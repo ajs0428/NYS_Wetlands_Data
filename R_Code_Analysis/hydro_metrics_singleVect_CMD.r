@@ -7,7 +7,7 @@
 ###################
 
 args = c("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg",
-         11,
+         123,
          "Data/TerrainProcessed/HUC_DEMs/",
          "Data/TerrainProcessed/HUC_Hydro/"
          )
@@ -33,7 +33,7 @@ library(stringr)
 library(whitebox)
 suppressPackageStartupMessages(library(tidyterra))
 
-terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_DL/Data/tmp")
+terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp")
 print(tempdir())
 
 ###############################################################################################

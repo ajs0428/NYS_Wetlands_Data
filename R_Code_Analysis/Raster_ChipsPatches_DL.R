@@ -17,39 +17,43 @@ set.seed(11)
 args <- c(
     "Data/Training_Data/R_Patches_Vector_Reviewed/", #Path to GIS reviewed wetland vector patches
     128, # patch size 1/2
-    208 # cluster subset options include number or NULL for any
+    123 # cluster subset options include number or NULL for any
 )
 
 args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
 
+patchPath <- args[1]
+patchSize <- args[2]
+clusterSubset <- args[3]
+
 message("these are the arguments: \n", 
-    "1) path the reviewed training data :", args[1], "\n",
-    "2) patch size :", args[2], "\n",
-    "3) cluster number :", args[3], "\n"
+    "1) path the reviewed training data :", patchPath, "\n",
+    "2) patch size :", patchSize, "\n",
+    "3) cluster number :", clusterSubset, "\n"
 )
 
 
 setGDALconfig("GDAL_PAM_ENABLED", "FALSE") # does not create aux.xml files but maybe needed
 ########################################################################################
-l_wet <- list.files(args[1], pattern = ".gpkg$", full.names = TRUE) 
+l_wet <- list.files(patchPath, pattern = ".gpkg$", full.names = TRUE) 
 l_wet_cluster_nums <- sub(".*cluster_(\\d+).*", "\\1", l_wet) |> unique()
 l_wet_extracted_clusters <- sub(".*cluster_(\\d+)_.*", "\\1", l_wet)
-l_wet_cluster <- l_wet[l_wet_extracted_clusters[1] %in% as.character(l_wet_cluster_nums)]
+l_wet_cluster <- l_wet[grepl(paste0("cluster_", clusterSubset, "_"), l_wet)]
 print(l_wet_cluster)
 clust_extract_fun <- function(l){
-    extracted_clusters <- sub(".*cluster_(\\d+)_.*", "\\1", l)
+    # extracted_clusters <- sub(".*cluster_(\\d+)_.*", "\\1", l)
     if(str_detect(deparse(substitute(l)), "dem")){
         message("DEM")
-        l_clust <- l[extracted_clusters %in% as.character(l_wet_cluster_nums) & 
+        l_clust <- l[grepl(paste0("cluster_", clusterSubset, "_"), l) & 
                          !str_detect(l, "wbt")]
     } else if(str_detect(deparse(substitute(l)), "terr")){
         message("Terrain")
-        l_clust <- l[extracted_clusters %in% as.character(l_wet_cluster_nums) & 
+        l_clust <- l[grepl(paste0("cluster_", clusterSubset, "_"), l) & 
                    str_detect(l, "local") & 
                    !str_detect(l, "10m|1000m")]
     } else {
         message(str_remove(deparse(substitute(l)), "l_"))
-        l_clust <- l[extracted_clusters %in% as.character(l_wet_cluster_nums)]
+        l_clust <- l[grepl(paste0("cluster_", clusterSubset, "_"), l)]
     }
     return(l_clust)
 }
@@ -85,7 +89,7 @@ logpath <- "Data/Training_Data/R_Patches_Vector/Vector_Patch_Checklist.csv"
 ########################################################################################
 # fct_df <- data.frame(ID = 0:4, MOD_CLASS = c("EMW", "FSW", "OWW", "SSW", "UPL"))
 fct_df <- data.frame(ID = 0:3, MOD_CLASS = c("EMW", "FSW", "SSW", "UPL"))
-patchsize = as.numeric(args[2])
+patchsize = as.numeric(patchSize)
 ########################################################################################
 set.seed(420)
 
@@ -101,28 +105,28 @@ rast_chip_patch_create <- function(wetland_file){
     } else {
         sourceWetlands <- sub("_.*", "", tools::file_path_sans_ext(basename(wetland_file)))
     }
-    patchsize = as.numeric(args[2])
+    patchsize = as.numeric(patchSize)
     huc_num <- str_extract(wetland_file, "(?<=huc_)\\d+")
     cluster_num <- str_extract(wetland_file, "(?<=cluster_)\\d+")
     
-    if(cluster_num != args[3] & !is.null(args[3])){
-        message("skip this cluster and huc, selecting cluster: ", args[3])
+    if(cluster_num != clusterSubset & !is.null(clusterSubset)){
+        # message("skip this cluster and huc, selecting cluster: ", clusterSubset)
         return(invisible(NULL))
-    } else if(cluster_num != args[3] & is.null(args[3])) {
+    } else if(cluster_num != clusterSubset & is.null(clusterSubset)) {
         message("Processing for all clusters in folder")
     }
     
-    # huc_poly <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg", quiet = TRUE,
-    #                               query = paste0("SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE huc12 = '", huc_num, "'"))
-
+    huc_poly <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg", quiet = TRUE,
+                                  query = paste0("SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE huc12 = '", huc_num, "'"))
     dem_rast <- l_dem_cluster[grepl(huc_num, l_dem_cluster) & grepl(paste0("cluster_", cluster_num), l_dem_cluster)] |> rast()
     set.names(dem_rast, "DEM")
     chm_rast <- l_chm_cluster[grepl(huc_num, l_chm_cluster) & grepl(paste0("cluster_", cluster_num), l_chm_cluster)] |> rast()
-    sat_rast <- l_sat_cluster[grepl(huc_num, l_sat_cluster)& grepl(paste0("cluster_", cluster_num), l_sat_cluster)] |> rast() |> 
+    sat_rast <- l_sat_cluster[grepl(huc_num, l_sat_cluster)& grepl(paste0("cluster_", cluster_num), l_sat_cluster)] |> rast() |>
         tidyterra::select(-NDVI, -MNDWI, -PSRI, -DPSVI, -RVI, -VH_VV_ratio)
     terr_rast <- l_terr_cluster[grepl(huc_num, l_terr_cluster)& grepl(paste0("cluster_", cluster_num), l_terr_cluster)] |> rast() |> 
-        tidyterra::select(-Geomorph_local)
+      tidyterra::select(-TPI_local, -dmv_local)
     hydro_rast <- l_hydro_cluster[grepl(huc_num, l_hydro_cluster) & grepl(paste0("cluster_", cluster_num), l_hydro_cluster)] |> rast()
+    hydro_rast$flowacc <- log(hydro_rast$flowacc)
     naip_rast <- l_naip_cluster[grepl(huc_num, l_naip_cluster)& grepl(paste0("cluster_", cluster_num), l_naip_cluster)] |> rast()
     lidar_rast <- l_lidar_cluster[grepl(huc_num, l_lidar_cluster)& grepl(paste0("cluster_", cluster_num), l_lidar_cluster)] |> rast() |>
         tidyterra::select(pct_below_0.5m, pct_0.5_to_2m)
@@ -133,8 +137,8 @@ rast_chip_patch_create <- function(wetland_file){
     message(ext(terr_rast))
     message(ext(hydro_rast))
     message(ext(naip_rast))
-    message(lidar_rast)
-    
+    message(ext(lidar_rast))
+
     stack <- c(dem_rast, terr_rast, hydro_rast, chm_rast, sat_rast, naip_rast, lidar_rast)
     stack_fn <- paste0("Data/HUC_Raster_Stacks/HUC_DL_Stacks/", "cluster_", cluster_num, "_huc_", huc_num, "_stack.tif")
     if (!file.exists(stack_fn)) {
@@ -144,7 +148,7 @@ rast_chip_patch_create <- function(wetland_file){
     ### Union all the polygons then rejoin and separate as groups
         ### so that each patch of touching polygons is a separate
             ### object that can be used to crop the rasters
-    tw <- st_read(l_wet_cluster[grepl(huc_num, l_wet_cluster) & grepl(paste0("cluster_", cluster_num), l_wet_cluster)], quiet = TRUE)
+    tw <- st_read(l_wet_cluster[grepl(huc_num, l_wet_cluster) & grepl(sourceWetlands, l_wet_cluster)], quiet = TRUE)
     tw_valid <- tw[st_is_valid(tw), ]
     tw_union <- tw_valid |>
         st_union() |>
@@ -177,7 +181,7 @@ rast_chip_patch_create <- function(wetland_file){
             levels(tw_rast_sub) <- fct_df
 
             fn <- paste0("Data/Training_Data/R_Patches/", sourceWetlands,"_cluster_", cluster_num, "_huc_", huc_num, "_patch_", i, "_", patchsize*2, "m.tif" )
-            fn_labels <- paste0("Data/Training_Data/R_Patches_Labels/", "labels_only_", sourceWetlands, "_cluster_", cluster_num, "_huc_", huc_num, "_patch_", i, "_", patchsize*2, "m.tif" )
+            # fn_labels <- paste0("Data/Training_Data/R_Patches_Labels/", "labels_only_", sourceWetlands, "_cluster_", cluster_num, "_huc_", huc_num, "_patch_", i, "_", patchsize*2, "m.tif" )
 
             # Regular Patches with all predictors
             #if(!file.exists(fn)){
@@ -193,12 +197,12 @@ rast_chip_patch_create <- function(wetland_file){
             #     message("Already file ", fn)
             # }
 
-            #Labels only patches NO predictors
-            if(!file.exists(fn_labels)){
-                writeRaster(tw_rast_sub, filename = fn_labels, overwrite = TRUE)
-                } else {
-                    message("Already file ", fn_labels)
-                    }
+            # #Labels only patches NO predictors
+            # if(!file.exists(fn_labels)){
+            #     writeRaster(tw_rast_sub, filename = fn_labels, overwrite = TRUE)
+            #     } else {
+            #         message("Already file ", fn_labels)
+            #         }
             },
         error = function(e) {
             message("Error: ", conditionMessage(e))
@@ -211,7 +215,7 @@ rast_chip_patch_create <- function(wetland_file){
 }
 
 ### Non-parallel
-# system.time({lapply(l_wet_cluster[9], rast_chip_patch_create)})
+# system.time({lapply(l_wet_cluster[3], rast_chip_patch_create)})
 # 
 # l_dem_cluster[[1]] |> rast() |> plot()
 # l_hydro_cluster[[1]] |> rast() |> plot()
@@ -235,7 +239,18 @@ plan(future.callr::callr)
 future_lapply(l_wet_cluster, rast_chip_patch_create,
               future.seed = TRUE,
               future.packages = c("terra", "sf", "dplyr", "tidyr", "stringr", "purrr"),
-              future.globals = TRUE)
+              future.globals = TRUE
+              # future.globals = list(
+              #   l_chm_cluster = l_chm_cluster,
+              #   l_dem_cluster = l_dem_cluster,
+              #   l_lidar_cluster = l_lidar_cluster,
+              #   l_sat_cluster = l_sat_cluster,
+              #   l_terr_cluster = l_terr_cluster,
+              #   l_hydro_cluster = l_hydro_cluster,
+              #   args = args,
+              #   fct_df = fct_df
+              # )
+              )
 
 ### Checks 
 # l_patches <- list.files("Data/Training_Data/R_Patches_Vector")

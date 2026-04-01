@@ -2,7 +2,7 @@
 
 args = c(
     "Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg",
-    11,
+    123,
     "Data/CHMs/AWS"
 )
 args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
@@ -20,7 +20,7 @@ suppressPackageStartupMessages(library(tidyterra))
 library(future)
 library(future.apply)
 
-terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_DL/Data/tmp")
+terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp")
 print(tempdir())
 ###############################################################################################
 
@@ -172,7 +172,7 @@ future_lapply(
 )
 
 # ### Non-parallel testing
-# lapply(target_hucs[[1]], process_huc)
+# lapply(target_hucs, process_huc)
 
 
 

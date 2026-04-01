@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-cd /ibstorage/anthony/NYS_Wetlands_DL/Data/DEMs/
+cd /ibstorage/anthony/NYS_Wetlands_Data/Data/DEMs/
 export PATH=/programs/gdal-3.5.2/bin:$PATH
 export LD_LIBRARY_PATH=/programs/gdal-3.5.2/lib
 

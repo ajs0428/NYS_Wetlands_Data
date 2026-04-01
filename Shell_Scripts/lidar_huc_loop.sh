@@ -8,7 +8,7 @@
 #SBATCH --ntasks=2
 #SBATCH --output=Shell_Scripts/SLURM/slurm-lidar-huc-%j.out
 
-cd /ibstorage/anthony/NYS_Wetlands_DL/
+cd /ibstorage/anthony/NYS_Wetlands_Data/
 
 export TMPDIR=/ibstorage/anthony/tmp
 

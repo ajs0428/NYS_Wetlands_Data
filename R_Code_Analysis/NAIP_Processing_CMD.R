@@ -22,7 +22,7 @@ suppressPackageStartupMessages(library(tidyterra))
 library(future)
 library(future.apply)
 
-terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_DL/Data/tmp")
+terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp")
 print(tempdir())
 setGDALconfig("GDAL_PAM_ENABLED", "FALSE") # does not create aux.xml files
 ###############################################################################################

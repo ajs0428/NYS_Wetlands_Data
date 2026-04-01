@@ -17,3 +17,4 @@ Models/*
 !Models/.gitkeep
 
 !.gitignore
+.Rproj.user

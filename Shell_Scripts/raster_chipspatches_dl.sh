@@ -9,7 +9,7 @@
 #SBATCH --output=Shell_Scripts/SLURM/slurm-patch-%j.out
 
 
-cd /ibstorage/anthony/NYS_Wetlands_DL/
+cd /ibstorage/anthony/NYS_Wetlands_Data/
 
 export TMPDIR=/ibstorage/anthony/tmp
 

@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-cd /ibstorage/anthony/NYS_Wetlands_DL/
+cd /ibstorage/anthony/NYS_Wetlands_Data/
 
 scale_arg=${2:-"NS"} 
 

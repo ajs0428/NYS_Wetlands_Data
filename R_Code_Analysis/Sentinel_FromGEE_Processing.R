@@ -23,7 +23,7 @@ suppressPackageStartupMessages(library(tidyterra))
 library(future)
 library(future.apply)
 
-terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_DL/Data/tmp")
+terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp")
 print(tempdir())
 ###############################################################################################
 

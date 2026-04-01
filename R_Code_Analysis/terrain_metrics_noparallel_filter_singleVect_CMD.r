@@ -25,7 +25,7 @@ library(stringr)
 
 # Configure terra for efficiency
 terraOptions(
-    tempdir = "/ibstorage/anthony/NYS_Wetlands_DL/Data/tmp"
+    tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp"
 )
 
 setGDALconfig("GDAL_PAM_ENABLED", "FALSE") # does not create aux.xml files

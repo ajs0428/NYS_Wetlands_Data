@@ -16,8 +16,8 @@ set.seed(11)
 ########################################################################################
 
 args <- c(
-    208,# Cluster
-    "Data/Training_Data/NHP_HUC_Wetlands_For_Field_Validation/", #Path to wetland polygons
+    123,# Cluster
+    "Data/Training_Data/HUC_NWI_Processed/", #Path to wetland polygons
     128 # Patch size radius
 )
 
@@ -221,7 +221,7 @@ future_lapply(l_wet_cluster, vect_chip_patch_create,
               future.globals = TRUE)
 
 ### Non-parallel
-# system.time({t <- lapply(l_wet_cluster, vect_chip_patch_create)})
+# system.time({t <- lapply(l_wet_cluster[1], vect_chip_patch_create)})
 
 
 #### Checks

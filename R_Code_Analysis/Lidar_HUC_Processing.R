@@ -21,7 +21,7 @@ library(dplyr)
 library(lidR)
 library(terra)
 
-terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_DL/Data/tmp",
+terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp",
              memmax = 8,
              memfrac = 0.5)
 

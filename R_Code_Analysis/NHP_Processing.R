@@ -99,10 +99,11 @@ nhp_combine <- bind_rows(nhp_wetlands1, nhp_wetlands2, nhp_wetlands3) |>
     st_transform(crs = st_crs("EPSG:6347"))
 ########################################################################################
 clusters <- st_read("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg")
-nhp_huc_int <- st_intersects(clusters, nhp_combine, sparse = FALSE)
-nhp_intersecting_hucs <- clusters[rowSums(nhp_huc_int) > 50, ]
+nhp_huc_int <- st_overlaps(clusters, nhp_combine, sparse = FALSE) # overlaps longer than intersects
+nhp_intersecting_hucs <- clusters[rowSums(nhp_huc_int) > 50, ] # Only HUCs with > 50 wetlands
 
 ########################################################################################
+### Reclassified NWI wetlands
 nwi_chm_rcl_list <- list.files("Data/Training_Data/Targeted_Wetlands_For_Field_Validation_v2/", 
                                full.names = T, pattern = ".gpkg")
 nwi_chm_rcl_huc_list <- str_extract(nwi_chm_rcl_list, "(?<=huc_)\\d+")
@@ -143,7 +144,7 @@ nhp_nwi_cmb_fun <- function(huc_num){
 
 nhp_singlehuc_fun <- function(huc_num){
     cluster_num <- clusters[grepl(pattern = huc_num, x = clusters$huc12), ][["cluster"]]
-    fn <- paste0("Data/Training_Data/NHP_HUC_Wetlands_For_Field_Validation/NHP_cluster_", cluster_num, "_huc_", huc_num, ".gpkg")
+    fn <- paste0("Data/Training_Data/HUC_NHP_Processed/NHP_cluster_", cluster_num, "_huc_", huc_num, ".gpkg")
     
     if(!file.exists(fn)){
         huc <- clusters[grepl(pattern = huc_num, x = clusters$huc12), ]

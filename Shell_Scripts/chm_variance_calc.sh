@@ -11,7 +11,7 @@
 
 ulimit -v
 
-cd /ibstorage/anthony/NYS_Wetlands_DL/
+cd /ibstorage/anthony/NYS_Wetlands_Data/
 
 export TMPDIR=/ibstorage/anthony/tmp
 

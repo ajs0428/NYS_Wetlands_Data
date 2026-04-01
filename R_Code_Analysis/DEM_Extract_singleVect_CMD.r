@@ -33,7 +33,7 @@ suppressPackageStartupMessages(library(tidyterra))
 
 # Configure terra for efficiency
 terraOptions(
-    tempdir = "/ibstorage/anthony/NYS_Wetlands_DL/Data/tmp",
+    tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp",
     memfrac = 0.6,      # Use up to 60% of RAM before writing to disk
     threads = 2         # Internal threading for terra operations (per worker)
 )
