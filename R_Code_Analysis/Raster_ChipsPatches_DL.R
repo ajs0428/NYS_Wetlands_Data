@@ -215,7 +215,7 @@ rast_chip_patch_create <- function(wetland_file){
 }
 
 ### Non-parallel
-# system.time({lapply(l_wet_cluster[3], rast_chip_patch_create)})
+# system.time({lapply(l_wet_cluster, rast_chip_patch_create)})
 # 
 # l_dem_cluster[[1]] |> rast() |> plot()
 # l_hydro_cluster[[1]] |> rast() |> plot()

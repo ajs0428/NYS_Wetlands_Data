@@ -17,7 +17,7 @@ export TMPDIR=/ibstorage/anthony/tmp
 
 module load R/4.4.3
 # include=(11 12 22 51 53 56 60 64 67 84 86 90 92 102 105 116 120 123 136 138 152 176 183 189 192 193 198 208 218 225 250)
-include=(123)
+include=(64 67 82 95 218 225 240 250)
 for number in "${include[@]}"; do
 Rscript R_Code_Analysis/Sentinel_FromGEE_Processing.R \
     "Data/TerrainProcessed/HUC_DEMs/" \

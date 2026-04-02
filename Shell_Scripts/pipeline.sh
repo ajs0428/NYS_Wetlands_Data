@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 
-cd /ibstorage/anthony/NYS_Wetlands_GHG
+cd /ibstorage/anthony/NYS_Wetlands_Data/
 module load R/4.4.3
 
 # Starting with making HUC terrain data
