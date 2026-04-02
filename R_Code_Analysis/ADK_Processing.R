@@ -165,17 +165,19 @@ adk_singlehuc_fun <- function(huc_num){
 
 
 
-#### Single core/sequential 
+#### Non-parallel
 # 
 # lapply(nwi_chm_rcl_huc_list[1], adk_nwi_cmb_fun)
 
-lapply(huc_nums_with_adk, adk_singlehuc_fun)
+# lapply(huc_nums_with_adk, adk_singlehuc_fun)
 
 #### Parallel 
-if(future::availableCores() > 16){
-    corenum <-  4
+slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
+
+if (nzchar(slurm_cpus)) {
+  corenum <- as.integer(slurm_cpus)
 } else {
-    corenum <-  (future::availableCores())
+  corenum <- min(future::availableCores(), 4)
 }
 print(corenum)
 options(future.globals.maxSize= 32.0 * 1e9)

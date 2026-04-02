@@ -116,13 +116,16 @@ cluster_extract <- function(huc){
     gc()
 }
 
-# lapply(cluster_hucs[[7]], cluster_extract)
 
-if(future::availableCores() > 16){
-    corenum <-  4
+### Parallel
+slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
+
+if (nzchar(slurm_cpus)) {
+  corenum <- as.integer(slurm_cpus)
 } else {
-    corenum <-  (future::availableCores())
+  corenum <- min(future::availableCores(), 4)
 }
+
 options(future.globals.maxSize= 64 * 1e9)
 # plan(multisession, workers = corenum)
 plan(future.callr::callr, workers = corenum)
@@ -134,4 +137,5 @@ future_lapply(cluster_hucs,
               future.globals = TRUE)
 
 ##########################################
-
+### Non-parallel
+# lapply(cluster_hucs[[7]], cluster_extract)

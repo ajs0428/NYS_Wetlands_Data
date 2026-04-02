@@ -104,20 +104,19 @@ hydro_func <- function(dem){
     }
 }
 
-# lapply(non_wbt_list, hydro_func)
+### Parallel
 
-#
-if(future::availableCores() > 16){
-    corenum <-  4
+slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
+
+if (nzchar(slurm_cpus)) {
+  corenum <- as.integer(slurm_cpus)
 } else {
-    corenum <-  (future::availableCores())
+  corenum <- min(future::availableCores(), 4)
 }
+
 options(future.globals.maxSize= 128 * 1e9)
 # plan(multisession, workers = corenum)
 plan(future.callr::callr, workers = corenum)
-
-print(corenum)
-print(options()$future.globals.maxSize)
 
 future_lapply(non_wbt_list,
               hydro_func,
@@ -129,7 +128,7 @@ future_lapply(non_wbt_list,
 
 ################################################################################################
 # non-parallel
-# lapply(wbt_dem_hucs, hydro_func)
+# lapply(non_wbt_list, hydro_func)
 
 # r <- rast(list_of_huc_hydro_dems[[1]])
 # s <- terra::terrain(r, v = "slope")

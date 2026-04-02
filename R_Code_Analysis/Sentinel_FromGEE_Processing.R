@@ -71,18 +71,22 @@ match_align_project <- function(single_gee_path){
     gc()
 }
 
-# Single core run
-# lapply(gee_files_clust,  match_align_project)
+###Parallel
 
+slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
 
-
-if(future::availableCores() > 16){
-    corenum <-  4
+if (nzchar(slurm_cpus)) {
+  corenum <- as.integer(slurm_cpus)
 } else {
-    corenum <-  (future::availableCores())
+  corenum <- min(future::availableCores(), 4)
 }
 options(future.globals.maxSize= 64 * 1e9)
 # plan(multisession, workers = corenum)
 plan(future.callr::callr, workers = corenum)
 
 future_lapply(gee_files_clust, match_align_project, future.seed = TRUE, future.globals = TRUE)
+
+
+### Non-Parallel
+# Single core run
+# lapply(gee_files_clust,  match_align_project)

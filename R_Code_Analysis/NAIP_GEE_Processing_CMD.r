@@ -69,12 +69,15 @@ process_huc <- function(huc) {
     return(NULL)  
 }
 #####################################################################################
+### Parallel
+slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
 
-if(future::availableCores() > 16){
-    corenum <-  4
+if (nzchar(slurm_cpus)) {
+  corenum <- as.integer(slurm_cpus)
 } else {
-    corenum <-  (future::availableCores())
+  corenum <- min(future::availableCores(), 4)
 }
+
 options(future.globals.maxSize= 64 * 1e9)
 # plan(multisession, workers = corenum)
 plan(future.callr::callr, workers = corenum)
@@ -87,7 +90,7 @@ future_lapply(
     future.seed = TRUE
 )
 
-# Run with non-parallel
+### Run with non-parallel
 # results <- lapply(
 #     X = huc_list[1], 
 #     FUN = process_huc

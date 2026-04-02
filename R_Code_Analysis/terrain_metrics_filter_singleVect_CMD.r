@@ -144,11 +144,14 @@ message(paste0("Found ", length(list_of_huc_dems), " DEMs to process"))
 
 ###############################################################################################
 
-if(future::availableCores() > 16){
-    corenum <-  2
+slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
+
+if (nzchar(slurm_cpus)) {
+  corenum <- as.integer(slurm_cpus)
 } else {
-    corenum <-  (future::availableCores())
+  corenum <- min(future::availableCores(), 2)
 }
+
 options(future.globals.maxSize=64.0 * 1e9)
 # plan(multisession, workers = corenum)
 plan(future.callr::callr)
