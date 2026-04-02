@@ -204,12 +204,14 @@ vect_chip_patch_create <- function(wetland_file){
 
 
 ### Parallel
+slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
 
-if(future::availableCores() > 16){
-    corenum <-  4
+if (nzchar(slurm_cpus)) {
+  corenum <- as.integer(slurm_cpus)
 } else {
-    corenum <-  (future::availableCores())
+  corenum <- min(future::availableCores(), 4)
 }
+
 print(corenum)
 options(future.globals.maxSize= 32.0 * 1e9)
 # plan(multisession, workers = corenum)

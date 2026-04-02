@@ -89,10 +89,12 @@ process_huc <- function(huc_num) {
     return(NULL)  
 }
 
-if(future::availableCores() > 16){
-    corenum <-  4
+slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
+
+if (nzchar(slurm_cpus)) {
+  corenum <- as.integer(slurm_cpus)
 } else {
-    corenum <-  (future::availableCores())
+  corenum <- min(future::availableCores(), 4)
 }
 options(future.globals.maxSize= 64 * 1e9)
 # plan(multisession, workers = corenum)
