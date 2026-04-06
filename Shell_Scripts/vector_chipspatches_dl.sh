@@ -1,11 +1,12 @@
 #!/bin/bash -l
-#SBATCH --nodelist=cbsuxu09,cbsuxu10
+#SBATCH --nodelist=cbsuxu08,cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
 #SBATCH --mem-per-cpu=24G
 #SBATCH --cpus-per-task=4
 #SBATCH --job-name=vector-patch
 #SBATCH --ntasks=2
+#SBATCH --ntasks-per-node=1
 #SBATCH --output=Shell_Scripts/SLURM/slurm-vector-patch-%j.out
 
 
@@ -21,12 +22,14 @@ include=(123)
 # Loop through each number in the list
 for number in "${include[@]}"; do
     echo "Running Rscript with argument: $number"
-    Rscript R_Code_Analysis/Vector_ChipsPatches_DL.R \
-    "$number" \
-    "Data/Training_Data/HUC_NWI_Processed/" \
-    128 >> "Shell_Scripts/logs/vector_patch_$(date +%Y%m%d).log" 2>&1
+    srun --nodes=1 --ntasks=1 --exclusive \
+        Rscript R_Code_Analysis/Vector_ChipsPatches_DL.R \
+        "$number" \
+        "Data/Training_Data/HUC_NWI_Processed/" \
+        128 >> "Shell_Scripts/logs/vector_patch_$(date +%Y%m%d).log" 2>&1 &
     
 done
 
+wait
 echo "All Rscript executions completed."
 

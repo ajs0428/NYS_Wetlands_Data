@@ -7,6 +7,8 @@ library(terra)
 library(future)
 library(future.apply)
 
+n_workers <- as.integer(Sys.getenv("SLURM_CPUS_PER_TASK", unset = "1"))
+
 nys_lidar_ftp <- "ftp://ftp.gis.ny.gov/elevation/LIDAR/"
 
 # List FTP directory contents
@@ -66,11 +68,10 @@ get_overlapping_tiles <- function(index_path, huc12_sf) {
 }
 
 # Per-pixel vegetation metrics function (top-level for lidR formula scoping)
-veg_metrics <- function(z, i) {
+veg_metrics <- function(z) {
     n <- length(z)
     #p95 <- quantile(z, 0.95)
     list(
-        # mean_intensity = mean(i),
         pct_below_1m = sum(z < 1) / n,
         pct_1m_to_5m  = sum(z >= 1 & z < 5) / n,
         pct_above_5m  = sum(z >= 5) / n
@@ -80,8 +81,8 @@ veg_metrics <- function(z, i) {
 ### Compute lidar vegetation metrics for a single LAS tile
 # Returns 4-band raster at 1m resolution in EPSG:6347:
 #   Band 1: mean_intensity  — mean return intensity REMOVED
-#   Band 2: pct_below_1m  — proportion of returns below 0.5m
-#   Band 3: pct_1m_to_2m   — proportion of returns between 0.5m and 2m
+#   Band 2: pct_below_1m  — proportion of returns below 1m
+#   Band 3: pct_1m_to_5m   — proportion of returns between 1m and 5m
 #   Band 4: pct_above_5m   — proportion of returns between 2m and 95th percentile height
 compute_lidar_metrics <- function(las_path, out_dir, res = 1) {
 
@@ -93,7 +94,7 @@ compute_lidar_metrics <- function(las_path, out_dir, res = 1) {
     # Drop points with negative normalized heights (below-ground noise)
     las <- filter_poi(las, Z >= 0)
 
-    metrics <- pixel_metrics(las, ~veg_metrics(z = Z, i = Intensity), res = res)
+    metrics <- pixel_metrics(las, ~veg_metrics(z = Z), res = res)
 
     # Reproject to EPSG:6347 if needed
     target_crs <- "EPSG:6347"
@@ -113,18 +114,18 @@ compute_lidar_metrics <- function(las_path, out_dir, res = 1) {
     # Mask back to original footprint so edges don't expand
     metrics <- mask(metrics, valid_mask, maskvalues = 0)
     # Min-max normalize intensity to 0-1 (raw values vary across sensors/projects)
-    int_vals <- values(metrics[[1]], na.rm = TRUE)
-    int_min <- min(int_vals)
-    int_max <- max(int_vals)
-    if (int_max > int_min) {
-        metrics[[1]] <- (metrics[[1]] - int_min) / (int_max - int_min)
-    } else {
-        metrics[[1]] <- metrics[[1]] * 0  # constant value → set to 0
-    }
+    # int_vals <- values(metrics[[1]], na.rm = TRUE)
+    # int_min <- min(int_vals)
+    # int_max <- max(int_vals)
+    # if (int_max > int_min) {
+    #     metrics[[1]] <- (metrics[[1]] - int_min) / (int_max - int_min)
+    # } else {
+    #     metrics[[1]] <- metrics[[1]] * 0  # constant value → set to 0
+    # }
     # metrics[[1]] <- ifel(is.na(metrics[[1]]), 0, metrics[[1]]) # makes NA which is usually water 0 intensity
-    metrics[[1]] <- ifel(is.na(metrics[[2]]), 1, metrics[[2]]) # makes NA which is usually water 100% below 0.5m
-    metrics[[2]] <- ifel(is.na(metrics[[3]]), 0, metrics[[3]]) # makes NA which is usually water 0% between 0.5 and 2m
-    metrics[[3]] <- ifel(is.na(metrics[[4]]), 0, metrics[[4]]) # makes NA which is usually water 0% above 2m
+    # metrics[[1]] <- ifel(is.na(metrics[[1]]), 1, metrics[[1]])  # pct_below_1m → 1 for water/NA
+    # metrics[[2]] <- ifel(is.na(metrics[[2]]), 0, metrics[[2]])  # pct_1m_to_5m → 0
+    # metrics[[3]] <- ifel(is.na(metrics[[3]]), 0, metrics[[3]])  # pct_above_5m → 0
     set.names(metrics, c("pct_below_1m", "pct_1m_to_5m", "pct_above_5m"))
     # Write multi-band GeoTIFF
     tile_name <- tools::file_path_sans_ext(basename(las_path))
@@ -185,8 +186,8 @@ process_tile <- function(tile_name, tile_url, out_dir) {
 #     "Data/Lidar/Metrics"
 ###############################################################################
 args <- c("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg",
-              225,
-              "Data/Lidar/Indexes/USGS_2024.gpkg",
+              208,
+              "Data/Lidar/Indexes/FEMA_2019.gpkg",
               "Data/Lidar/Metrics")
 
 args <- commandArgs(trailingOnly = TRUE)
@@ -199,11 +200,11 @@ gpkg_path   <- args[1]
 cluster_num <- args[2]
 index_path  <- args[3]
 out_dir     <- args[4]
-if (future::availableCores() > 16) {
-    n_workers <- 1
-} else {
-    n_workers <- future::availableCores()
-}
+# if (future::availableCores() > 16) {
+#     n_workers <- 1
+# } else {
+#     n_workers <- future::availableCores()
+# }
 
 message("=== Lidar Metrics Pipeline ===")
 message("  GPKG:        ", gpkg_path)
@@ -234,7 +235,10 @@ unique_tiles <- tile_index_info |>
 message("Unique full-size tiles to process: ", nrow(unique_tiles))
 
 # Create output directory
-dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
+if(!dir.exists(out_dir)){
+  dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
+}
+
 
 # Set up parallel workers (sequential if workers = 1)
 if (n_workers > 1) {
