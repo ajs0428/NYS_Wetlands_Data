@@ -1,11 +1,12 @@
 #!/bin/bash -l
-#SBATCH --nodelist=cbsuxu09,cbsuxu10
+#SBATCH --nodelist=cbsuxu06,cbsuxu07,cbsuxu08,cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
 #SBATCH --mem-per-cpu=36G
 #SBATCH --cpus-per-task=4
 #SBATCH --job-name=chm
-#SBATCH --ntasks=2
+#SBATCH --ntasks=5
+#SBATCH --ntasks-per-node=1
 #SBATCH --output=Shell_Scripts/SLURM/slurm-chm-%j.out
 
 cd /ibstorage/anthony/NYS_Wetlands_Data/
@@ -19,10 +20,13 @@ DATE=$(date +%Y%m%d)
 echo "=== CHM extraction ==="
 for number in "${include[@]}"; do
     echo "  Cluster $number – CHM"
-    Rscript R_Code_Analysis/CHM_extraction.R \
+    srun --nodes=1 --ntasks=1 --exclusive \
+        Rscript R_Code_Analysis/CHM_extraction.R \
         "$GPKG" \
         "$number" \
         "Data/CHMs/AWS" \
-        >> "Shell_Scripts/logs/chm_${DATE}.log" 2>&1
+        >> "Shell_Scripts/logs/chm_${number}_${DATE}.log" 2>&1 &
 done
+
+wait
 echo "CHM extraction completed."

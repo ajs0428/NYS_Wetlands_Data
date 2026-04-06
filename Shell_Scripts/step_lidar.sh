@@ -1,11 +1,12 @@
 #!/bin/bash -l
-#SBATCH --nodelist=cbsuxu09,cbsuxu10
+#SBATCH --nodelist=cbsuxu06,cbsuxu07,cbsuxu08,cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
 #SBATCH --mem-per-cpu=16G
 #SBATCH --cpus-per-task=8
 #SBATCH --job-name=lidar
-#SBATCH --ntasks=2
+#SBATCH --ntasks=5
+#SBATCH --ntasks-per-node=1
 #SBATCH --output=Shell_Scripts/SLURM/slurm-lidar-%j.out
 
 cd /ibstorage/anthony/NYS_Wetlands_Data/
@@ -39,14 +40,17 @@ for entry in "${lidar_entries[@]}"; do
     for number in "${include[@]}"; do
         if [[ "$cluster" == "$number" ]]; then
             echo "  Cluster $cluster – $index_file"
-            Rscript R_Code_Analysis/LIDAR_ftp.R \
+            srun --nodes=1 --ntasks=1 --exclusive \
+                Rscript R_Code_Analysis/LIDAR_ftp.R \
                 "$GPKG" \
                 "$cluster" \
                 "$INDEX_DIR/$index_file" \
                 "$OUTDIR" \
-                >> "Shell_Scripts/logs/lidar_${DATE}.log" 2>&1
+                >> "Shell_Scripts/logs/lidar_${cluster}_${DATE}.log" 2>&1 &
             break
         fi
     done
 done
+
+wait
 echo "Lidar metrics completed."

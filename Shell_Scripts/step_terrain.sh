@@ -1,9 +1,10 @@
 #!/bin/bash -l
-#SBATCH --nodelist=cbsuxu09,cbsuxu10
+#SBATCH --nodelist=cbsuxu06,cbsuxu07,cbsuxu08,cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
 #SBATCH --job-name=terrain
-#SBATCH --ntasks=2
+#SBATCH --ntasks=5
+#SBATCH --ntasks-per-node=1
 #SBATCH --output=Shell_Scripts/SLURM/slurm-terrain-%j.out
 
 # Usage: sbatch [--mem-per-cpu=X --cpus-per-task=Y] step_terrain.sh <include_csv> <metric>
@@ -20,11 +21,14 @@ DATE=$(date +%Y%m%d)
 echo "=== Terrain metric: $metric ==="
 for number in "${include[@]}"; do
     echo "  Cluster $number – $metric"
-    Rscript R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.r \
+    srun --nodes=1 --ntasks=1 --exclusive \
+        Rscript R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.r \
         "$number" \
         "Data/TerrainProcessed/HUC_DEMs" \
         "$metric" \
         "Data/TerrainProcessed/HUC_TerrainMetrics/" \
-        >> "Shell_Scripts/logs/terrain_${metric}_${DATE}.log" 2>&1
+        >> "Shell_Scripts/logs/terrain_${metric}_${number}_${DATE}.log" 2>&1 &
 done
+
+wait
 echo "Terrain $metric completed."

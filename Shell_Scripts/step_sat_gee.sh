@@ -1,11 +1,12 @@
 #!/bin/bash -l
-#SBATCH --nodelist=cbsuxu09,cbsuxu10
+#SBATCH --nodelist=cbsuxu06,cbsuxu07,cbsuxu08,cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
 #SBATCH --mem-per-cpu=32G
 #SBATCH --cpus-per-task=5
 #SBATCH --job-name=sat_gee
-#SBATCH --ntasks=2
+#SBATCH --ntasks=5
+#SBATCH --ntasks-per-node=1
 #SBATCH --output=Shell_Scripts/SLURM/slurm-sat-gee-%j.out
 #SBATCH --time=48:00:00
 
@@ -19,11 +20,14 @@ DATE=$(date +%Y%m%d)
 echo "=== Sentinel GEE processing ==="
 for number in "${include[@]}"; do
     echo "  Cluster $number – Sentinel GEE"
-    Rscript R_Code_Analysis/Sentinel_FromGEE_Processing.R \
+    srun --nodes=1 --ntasks=1 --exclusive \
+        Rscript R_Code_Analysis/Sentinel_FromGEE_Processing.R \
         "Data/TerrainProcessed/HUC_DEMs/" \
         "Data/Satellite/GEE_Download_NY_HUC_Sentinel_Indices/ny_huc_indices" \
         "Data/Satellite/HUC_Processed_NY_Sentinel_Indices/" \
         "$number" \
-        >> "Shell_Scripts/logs/sat_gee_${DATE}.log" 2>&1
+        >> "Shell_Scripts/logs/sat_gee_${number}_${DATE}.log" 2>&1 &
 done
+
+wait
 echo "Sentinel GEE processing completed."
