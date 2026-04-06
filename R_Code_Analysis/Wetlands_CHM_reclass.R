@@ -16,7 +16,7 @@ set.seed(11)
 args <- c(
     123, #Target Cluster
     "Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg", #Clusters and HUCs
-    "Data/NWI/NY_NWI_6347.gpkg", # Wetlands
+    "Data/ADK/RegWetlandAreasParkPromulgated_UTM83.shp", # Wetlands
     "ATTRIBUTE" # Field for filtering and matching
     )
 
@@ -105,7 +105,7 @@ wetland_chm_extract_classify <- function(huc_num){
           dplyr::mutate(ID = paste0(ATTRIBUTE, "_", row_number())) 
         v_wet <- sf_wet |> 
           vect() |> 
-          terra::buffer(-5) #negative buffer to remove edge effects
+          terra::buffer(-10) #negative buffer to remove edge effects
 
         filename <- paste0(saveFolder, suffix, "_cluster_", targetCluster, "_huc_", huc_num, ".gpkg")
         

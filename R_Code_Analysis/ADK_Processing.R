@@ -38,7 +38,8 @@ l_naip <- list.files("Data/NAIP/HUC_NAIP_Processed/", pattern = ".tif", full.nam
 
 ########################################################################################
 
-clusters <- st_read("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg", quiet = TRUE)
+clusters <- st_read("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg", 
+                    quiet = TRUE)
 
 adk_files <- list.files("Data/ADK", pattern = ".shp$", full.names = TRUE) |> 
     keep( \(x) !str_detect(x, "RegWetlandAreasParkPromulgated"))
@@ -50,7 +51,7 @@ adk_read_filter <- function(filename){
         mutate(SYSTEM = as.character(SYSTEM),
                MOD_CLASS = case_when(
                    str_detect(SYSTEM, "^U$") ~ "UPL",
-                   str_detect(CLASS1, "OW|AB|US|UB|SB|RB") ~ "OWW",
+                   str_detect(CLASS1, "OW|AB|US|UB|SB|RB") ~ "UPL",
                    str_detect(CLASS1, "SS") ~ "SSW",
                    str_detect(CLASS1, "EM") ~ "EMW",
                    str_detect(CLASS1, "FO") ~ "FSW",
@@ -84,28 +85,26 @@ hucs_with_regulated_adk <- clusters[rowSums(st_intersects(clusters, regulated_ad
 huc_nums_with_regulated_adk <- hucs_with_regulated_adk[["huc12"]] |> keep(\(x) !str_detect(x, "043001081604")) #Remove this one huge huc
 
 regadk_wetland_chm_extract_classify <- function(huc_num){
-    
     tryCatch({
         if(sum(length(l_naip[str_detect(l_naip , huc_num)]), 
                length(l_chm[str_detect(l_chm , huc_num)])) > 1 ){
             print("Files Exist")
             r_chm <- rast(l_chm[str_detect(l_chm , huc_num)])
-            r_naip <- rast(l_naip[str_detect(l_naip , huc_num)])
-            stack <- c(r_chm, r_naip)
             huc <- clusters[grepl(pattern = huc_num, x = clusters$huc12), ]
             cluster_num <-  clusters[grepl(pattern = huc_num, x = clusters$huc12), ][["cluster"]]
             
-            filename <- paste0("Data/Training_Data/ADK_HUC_Processed/ADK_regulated_cluster_", cluster_num, "_huc_", huc_num, ".gpkg")
+            filename <- paste0("Data/Training_Data/HUC_ADK_Processed/ADK_regulated_cluster_", cluster_num, "_huc_", huc_num, ".gpkg")
             
             if(!file.exists(filename)){
                 message(paste0("Creating New ADK Regulated Reclass File: ", filename))
-                adk_reg_huc <- st_intersection(regulated_adk, huc)  |> vect()
-                adk_reg_wet_chm <- terra::extract(stack, adk_reg_huc, "mean", bind = TRUE) |>
+                adk_reg_huc <- st_intersection(regulated_adk, huc)  |> vect() |> 
+                  terra::buffer(-10) #negative buffer to remove edge effects
+                adk_reg_wet_chm <- terra::extract(r_chm, adk_reg_huc, "mean", bind = TRUE) |>
                     tidyterra::mutate(
                         MOD_CLASS = dplyr::case_when(
-                            CHM <= 1.0 & ndwi > 0.2 ~ "OWW",
-                            CHM > 1.0 & CHM <= 3.5 & ndwi > 0.2 ~ "EMW",
-                            CHM >= 1.0 & CHM <= 5.0 & ndwi < 0.2~ "SSW",
+                            CHM <= 1.0 ~ "OWW",
+                            CHM > 1.0 & CHM <= 3.5  ~ "EMW",
+                            CHM >= 1.0 & CHM <= 5.0 ~ "SSW",
                             CHM > 5.0 ~ "FSW",
                             CHM <= 3.5 ~ "EMW",
                             CHM > 3.5 & CHM <= 5.0 ~ "SSW",

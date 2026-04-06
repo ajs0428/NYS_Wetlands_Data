@@ -17,7 +17,7 @@ set.seed(11)
 args <- c(
     "Data/Training_Data/R_Patches_Vector_Reviewed/", #Path to GIS reviewed wetland vector patches
     128, # patch size 1/2
-    123 # cluster subset options include number or NULL for any
+    225 # cluster subset options include number or NULL for any
 )
 
 args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
@@ -140,6 +140,8 @@ rast_chip_patch_create <- function(wetland_file){
     message(ext(lidar_rast))
 
     stack <- c(dem_rast, terr_rast, hydro_rast, chm_rast, sat_rast, naip_rast, lidar_rast)
+    
+    
     stack_fn <- paste0("Data/HUC_Raster_Stacks/HUC_DL_Stacks/", "cluster_", cluster_num, "_huc_", huc_num, "_stack.tif")
     if (!file.exists(stack_fn)) {
         writeRaster(stack, filename = stack_fn, overwrite = TRUE)

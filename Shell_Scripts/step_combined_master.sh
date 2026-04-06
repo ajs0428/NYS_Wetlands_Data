@@ -1,12 +1,12 @@
 #!/bin/bash
 # Master script – submits one SLURM job per processing step
-# Usage: bash combined_master.sh
+# Usage: bash step_combined_master.sh
 # Edit 'include' below to set which clusters to process.
 
 cd /ibstorage/anthony/NYS_Wetlands_Data/
 
 # ── Cluster numbers to process ───────────────────────────────────────────────
-include=(123 11 208)
+include=(168)
 
 # Convert array to comma-separated string for passing to child scripts
 INCLUDE_STR=$(IFS=,; echo "${include[*]}")

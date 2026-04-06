@@ -168,7 +168,9 @@ pts_extracted_df <- as_tibble(pts_extracted_filtered) |>
     dplyr::mutate(across(where(is.character), as.factor),
                   twi = case_when(is.infinite(twi) ~ NA,
                                   # is.nan(twi) ~ 0,
-                                  .default = twi)
+                                  .default = twi),
+                  MOD_CLASS = case_when(MOD_CLASS == "OWW" ~ "UPL", 
+                                        .default = MOD_CLASS)
                   ) |> 
     drop_na()
 
@@ -344,7 +346,8 @@ RFM_coarse_fit |>
     theme_minimal()
 
 Wetland_MultiTest_Fit <- 
-    augment(RFM_multi_fit, test_data)
+    augment(RFM_multi_fit, test_data) |> 
+  mutate(MOD_CLASS = as.factor(MOD_CLASS))
 Wetland_CoarseTest_Fit <- 
     augment(RFM_coarse_fit, test_data)
 

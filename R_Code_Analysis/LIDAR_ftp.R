@@ -68,21 +68,21 @@ get_overlapping_tiles <- function(index_path, huc12_sf) {
 # Per-pixel vegetation metrics function (top-level for lidR formula scoping)
 veg_metrics <- function(z, i) {
     n <- length(z)
-    p95 <- quantile(z, 0.95)
+    #p95 <- quantile(z, 0.95)
     list(
-        mean_intensity = mean(i),
-        pct_below_0.5m = sum(z < 0.5) / n,
-        pct_0.5_to_2m  = sum(z >= 0.5 & z < 2) / n,
-        pct_2m_to_p95  = sum(z >= 2 & z <= p95) / n
+        # mean_intensity = mean(i),
+        pct_below_1m = sum(z < 1) / n,
+        pct_1m_to_5m  = sum(z >= 1 & z < 5) / n,
+        pct_above_5m  = sum(z >= 5) / n
     )
 }
 
 ### Compute lidar vegetation metrics for a single LAS tile
 # Returns 4-band raster at 1m resolution in EPSG:6347:
-#   Band 1: mean_intensity  — mean return intensity
-#   Band 2: pct_below_0.5m  — proportion of returns below 0.5m
-#   Band 3: pct_0.5_to_2m   — proportion of returns between 0.5m and 2m
-#   Band 4: pct_2m_to_p95   — proportion of returns between 2m and 95th percentile height
+#   Band 1: mean_intensity  — mean return intensity REMOVED
+#   Band 2: pct_below_1m  — proportion of returns below 0.5m
+#   Band 3: pct_1m_to_2m   — proportion of returns between 0.5m and 2m
+#   Band 4: pct_above_5m   — proportion of returns between 2m and 95th percentile height
 compute_lidar_metrics <- function(las_path, out_dir, res = 1) {
 
     las <- readLAS(las_path, filter = "-drop_withheld -drop_class 7 18")
@@ -121,11 +121,11 @@ compute_lidar_metrics <- function(las_path, out_dir, res = 1) {
     } else {
         metrics[[1]] <- metrics[[1]] * 0  # constant value → set to 0
     }
-    metrics[[1]] <- ifel(is.na(metrics[[1]]), 0, metrics[[1]]) # makes NA which is usually water 0 intensity
-    metrics[[2]] <- ifel(is.na(metrics[[2]]), 1, metrics[[2]]) # makes NA which is usually water 100% below 0.5m
-    metrics[[3]] <- ifel(is.na(metrics[[3]]), 0, metrics[[3]]) # makes NA which is usually water 0% between 0.5 and 2m
-    metrics[[4]] <- ifel(is.na(metrics[[4]]), 0, metrics[[4]]) # makes NA which is usually water 0% above 2m
-    set.names(metrics, c("mean_intensity", "pct_below_0.5m", "pct_0.5_to_2m", "pct_2m_to_p95"))
+    # metrics[[1]] <- ifel(is.na(metrics[[1]]), 0, metrics[[1]]) # makes NA which is usually water 0 intensity
+    metrics[[1]] <- ifel(is.na(metrics[[2]]), 1, metrics[[2]]) # makes NA which is usually water 100% below 0.5m
+    metrics[[2]] <- ifel(is.na(metrics[[3]]), 0, metrics[[3]]) # makes NA which is usually water 0% between 0.5 and 2m
+    metrics[[3]] <- ifel(is.na(metrics[[4]]), 0, metrics[[4]]) # makes NA which is usually water 0% above 2m
+    set.names(metrics, c("pct_below_1m", "pct_1m_to_5m", "pct_above_5m"))
     # Write multi-band GeoTIFF
     tile_name <- tools::file_path_sans_ext(basename(las_path))
     out_path <- file.path(out_dir, paste0(tile_name, "_metrics.tif"))
@@ -185,8 +185,8 @@ process_tile <- function(tile_name, tile_url, out_dir) {
 #     "Data/Lidar/Metrics"
 ###############################################################################
 args <- c("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg",
-              208,
-              "Data/Lidar/Indexes/FEMA_2019.gpkg",
+              225,
+              "Data/Lidar/Indexes/USGS_2024.gpkg",
               "Data/Lidar/Metrics")
 
 args <- commandArgs(trailingOnly = TRUE)

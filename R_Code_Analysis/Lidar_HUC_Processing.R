@@ -114,13 +114,13 @@ lidar_huc <- function(huc_num){
 lapply(huc_numbers, lidar_huc)
 
 ### testing
-int <- st_intersects(lidar_index_all_sf_noe, cluster_hucs[1,], sparse = F) |> rowSums()
-l_int <- lidar_index_all_sf_noe[int > 0, ]
-unique(l_int$COLLECTION)
-l_int_col <- (l_int[l_int$COLLECTION == "NYSGPO - New York Central Finer Lakes 2020", ])
-l_int_col2 <- (l_int[l_int$COLLECTION == "FEMA 2019", ])
-l_int_fn <- tools::file_path_sans_ext(l_int_col$FILENAME)
-l_cm <- current_lidar_metrics[current_lidar_metrics_fn %in% l_int_fn]
+# int <- st_intersects(lidar_index_all_sf_noe, cluster_hucs[1,], sparse = F) |> rowSums()
+# l_int <- lidar_index_all_sf_noe[int > 0, ]
+# unique(l_int$COLLECTION)
+# l_int_col <- (l_int[l_int$COLLECTION == "NYSGPO - New York Central Finer Lakes 2020", ])
+# l_int_col2 <- (l_int[l_int$COLLECTION == "FEMA 2019", ])
+# l_int_fn <- tools::file_path_sans_ext(l_int_col$FILENAME)
+# l_cm <- current_lidar_metrics[current_lidar_metrics_fn %in% l_int_fn]
 # plet(c(vect(l_int_col), vect(l_int_col2)))
 # plet(c(vect(l_int_col), vect(cluster_hucs[1,])))
 # plot(rast(l_cm[1]))
