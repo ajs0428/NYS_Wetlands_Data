@@ -31,19 +31,19 @@ jid_dmv=$(sbatch --parsable --mem-per-cpu=48G --cpus-per-task=3 "$SCRIPTDIR/step
 echo "  Job $jid_dmv"
 
 echo "Submitting CHM extraction..."
-jid_chm=$(sbatch --parsable "$SCRIPTDIR/step_chm.sh" "$INCLUDE_STR")
+jid_chm=$(sbatch --parsable --mem-per-cpu=36G --cpus-per-task=4 "$SCRIPTDIR/step_chm.sh" "$INCLUDE_STR")
 echo "  Job $jid_chm"
 
 echo "Submitting lidar metrics..."
-jid_lidar=$(sbatch --parsable "$SCRIPTDIR/step_lidar.sh" "$INCLUDE_STR")
+jid_lidar=$(sbatch --parsable --mem-per-cpu=16G --cpus-per-task=8 "$SCRIPTDIR/step_lidar.sh" "$INCLUDE_STR")
 echo "  Job $jid_lidar"
 
 echo "Submitting NAIP processing..."
-jid_naip=$(sbatch --parsable "$SCRIPTDIR/step_naip.sh" "$INCLUDE_STR")
+jid_naip=$(sbatch --parsable --mem-per-cpu=64G --cpus-per-task=2 "$SCRIPTDIR/step_naip.sh" "$INCLUDE_STR")
 echo "  Job $jid_naip"
 
 echo "Submitting Sentinel GEE processing..."
-jid_sat=$(sbatch --parsable "$SCRIPTDIR/step_sat_gee.sh" "$INCLUDE_STR")
+jid_sat=$(sbatch --parsable --mem-per-cpu=32G --cpus-per-task=5 "$SCRIPTDIR/step_sat_gee.sh" "$INCLUDE_STR")
 echo "  Job $jid_sat"
 
 echo ""
