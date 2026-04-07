@@ -3,7 +3,6 @@
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
 #SBATCH --mem-per-cpu=32G
-#SBATCH --cpus-per-task=5
 #SBATCH --job-name=sat_gee
 #SBATCH --ntasks=5
 #SBATCH --ntasks-per-node=1
@@ -11,7 +10,7 @@
 #SBATCH --time=48:00:00
 
 cd /ibstorage/anthony/NYS_Wetlands_Data/
-export TMPDIR=/ibstorage/anthony/tmp
+export TMPDIR=/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp/
 module load R/4.4.3
 
 IFS=',' read -ra include <<< "$1"
