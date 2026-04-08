@@ -17,7 +17,7 @@ set.seed(11)
 args <- c(
     "Data/Training_Data/R_Patches_Vector_Reviewed/", #Path to GIS reviewed wetland vector patches
     128, # patch size 1/2
-    225 # cluster subset options include number or NULL for any
+    208 # cluster subset options include number or NULL for any
 )
 
 args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
@@ -116,8 +116,8 @@ rast_chip_patch_create <- function(wetland_file){
         message("Processing for all clusters in folder")
     }
     
-    huc_poly <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg", quiet = TRUE,
-                                  query = paste0("SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE huc12 = '", huc_num, "'"))
+    # huc_poly <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg", quiet = TRUE,
+    #                               query = paste0("SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE huc12 = '", huc_num, "'"))
     dem_rast <- l_dem_cluster[grepl(huc_num, l_dem_cluster) & grepl(paste0("cluster_", cluster_num), l_dem_cluster)] |> rast()
     set.names(dem_rast, "DEM")
     chm_rast <- l_chm_cluster[grepl(huc_num, l_chm_cluster) & grepl(paste0("cluster_", cluster_num), l_chm_cluster)] |> rast()
@@ -128,8 +128,7 @@ rast_chip_patch_create <- function(wetland_file){
     hydro_rast <- l_hydro_cluster[grepl(huc_num, l_hydro_cluster) & grepl(paste0("cluster_", cluster_num), l_hydro_cluster)] |> rast()
     hydro_rast$flowacc <- log(hydro_rast$flowacc)
     naip_rast <- l_naip_cluster[grepl(huc_num, l_naip_cluster)& grepl(paste0("cluster_", cluster_num), l_naip_cluster)] |> rast()
-    lidar_rast <- l_lidar_cluster[grepl(huc_num, l_lidar_cluster)& grepl(paste0("cluster_", cluster_num), l_lidar_cluster)] |> rast() |>
-        tidyterra::select(pct_below_0.5m, pct_0.5_to_2m)
+    lidar_rast <- l_lidar_cluster[grepl(huc_num, l_lidar_cluster)& grepl(paste0("cluster_", cluster_num), l_lidar_cluster)] |> rast()
     set.names(naip_rast, c("r", "g", "b", "nir", "n_ndvi", "n_ndwi"))
     message(ext(dem_rast))
     message(ext(chm_rast))
@@ -140,7 +139,6 @@ rast_chip_patch_create <- function(wetland_file){
     message(ext(lidar_rast))
 
     stack <- c(dem_rast, terr_rast, hydro_rast, chm_rast, sat_rast, naip_rast, lidar_rast)
-    
     
     stack_fn <- paste0("Data/HUC_Raster_Stacks/HUC_DL_Stacks/", "cluster_", cluster_num, "_huc_", huc_num, "_stack.tif")
     if (!file.exists(stack_fn)) {
@@ -217,7 +215,7 @@ rast_chip_patch_create <- function(wetland_file){
 }
 
 ### Non-parallel
-# system.time({lapply(l_wet_cluster, rast_chip_patch_create)})
+# system.time({lapply(l_wet_cluster[1], rast_chip_patch_create)})
 # 
 # l_dem_cluster[[1]] |> rast() |> plot()
 # l_hydro_cluster[[1]] |> rast() |> plot()

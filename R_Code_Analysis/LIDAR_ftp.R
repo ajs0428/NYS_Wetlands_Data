@@ -227,7 +227,7 @@ if (is.null(tile_index_info) || nrow(tile_index_info) == 0) {
 }
 
 # Deduplicate tiles and filter out partial/small tiles
-min_tile_area <- 500000  # full tiles are 2250000 m^2
+min_tile_area <- 500000  # most tiles are 2250000 m^2 but size varies by collection
 unique_tiles <- tile_index_info |>
     as.data.frame() |>
     distinct(tile_name, .keep_all = TRUE) |>
@@ -259,3 +259,5 @@ plan(sequential)
 n_success <- sum(!sapply(results, is.null))
 message("\n=== Done. ", n_success, "/", nrow(unique_tiles),
         " tiles processed. Metrics written to: ", out_dir, " ===")
+
+gc()

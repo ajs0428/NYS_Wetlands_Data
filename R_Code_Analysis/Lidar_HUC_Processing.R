@@ -1,3 +1,5 @@
+### Combine lidar tiles into HUC rasters
+
 args <- c("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg",
           123,
           "Data/Lidar/HUC_Lidar_Metrics/")
@@ -13,7 +15,7 @@ args <- commandArgs(trailingOnly = TRUE)
 gpkg_path   <- args[1]
 cluster_num <- args[2]
 out_dir     <- args[3]
-
+########################################################################################
 library(curl)
 library(stringr)
 library(sf)
@@ -25,12 +27,12 @@ terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp",
              memmax = 8,
              memfrac = 0.5)
 
-
+########################################################################################
 message("=== Lidar Metrics Pipeline ===")
 message("  GPKG:        ", gpkg_path)
 message("  Cluster:     ", cluster_num)
 message("  Output:      ", out_dir)
-
+########################################################################################
 # Filter to all HUC12s in this cluster
 cluster_hucs <- st_read(gpkg_path, quiet = TRUE) |>
     filter(cluster == cluster_num)
@@ -62,8 +64,9 @@ lidar_index_all_sf_collect <- st_read("Data/Lidar/NYS_Lidar_All_Indexes.gpkg", q
                                          .default = COLLECTION)) |> 
     dplyr::select(-COLLECTION_NAME) |> 
     st_buffer(0) |> 
-    dplyr::filter(as.numeric(st_area(geom)) > 100000)
+    dplyr::filter(as.numeric(st_area(geom)) > 500000)
 lidar_index_all_sf_noe <- lidar_index_all_sf_collect[!st_is_empty(lidar_index_all_sf_collect), ]
+########################################################################################
 
 lidar_huc <- function(huc_num){
     huc <- cluster_hucs[cluster_hucs$huc12 == huc_num, ]
@@ -96,11 +99,15 @@ lidar_huc <- function(huc_num){
         }
 
         if (length(cropped) == 1) {
-            lidar_metrics_huc <- mask(cropped[[1]], huc_vect)
+            lidar_metrics_huc <- crop(cropped[[1]], huc_vect, mask = TRUE)
+            lidar_metrics_huc[[1]] <- lidar_metrics_huc[[1]] |> classify(cbind(NA, 1)) |> terra::mask(huc_vect)
+            lidar_metrics_huc[[c(2,3)]]  <- lidar_metrics_huc[[c(2,3)]] |> classify(cbind(NA, 0))  |> terra::mask(huc_vect)
         } else {
             lidar_metrics_huc <- sprc(cropped) |>
-                terra::mosaic(fun = "mean") |>
-                terra::mask(huc_vect)
+                terra::mosaic(fun = "mean") |> 
+              crop(huc_vect, mask = TRUE)
+            lidar_metrics_huc[[1]] <- lidar_metrics_huc[[1]] |> classify(cbind(NA, 1)) |> terra::mask(huc_vect)
+            lidar_metrics_huc[[c(2,3)]]  <- lidar_metrics_huc[[c(2,3)]] |> classify(cbind(NA, 0)) |> terra::mask(huc_vect)
         }
         writeRaster(lidar_metrics_huc, lidar_huc_fn)
         #rm(lidar_metrics_huc)
@@ -112,6 +119,8 @@ lidar_huc <- function(huc_num){
 }
 
 lapply(huc_numbers, lidar_huc)
+
+gc()
 
 ### testing
 # int <- st_intersects(lidar_index_all_sf_noe, cluster_hucs[1,], sparse = F) |> rowSums()
