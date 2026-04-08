@@ -2,7 +2,7 @@
 #SBATCH --nodelist=cbsuxu06,cbsuxu07,cbsuxu08,cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
-#SBATCH --mem-per-cpu=16G
+#SBATCH --mem-per-cpu=64G
 #SBATCH --job-name=lidar
 #SBATCH --ntasks=5
 #SBATCH --ntasks-per-node=1
@@ -21,12 +21,11 @@ echo "=== Lidar metrics ==="
 for number in "${include[@]}"; do
         echo "Cluster $number"
         srun --nodes=1 --ntasks=1 --exclusive \
-            Rscript R_Code_Analysis/LIDAR_ftp.R \
+            Rscript R_Code_Analysis/Lidar_HUC_Processing.R \
             "$GPKG" \
             "$number" \
             "$OUTDIR" \
             >> "Shell_Scripts/logs/lidar_huc_${number}_$(date +%Y%m%d).log" 2>&1 &
-        break
 done
 
 wait
