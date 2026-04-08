@@ -3,7 +3,9 @@
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
 #SBATCH --job-name=terrain
+#SBATCH --mem-per-cpu=96G
 #SBATCH --ntasks=5
+#SBATCH --cpus-per-task=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --output=Shell_Scripts/SLURM/slurm-terrain-%j.out
 

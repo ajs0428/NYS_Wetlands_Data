@@ -5,6 +5,7 @@
 #SBATCH --mem-per-cpu=64G
 #SBATCH --job-name=hydro
 #SBATCH --ntasks=5
+#SBATCH --cpus-per-task=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --output=Shell_Scripts/SLURM/slurm-hydro-%j.out
 

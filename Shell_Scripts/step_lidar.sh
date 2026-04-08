@@ -4,6 +4,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --mem-per-cpu=64G
 #SBATCH --job-name=lidar
+#SBATCH --cpus-per-task=1
 #SBATCH --ntasks=5
 #SBATCH --ntasks-per-node=1
 #SBATCH --output=Shell_Scripts/SLURM/slurm-lidar-%j.out

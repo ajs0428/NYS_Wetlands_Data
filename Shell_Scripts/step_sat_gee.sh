@@ -5,6 +5,7 @@
 #SBATCH --mem-per-cpu=32G
 #SBATCH --job-name=sat_gee
 #SBATCH --ntasks=5
+#SBATCH --cpus-per-task=2
 #SBATCH --ntasks-per-node=1
 #SBATCH --output=Shell_Scripts/SLURM/slurm-sat-gee-%j.out
 #SBATCH --time=48:00:00

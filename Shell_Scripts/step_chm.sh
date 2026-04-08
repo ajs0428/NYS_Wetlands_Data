@@ -4,6 +4,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --mem-per-cpu=36G
 #SBATCH --job-name=chm
+#SBATCH --cpus-per-task=2
 #SBATCH --ntasks=5
 #SBATCH --ntasks-per-node=1
 #SBATCH --output=Shell_Scripts/SLURM/slurm-chm-%j.out
