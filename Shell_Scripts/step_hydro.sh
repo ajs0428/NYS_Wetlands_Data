@@ -18,6 +18,8 @@ IFS=',' read -ra include <<< "$1"
 GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg"
 DATE=$(date +%Y%m%d)
 
+unset SLURM_MEM_PER_CPU SLURM_MEM_PER_NODE SLURM_MEM_PER_GPU
+
 for number in "${include[@]}"; do
     echo "  Cluster $number – Hydro"
     srun --nodes=1 --ntasks=1 --exclusive \

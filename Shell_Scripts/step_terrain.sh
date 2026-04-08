@@ -20,6 +20,8 @@ IFS=',' read -ra include <<< "$1"
 metric="$2"
 DATE=$(date +%Y%m%d)
 
+unset SLURM_MEM_PER_CPU SLURM_MEM_PER_NODE SLURM_MEM_PER_GPU
+
 echo "=== Terrain metric: $metric ==="
 for number in "${include[@]}"; do
     echo "  Cluster $number – $metric"

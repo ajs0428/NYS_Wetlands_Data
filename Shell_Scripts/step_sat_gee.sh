@@ -17,6 +17,8 @@ module load R/4.4.3
 IFS=',' read -ra include <<< "$1"
 DATE=$(date +%Y%m%d)
 
+unset SLURM_MEM_PER_CPU SLURM_MEM_PER_NODE SLURM_MEM_PER_GPU
+
 echo "=== Sentinel GEE processing ==="
 for number in "${include[@]}"; do
     echo "  Cluster $number – Sentinel GEE"

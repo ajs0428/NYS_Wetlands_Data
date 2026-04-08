@@ -18,6 +18,8 @@ GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg"
 OUTDIR="Data/Lidar/HUC_Lidar_Metrics"
 DATE=$(date +%Y%m%d)
 
+unset SLURM_MEM_PER_CPU SLURM_MEM_PER_NODE SLURM_MEM_PER_GPU
+
 echo "=== Lidar metrics ==="
 for number in "${include[@]}"; do
         echo "Cluster $number"
