@@ -2,7 +2,7 @@
 
 args = c(
     "Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg",
-    123,
+    22,
     "Data/CHMs/AWS"
 )
 args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
@@ -134,15 +134,15 @@ process_huc <- function(cluster_huc_name) {
             terra::mosaic(fun = "max") |>
             terra::project("EPSG:6347", res = 1) |>
             terra::crop(y = huc_target, mask = TRUE) |>
-            resample(y = dem_rast) |> 
+            resample(y = dem_rast) |>
             tidyterra::rename("CHM" = 1)
         terra::mask(huc_chm_merge, (!is.na(dem_rast) & is.na(huc_chm_merge)),
                     maskvalues=TRUE, updatevalue = 0, filename = chm_filename,
                     overwrite = TRUE)
-        
-    # } else if(file.exists(chm_filename) & file.exists(dem_filename)){
-    #     print(paste0("File already exists: ", chm_filename))
-    #     return(chm_filename)
+
+    } else if(file.exists(chm_filename) & file.exists(dem_filename)){
+        print(paste0("File already exists: ", chm_filename))
+        return(chm_filename)
     } else if(file.exists(chm_filename) & !file.exists(dem_filename)){
         print(paste0("DEM does not exist?: ", dem_filename))
         return(dem_filename)

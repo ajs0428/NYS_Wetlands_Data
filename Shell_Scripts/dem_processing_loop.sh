@@ -1,11 +1,12 @@
 #!/bin/bash -l
-#SBATCH --nodelist=cbsuxu09
+#SBATCH --nodelist=cbsuxu01,cbsuxu02,cbsuxu03,cbsuxu04,cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
 #SBATCH --mem-per-cpu=32G
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=2
 #SBATCH --job-name=dem_processing
-#SBATCH --ntasks=1
+#SBATCH --ntasks=6
+#SBATCH --ntasks-per-node=1
 #SBATCH --output=Shell_Scripts/SLURM/slurm-dems-%j.out
 
 cd /ibstorage/anthony/NYS_Wetlands_Data/
@@ -24,24 +25,19 @@ all=(1 2 3 4 5 6 7 8 9 10 13 14 15 16 17 18 19 20 21 23 24 25 26 27 28 29 30 31 
 190 191 194 195 196 197 199 200 201 202 203 204 205 206 207 208 209 210 211 212 213 214 215 216 217 219 220 221 222 223 224 226 227 \
 228 229 230 231 232 233 234 235 236 237 238 239 240 241 242 243 244 245 246 247 248 249 250)
 # include=(11 12 22 51 53 56 60 64 67 84 86 90 92 102 105 116 120 123 136 138 152 176 183 189 192 193 198 218 225 250)
-# include=(11 12 208 123)
+# include=(50)
 # Loop through each number in the list
-for number in "${include[@]}"; do
+for number in "${all[@]}"; do
     echo "Running Rscript with argument: $number"
     
+    srun --nodes=1 --ntasks=1 --exclusive \
     Rscript R_Code_Analysis/DEM_Extract_singleVect_CMD.r \
         "Data/NYS_DEM_Indexes" \
         "Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg" \
         "$number" \
         "Data/DEMs/" \
-        "Data/TerrainProcessed/HUC_DEMs/" >> "Shell_Scripts/logs/dem_processing_loop_$(date +%Y%m%d).log" 2>&1
-    
-    if [ $? -eq 0 ]; then
-        echo "Successfully completed Rscript for number: $number"
-    else
-        echo "Error: Rscript failed for number: $number"
-    fi
-    echo "---"
+        "Data/TerrainProcessed/HUC_DEMs/" >> "Shell_Scripts/logs/dem_processing_${number}_$(date +%Y%m%d).log" 2>&1 &
+
 done
 
-
+wait

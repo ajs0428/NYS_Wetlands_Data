@@ -23,17 +23,21 @@ args <- c(
 
 args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
 
+clusterTarget <- args[1]
+wetlandPath <- args[2]
+patchSize <- as.numeric(args[3])
+
 cat("these are the arguments: \n", 
-    "1) Cluster number for HUC groups:", args[1], "\n", 
-    "2) path the reviewed training data :", args[2], "\n",
-    "3) patch size :", args[3], "\n"
+    "1) Cluster number for HUC groups:", clusterTarget, "\n", 
+    "2) path the reviewed training data :", wetlandPath, "\n",
+    "3) patch size :", patchSize, "\n"
 )
 
 
 setGDALconfig("GDAL_PAM_ENABLED", "FALSE") # does not create aux.xml files but maybe needed
 ########################################################################################
-l_wet <- list.files(args[2], pattern = ".gpkg$", full.names = TRUE) ## |> keep(\(x) str_detect(x, "ADK_WCT"))
-l_wet_cluster <- l_wet[str_detect(l_wet, paste0("cluster_", args[1], "_"))]
+l_wet <- list.files(wetlandPath, pattern = ".gpkg$", full.names = TRUE) ## |> keep(\(x) str_detect(x, "ADK_WCT"))
+l_wet_cluster <- l_wet[str_detect(l_wet, paste0("cluster_", clusterTarget, "_"))]
 
 print(l_wet_cluster)
 
@@ -41,7 +45,6 @@ logpath <- "Data/Training_Data/R_Patches_Vector/Vector_Patch_Checklist.csv"
 ########################################################################################
 # fct_df <- data.frame(ID = 0:4, MOD_CLASS = c("EMW", "FSW", "OWW", "SSW", "UPL"))
 fct_df <- data.frame(ID = 0:3, MOD_CLASS = c("EMW", "FSW", "SSW", "UPL"))
-patchsize = as.numeric(args[3])
 ########################################################################################
 set.seed(420)
 
@@ -71,7 +74,7 @@ vect_chip_patch_create <- function(wetland_file){
     tw_centroid <- st_centroid(target_wetlands) |> st_geometry() |> st_cast(to = "MULTIPOINT") #centroid cast to multipoint
     
     tw_boundary <- st_boundary(target_wetlands) |> st_cast("LINESTRING") # cast to linestring
-    tw_b_line <- st_line_sample(tw_boundary, density = 1/512) # put n_points on the border
+    tw_b_line <- st_line_sample(tw_boundary, density = 1/1024) # put 1pt per distance (m)
     
     tw_bl_point <- st_cast(tw_b_line, "POINT")
     tw_bl_point <- tw_bl_point[!st_is_empty(tw_bl_point)]
@@ -92,12 +95,12 @@ vect_chip_patch_create <- function(wetland_file){
     # rand_pts_intersect <- st_intersects(rand_pts, target_wetlands_buffer, sparse = FALSE)
     # pts_outside_target <- rowSums(rand_pts_intersect) == 0
     # upl_pts <- rand_pts[pts_outside_target, ]
-    # upl_pts_box <- st_buffer(upl_pts, dist = patchsize, endCapStyle = "SQUARE") |> #set the size of the patch here (x2)
+    # upl_pts_box <- st_buffer(upl_pts, dist = patchSize, endCapStyle = "SQUARE") |> #set the size of the patch here (x2)
     #     st_sf()
     # st_geometry(upl_pts_box) <- "geom"
     # upl_pts_box["MOD_CLASS"] <- "UPL"
     # upl_pts_box["huc12"] <- huc_num
-    # upl_pts_box["cluster"] <- as.integer(args[1])
+    # upl_pts_box["cluster"] <- as.integer(clusterTarget)
     # target_wetlands_uplands <- bind_rows(upl_pts_box, target_wetlands)
     target_wetlands_uplands <- target_wetlands
     ###combine points
@@ -110,7 +113,7 @@ vect_chip_patch_create <- function(wetland_file){
         # st_sf(geometry = upl_pts)
     )
     
-    tw_bl_c_cmbbuff <- st_buffer(tw_bl_c_cmb, dist = patchsize, endCapStyle = "SQUARE")
+    tw_bl_c_cmbbuff <- st_buffer(tw_bl_c_cmb, dist = patchSize, endCapStyle = "SQUARE")
     st_geometry(tw_bl_c_cmbbuff) <- "geom"
     #tw = target wetlands, bl = boundary line, c = centroid, cmbbuff = combined buffer, o = overlap
     tw_bl_c_cmbbuff_o <- tw_bl_c_cmbbuff[rowSums(st_overlaps(tw_bl_c_cmbbuff, sparse = F)) == 0, ] |> 
@@ -128,7 +131,7 @@ vect_chip_patch_create <- function(wetland_file){
                     st_cast(to = "MULTIPOLYGON") |>
                 dplyr::select(ReviewerName, Confidence, BoundariesAltered, Comments, MOD_CLASS)
     
-    fn_full_patch <- paste0("Data/Training_Data/R_Patches_Vector/", sourceWetlands,"_cluster_", args[1], "_huc_", huc_num, "_", patchsize*2, "m.gpkg" )
+    fn_full_patch <- paste0("Data/Training_Data/R_Patches_Vector/", sourceWetlands,"_cluster_", clusterTarget, "_huc_", huc_num, "_", patchSize*2, "m.gpkg" )
     if(!file.exists(fn_full_patch)){
         st_write(cmb_tutw, dsn = fn_full_patch, append = FALSE)
         } else {
@@ -138,7 +141,7 @@ vect_chip_patch_create <- function(wetland_file){
     # #### Vector polygon patches
     # 
     # for(i in seq_len(nrow(tw_bl_c_cmbbuff_o))){
-    #     fn_vector <- paste0("Data/Training_Data/R_Patches_Vector/individual_patches/", sourceWetlands,"_cluster_", args[1], "_huc_", huc_num, "_patch_", i, "_", patchsize*2, "m.gpkg" )
+    #     fn_vector <- paste0("Data/Training_Data/R_Patches_Vector/individual_patches/", sourceWetlands,"_cluster_", clusterTarget, "_huc_", huc_num, "_patch_", i, "_", patchSize*2, "m.gpkg" )
     #     if(!file.exists(fn_vector)){
     #         wet_patch <-  st_intersection(target_wetlands_uplands, tw_bl_c_cmbbuff_o[i,])
     #         st_geometry(wet_patch) <- "geom"
@@ -176,24 +179,24 @@ vect_chip_patch_create <- function(wetland_file){
     #         }
     #    }
     # 
-    # fn_full_patch <- paste0("Data/Training_Data/R_Patches_Vector/", sourceWetlands,"_cluster_", args[1], "_huc_", huc_num, "_", patchsize*2, "m.gpkg" )
+    # fn_full_patch <- paste0("Data/Training_Data/R_Patches_Vector/", sourceWetlands,"_cluster_", clusterTarget, "_huc_", huc_num, "_", patchSize*2, "m.gpkg" )
     # if(!file.exists(fn_full_patch)){
     #     full_patch_file <- list.files("Data/Training_Data/R_Patches_Vector/individual_patches/",
     #                                   full.names = TRUE,
-    #                                   pattern = paste0("_cluster_", args[1], "_huc_", huc_num, "_", "patch.*\\.gpkg$")) |>
+    #                                   pattern = paste0("_cluster_", clusterTarget, "_huc_", huc_num, "_", "patch.*\\.gpkg$")) |>
     #         purrr::map(st_read, quiet = TRUE) |>
     #         bind_rows()
     #     st_write(full_patch_file,
-    #              dsn =  paste0("Data/Training_Data/R_Patches_Vector/", sourceWetlands,"_cluster_", args[1], "_huc_", huc_num, "_", patchsize*2, "m.gpkg" ),
+    #              dsn =  paste0("Data/Training_Data/R_Patches_Vector/", sourceWetlands,"_cluster_", clusterTarget, "_huc_", huc_num, "_", patchSize*2, "m.gpkg" ),
     #              append = FALSE)
     # } else {
     #     # full_patch_file <- list.files("Data/Training_Data/R_Patches_Vector/",
     #     #                               full.names = TRUE,
-    #     #                               pattern = paste0("_cluster_", args[1], "_huc_", huc_num, "_", "patch.*\\.gpkg$")) |>
+    #     #                               pattern = paste0("_cluster_", clusterTarget, "_huc_", huc_num, "_", "patch.*\\.gpkg$")) |>
     #     #     purrr::map(st_read, quiet = TRUE) |>
     #     #     bind_rows()
     #     # st_write(full_patch_file,
-    #     #          dsn =  paste0("Data/Training_Data/R_Patches_Vector/", sourceWetlands,"_cluster_", args[1], "_huc_", huc_num, "_", patchsize*2, "m.gpkg" ),
+    #     #          dsn =  paste0("Data/Training_Data/R_Patches_Vector/", sourceWetlands,"_cluster_", clusterTarget, "_huc_", huc_num, "_", patchSize*2, "m.gpkg" ),
     #     #          append = FALSE)
     #     message("Already file")
     # }

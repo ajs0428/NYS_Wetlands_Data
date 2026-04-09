@@ -1,13 +1,13 @@
 #!/bin/bash -l
-#SBATCH --nodelist=cbsuxu05,cbsuxu06,cbsuxu07,cbsuxu08,cbsuxu09,cbsuxu10
+#SBATCH --nodelist=cbsuxu01,cbsuxu02,cbsuxu03,cbsuxu04,cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
 #SBATCH --mem-per-cpu=16G
 #SBATCH --cpus-per-task=3
-#SBATCH --job-name=vector-patch
+#SBATCH --job-name=wetland_reclass
 #SBATCH --ntasks=6
 #SBATCH --ntasks-per-node=1
-#SBATCH --output=Shell_Scripts/SLURM/slurm-vector-patch-%j.out
+#SBATCH --output=Shell_Scripts/SLURM/slurm-wetland_reclass-%j.out
 
 
 cd /ibstorage/anthony/NYS_Wetlands_Data/
@@ -39,10 +39,11 @@ include=(11 22 46 50 64 67 82 95 123 168 208 218 225 250)
 for number in "${include[@]}"; do
     echo "Running Rscript with argument: $number"
     srun --nodes=1 --ntasks=1 --exclusive \
-        Rscript R_Code_Analysis/Vector_ChipsPatches_DL.R \
+        Rscript R_Code_Analysis/Wetlands_CHM_reclass.R \
         "$number" \
-        "Data/Training_Data/HUC_NWI_Processed/" \
-        128 >> "Shell_Scripts/logs/vector_patch_${number}_$(date +%Y%m%d).log" 2>&1 &
+        "Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg" \
+        "Data/NWI/NY_NWI_6347.gpkg" \
+        "ATTRIBUTE" >> "Shell_Scripts/logs/wetland_reclass_${number}_$(date +%Y%m%d).log" 2>&1 &
     
 done
 

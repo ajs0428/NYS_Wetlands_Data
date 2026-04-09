@@ -1,17 +1,22 @@
 #!/usr/bin/env Rscript
 
-args = c(208,
+args = c(50,
          "Data/TerrainProcessed/HUC_DEMs/",
-         "curv",
+         "slp",
          "Data/TerrainProcessed/HUC_TerrainMetrics/"
 )
 args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
 
+CLUSTER <- args[1]
+HUC_DEMs <- args[2]
+METRIC <- args[3]
+OUTPUT <- args[4]
+
 cat("these are the arguments: \n", 
-    "- Cluster number (integer 1-200ish):", args[1], "\n",
-    "- Path to the DEMs in TerrainProcessed folder", args[2], "\n",
-    "- Metric (slp, dmv, curv):", args[3], "\n", 
-    "- Path to the Save folder", args[4], "\n"
+    "- Cluster number (integer 1-200ish):", CLUSTER, "\n",
+    "- Path to the DEMs in TerrainProcessed folder", HUC_DEMs, "\n",
+    "- Metric (slp, dmv, curv):", METRIC, "\n", 
+    "- Path to the Save folder", OUTPUT, "\n"
 )
 
 ###############################################################################################
@@ -54,12 +59,13 @@ process_scale <- function(dem_path, scale_factor, output_file, metric, scale_lab
                      "slp" = {
                          slp <- terra::terrain(smoothed,
                                                v = c("slope", "TPI"))
-                         
+                         system.time({
                          sg <- rgeomorphon::geomorphons(elevation = smoothed, 
                                                         search = 100, 
                                                         use_meters = TRUE,
-                                                        skip = 5, 
+                                                        skip = 10, 
                                                         flat_angle_deg = 1.5)
+                         })
                          slp_sg <- c(slp, sg)
                          writeRaster(slp_sg,
                                      filename = output_file,
@@ -107,7 +113,7 @@ terrain_function <- function(dem_path, metric) {
     message(paste0("\n=== Processing: ", cluster_huc_name, " ==="))
     
     # Define output paths
-    base_path <- paste0(args[4], cluster_huc_name, "_terrain_", metric)
+    base_path <- paste0(OUTPUT, cluster_huc_name, "_terrain_", metric)
     output_files <- list(
         "local" = paste0(base_path, "_local.tif"),
         "5m"   = paste0(base_path, "_5m.tif"),
@@ -135,8 +141,8 @@ terrain_function <- function(dem_path, metric) {
 ###############################################################################################
 
 list_of_huc_dems <- list.files(
-    args[2],
-    pattern = paste0("^cluster_", args[1], "_.*\\.tif$"),  
+    HUC_DEMs,
+    pattern = paste0("^cluster_", CLUSTER, "_.*\\.tif$"),  
     full.names = TRUE
 ) |> str_subset(pattern = "wbt", negate = TRUE) 
 
@@ -159,7 +165,7 @@ plan(future.callr::callr)
 future_lapply(
     list_of_huc_dems,
     terrain_function,
-    metric = args[3],
+    metric = METRIC,
     future.seed = TRUE, 
     future.globals = TRUE,
     future.scheduling = 1.0  # Dynamic load balancing
@@ -167,10 +173,4 @@ future_lapply(
 
 #### Testing
 
-# lapply(list_of_huc_dems, terrain_function, metric = args[3])
-# 
-# r <- rast("Data/TerrainProcessed/HUC_DEMs/cluster_120_huc_020200060609.tif")
-# 
-# rac <- r |> terra::aggregate(500, fun = "mean", na.rm = TRUE) |>
-#     terra::resample(y = (r), method = "cubicspline") |> 
-#     MultiscaleDTM::Qfit( w = c(3,3),include_scale = TRUE, metrics = c("meanc", "planc", "profc"))
+# lapply(list_of_huc_dems, terrain_function, metric = METRIC)

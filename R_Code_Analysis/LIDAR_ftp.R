@@ -186,7 +186,7 @@ process_tile <- function(tile_name, tile_url, out_dir) {
 #     "Data/Lidar/Metrics"
 ###############################################################################
 args <- c("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg",
-              208,
+              82,
               "Data/Lidar/Indexes/FEMA_2019.gpkg",
               "Data/Lidar/Metrics")
 

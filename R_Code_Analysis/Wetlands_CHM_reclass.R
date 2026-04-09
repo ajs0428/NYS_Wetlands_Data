@@ -165,10 +165,11 @@ wetland_chm_extract_classify <- function(huc_num){
 
 
 ###############################################################################################
-if(future::availableCores() > 16){
-    corenum <-  8
+slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
+if (nzchar(slurm_cpus)) {
+  corenum <- as.integer(slurm_cpus)
 } else {
-    corenum <-  (future::availableCores())
+  corenum <- min(future::availableCores(), 4)
 }
 options(future.globals.maxSize= 16 * 1e9)
 

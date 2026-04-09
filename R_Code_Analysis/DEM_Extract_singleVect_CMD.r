@@ -7,7 +7,7 @@
 
 args = c("Data/NYS_DEM_Indexes",
          "Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg",
-         11,
+         50,
          "Data/DEMs/",
          "Data/TerrainProcessed/HUC_DEMs"
 )
@@ -40,21 +40,23 @@ terraOptions(
 ###############################################################################################
 
 # A shapefile list of all the DEM indexes (vector tiles of the actual DEM locations)
-dem_ind_list <- list.files(args[1], pattern = "^dem_1_meter.*\\.shp$|USGS_LakeOntarioHudsonRiverRegion2022|FEMA_Bare_Earth_DEM_1m.shp",full.names = TRUE)
+# dem_ind_list <- list.files(args[1], pattern = "^dem_1_meter.*\\.shp$|USGS_LakeOntarioHudsonRiverRegion2022|FEMA_Bare_Earth_DEM_1m.shp",full.names = TRUE)
+# 
+# dem_ind_full <- lapply(dem_ind_list, st_read, quiet = TRUE) |> 
+#     lapply(\(x) st_transform(x, "EPSG:6347")) |> 
+#     lapply(\(x) st_make_valid(x)) |> 
+#     lapply(\(x) dplyr::select(x, any_of(c("FILENAME", "location")))) |> 
+#     bind_rows() |> 
+#     dplyr::mutate(FilenameCmb = case_when(is.na(location) ~ FILENAME,
+#                                           .default = location),
+#                   geom = case_when(st_is_empty(geom) ~ geometry,
+#                                    .default = geom)) |> 
+#     dplyr::select(FilenameCmb, geom) |> 
+#     st_set_geometry("geom") |> 
+#     dplyr::select(-geometry)
 
-dem_ind_full <- lapply(dem_ind_list, st_read, quiet = TRUE) |> 
-    lapply(\(x) st_transform(x, "EPSG:6347")) |> 
-    lapply(\(x) st_make_valid(x)) |> 
-    lapply(\(x) dplyr::select(x, any_of(c("FILENAME", "location")))) |> 
-    bind_rows() |> 
-    dplyr::mutate(FilenameCmb = case_when(is.na(location) ~ FILENAME,
-                                          .default = location),
-                  geom = case_when(st_is_empty(geom) ~ geometry,
-                                   .default = geom)) |> 
-    dplyr::select(FilenameCmb, geom) |> 
-    st_set_geometry("geom") |> 
-    dplyr::select(-geometry)
-
+# st_write(dem_ind_full, "Data/DEMs/NYS_All_DEM_Index.gpkg", append = F)
+dem_ind_full <- st_read("Data/DEMs/NYS_All_DEM_Index.gpkg", quiet = TRUE)
 # dem_ind_full_int <- st_overlaps(dem_ind_full)
 # first_occurrence <- sapply(seq_along(dem_ind_full_int), \(x) min(dem_ind_full_int[[x]]) != x)
 # dem_ind_full_fix <- dem_ind_full[first_occurrence, ]
@@ -65,11 +67,13 @@ print(paste0("The number of DEM indices: ", nrow(dem_ind_full)))
 
 ###############################################################################################
 # This is all the DEM file names 
-dems_file_list <- list.files(args[4], 
-                             pattern = ".img$|.tif$", 
-                             full.names = TRUE, 
-                             recursive = TRUE, 
-                             include.dirs = TRUE)
+# dems_file_list <- list.files(args[4], 
+#                              pattern = ".img$|.tif$", 
+#                              full.names = TRUE, 
+#                              recursive = TRUE, 
+#                              include.dirs = TRUE)
+# saveRDS(dems_file_list, "Data/DEMs/NYS_All_DEM_Filenames.rds")
+dems_file_list <- readRDS("Data/DEMs/NYS_All_DEM_Filenames.rds")
 print(paste0("this is the total list of DEM raster files: ", length(dems_file_list)[[1]]))
 
 
@@ -96,7 +100,7 @@ cluster_extract <- function(huc){
     dems_fn_huc <- dems_file_list[tools::file_path_sans_ext(basename(dems_file_list)) %in% Fnames]
     
     huc_dem_fn <- (paste0(args[5], "/cluster_", args[3], "_huc_", huc,".tif"))
-    if(file.exists(huc_dem_fn)){
+    if(!file.exists(huc_dem_fn)){
         message("Create raster for ", huc_dem_fn)
         huc_vect <- vect(huc_sf)
         lvrt <-  lapply(dems_fn_huc, terra::rast) |> 
@@ -138,4 +142,4 @@ future_lapply(cluster_hucs,
 
 ##########################################
 ### Non-parallel
-# lapply(cluster_hucs[[7]], cluster_extract)
+# lapply(cluster_hucs, cluster_extract)

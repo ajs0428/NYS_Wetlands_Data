@@ -10,7 +10,8 @@ colls <- st_read("Data/Lidar/NYS_Lidar_All_Indexes.gpkg") |>
   dplyr::select(-COLLECTION_NAME) |> 
   st_buffer(0)
 
-clusters <- c(11,12,22,46,50,51,53,56,60,64,67,84,86,90,92,102,105,116,120,123,126,136,138,152,176,183,187,189,192,193,198,203,208,218,225,240,250)
+# clusters <- c(11,12,22,46,50,51,53,56,60,64,67,84,86,90,92,102,105,116,120,123,126,136,138,152,176,183,187,189,192,193,198,203,208,218,225,240,250)
+clusters <- c(11, 22, 46, 50, 64, 67, 82, 95, 123, 168, 208, 218, 225, 250)
 
 lidar_cluster <- function(cluster_num) {
   q <- paste0("SELECT * FROM \"NY_Cluster_Zones_250_NAomit_6347\" WHERE cluster = ", cluster_num)
@@ -59,7 +60,7 @@ lidar_colls_clusters <- candidates |>
                            .default = paste0(cluster, "|", best_match)
                            )
   )
-write_csv(lidar_colls_clusters, "Data/Lidar/NYS_Lidar_Collections_Clusters.csv")
+# write_csv(lidar_colls_clusters, "Data/Lidar/NYS_Lidar_Collections_Clusters.csv")
 
 lines <- lidar_colls_clusters |>
   arrange(desc(cluster)) |> 
@@ -68,5 +69,5 @@ lines <- lidar_colls_clusters |>
 # Write to a text file
 writeLines(
   c("entries=(", lines, ")"),
-  "Data/Lidar/NYS_Lidar_Collections_Clusters.txt"
+  "Data/Lidar/NYS_Lidar_Collections_Clusters_Batch1.txt"
 )
