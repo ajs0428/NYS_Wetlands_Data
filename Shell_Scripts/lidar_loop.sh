@@ -18,7 +18,7 @@ export TMPDIR=/ibstorage/anthony/tmp
 
 module load R/4.4.3
 
-GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg"
+GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg"
 OUTDIR="Data/Lidar/Metrics"
 INDEX_DIR="Data/Lidar/Indexes"
 

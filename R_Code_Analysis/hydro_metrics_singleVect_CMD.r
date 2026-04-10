@@ -6,7 +6,7 @@
 # It also creates the hydrologic metrics for Topographic Wetness Index
 ###################
 
-args = c("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg",
+args = c("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
          123,
          "Data/TerrainProcessed/HUC_DEMs/",
          "Data/TerrainProcessed/HUC_Hydro/"

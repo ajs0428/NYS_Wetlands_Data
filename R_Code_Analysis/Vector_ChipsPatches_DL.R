@@ -65,7 +65,7 @@ vect_chip_patch_create <- function(wetland_file){
     }
     message(sourceWetlands)
     huc_num <- str_extract(wetland_file, "(?<=huc_)\\d+")
-    huc_poly <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg", quiet = TRUE,
+    huc_poly <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", quiet = TRUE,
                                   query = paste0("SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE huc12 = '", huc_num, "'"))
     huc_poly_ls <- st_cast(huc_poly, "MULTILINESTRING")
     target_wetlands <- st_read(wetland_file, quiet = TRUE) |> # target wetlands

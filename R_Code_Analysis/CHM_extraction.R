@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 args = c(
-    "Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg",
+    "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
     22,
     "Data/CHMs/AWS"
 )

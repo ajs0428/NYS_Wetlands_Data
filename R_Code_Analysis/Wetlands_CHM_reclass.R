@@ -15,7 +15,7 @@ set.seed(11)
 
 args <- c(
     123, #Target Cluster
-    "Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg", #Clusters and HUCs
+    "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", #Clusters and HUCs
     "Data/ADK/RegWetlandAreasParkPromulgated_UTM83.shp", # Wetlands
     "ATTRIBUTE" # Field for filtering and matching
     )

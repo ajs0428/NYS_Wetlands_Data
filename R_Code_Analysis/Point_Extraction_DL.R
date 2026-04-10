@@ -14,8 +14,8 @@ set.seed(11)
 ########################################################################################
 
 args <- c(
-    "Data/Training_Data/R_Patches_Vector/", # Path to vector patches
-    10, # point spacing in meters (grid cell size for regular sampling)
+    "Data/Training_Data/R_Patches_Vector_Reviewed/", # Path to vector patches
+    32, # point spacing in meters (grid cell size for regular sampling)
     208 # cluster subset: number or NULL for all
 )
 
@@ -161,9 +161,9 @@ point_extract_fun <- function(patch_file) {
     result_df <- result_df |> filter(!if_all(all_of(predictor_cols), is.na))
 
     ## Write output
-    out_fn <- paste0(outDir, source_name, "_cluster_", cluster_num,
-                     "_huc_", huc_num, "_points.csv")
-    write_csv(result_df, out_fn)
+    # out_fn <- paste0(outDir, source_name, "_cluster_", cluster_num,
+    #                  "_huc_", huc_num, "_points.csv")
+    # write_csv(result_df, out_fn)
 
     ## Also save as geopackage for spatial reference
     out_gpkg <- paste0(outDir, source_name, "_cluster_", cluster_num,
@@ -174,12 +174,15 @@ point_extract_fun <- function(patch_file) {
     pts_result$cluster <- cluster_num
     pts_result$source <- source_name
     ## Filter NA rows from spatial output as well
-    pts_result <- pts_result |> filter(!if_all(all_of(predictor_cols), is.na))
+    pts_result <- pts_result |> 
+      filter(!if_all(all_of(predictor_cols), is.na)) |> 
+      select(-ReviewerName, -Confidence, -BoundariesAltered, -Comments, -source, -huc, -cluster) |> 
+      drop_na()
     st_write(pts_result, out_gpkg, delete_dsn = TRUE, quiet = TRUE)
 
-    message("Wrote ", nrow(result_df), " points to ", basename(out_fn))
+    message("Wrote ", nrow(pts_result), " points to ", basename(out_gpkg))
 
-    return(out_fn)
+    return(out_gpkg)
 }
 
 ########################################################################################
@@ -205,3 +208,8 @@ results <- future_lapply(l_patches_cluster, point_extract_fun,
 
 message("Completed point extraction for cluster ", clusterSubset)
 message("Output files: ", paste(unlist(results[!sapply(results, is.null)]), collapse = "\n"))
+
+
+### Non-parallel
+
+# lapply(l_patches_cluster, point_extract_fun)

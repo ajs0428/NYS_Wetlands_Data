@@ -1,6 +1,6 @@
 ### Combine lidar tiles into HUC rasters
 
-args <- c("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg",
+args <- c("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
           123,
           "Data/Lidar/HUC_Lidar_Metrics/")
 

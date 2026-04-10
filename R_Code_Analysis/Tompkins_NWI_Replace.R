@@ -11,7 +11,7 @@ ny_nwi <- st_read("Data/NWI/NY_NWI_6347.gpkg")
 l_nwi <- list.files("Data/Training_Data/Targeted_Wetlands_For_Field_Validation/", 
                     pattern = "NWI_CHM_reclas", full.names = TRUE)
 all_nwi_chm <- lapply(l_nwi, st_read, quiet = TRUE) |> bind_rows()
-ny_clusters <- st_read("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg", quiet = TRUE)
+ny_clusters <- st_read("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", quiet = TRUE)
 tc <- st_read("Data/Boundaries/tompkins_county.gpkg", quiet = TRUE) |> st_cast("MULTIPOLYGON") |> st_buffer(1000, endCapStyle = "SQUARE")
 tc_wetlands <- st_read("Data/Tompkins County Wetland Mapping 2015/Geospatial Data/Tompkins County Wetlands 2012 SHP/Tompkins County Wetlands 2012.shp") |> 
     st_transform("EPSG:6347")

@@ -31,7 +31,7 @@ set.seed(11)
 
 setGDALconfig("GDAL_PAM_ENABLED", "FALSE") # does not create aux.xml files
 ########################################################################################
-clusters <- st_read("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg", quiet = TRUE)
+clusters <- st_read("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", quiet = TRUE)
 
     # attributed_systems_subsyst_cowardin.
     # This is a collection of all recent (since year 2000) vegetation maps
@@ -98,7 +98,7 @@ nhp_wetlands3 <- st_read("Data/NYS_NHP_Wetland_DelineatonData/NYNHP_NatComm_data
 nhp_combine <- bind_rows(nhp_wetlands1, nhp_wetlands2, nhp_wetlands3) |> 
     st_transform(crs = st_crs("EPSG:6347"))
 ########################################################################################
-clusters <- st_read("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg")
+clusters <- st_read("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg")
 nhp_huc_int <- st_overlaps(clusters, nhp_combine, sparse = FALSE) # overlaps longer than intersects
 nhp_intersecting_hucs <- clusters[rowSums(nhp_huc_int) > 50, ] # Only HUCs with > 50 wetlands
 

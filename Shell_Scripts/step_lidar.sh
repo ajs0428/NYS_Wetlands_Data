@@ -14,7 +14,7 @@ export TMPDIR=/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp/
 module load R/4.4.3
 
 IFS=',' read -ra include <<< "$1"
-GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg"
+GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg"
 OUTDIR="Data/Lidar/HUC_Lidar_Metrics"
 DATE=$(date +%Y%m%d)
 

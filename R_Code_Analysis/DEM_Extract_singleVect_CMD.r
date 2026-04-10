@@ -6,8 +6,8 @@
 ###################
 
 args = c("Data/NYS_DEM_Indexes",
-         "Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg",
-         50,
+         "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
+         22,
          "Data/DEMs/",
          "Data/TerrainProcessed/HUC_DEMs"
 )

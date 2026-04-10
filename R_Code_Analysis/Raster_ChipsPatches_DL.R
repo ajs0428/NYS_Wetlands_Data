@@ -110,13 +110,16 @@ rast_chip_patch_create <- function(wetland_file){
     cluster_num <- str_extract(wetland_file, "(?<=cluster_)\\d+")
     
     if(cluster_num != clusterSubset & !is.null(clusterSubset)){
-        # message("skip this cluster and huc, selecting cluster: ", clusterSubset)
+        message("skip this cluster and huc, selecting cluster: ", clusterSubset)
         return(invisible(NULL))
     } else if(cluster_num != clusterSubset & is.null(clusterSubset)) {
         message("Processing for all clusters in folder")
     }
     
-    # huc_poly <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg", quiet = TRUE,
+    stack_fn <- paste0("Data/HUC_Raster_Stacks/HUC_DL_Stacks/", "cluster_", cluster_num, "_huc_", huc_num, "_stack.tif")
+    
+    if (!file.exists(stack_fn)) {
+    # huc_poly <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", quiet = TRUE,
     #                               query = paste0("SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE huc12 = '", huc_num, "'"))
     dem_rast <- l_dem_cluster[grepl(huc_num, l_dem_cluster) & grepl(paste0("cluster_", cluster_num), l_dem_cluster)] |> rast()
     set.names(dem_rast, "DEM")
@@ -139,10 +142,9 @@ rast_chip_patch_create <- function(wetland_file){
     message(ext(lidar_rast))
 
     stack <- c(dem_rast, terr_rast, hydro_rast, chm_rast, sat_rast, naip_rast, lidar_rast)
-    
-    stack_fn <- paste0("Data/HUC_Raster_Stacks/HUC_DL_Stacks/", "cluster_", cluster_num, "_huc_", huc_num, "_stack.tif")
-    if (!file.exists(stack_fn)) {
         writeRaster(stack, filename = stack_fn, overwrite = TRUE)
+    } else {
+      stack <- rast(stack_fn)
     }
 
     ### Union all the polygons then rejoin and separate as groups

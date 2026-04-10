@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 args = c(
-    "Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg",
+    "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
     208,
     "Data/NAIP/HUC_NAIP_Processed/"
 )
@@ -36,7 +36,7 @@ naip_index <- list.files("Data/NAIP/GEE_NAIP/ny_huc_naip_indices/", full.names =
 l_dem <- list.files("Data/TerrainProcessed/HUC_DEMs/", pattern = ".tif", full.names = TRUE) 
 l_dem_cluster <- l_dem[str_detect(l_dem, paste0("cluster_", args[2])) & !str_detect(l_dem, "wbt")]
 
-cluster_target <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg", quiet = TRUE,
+cluster_target <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", quiet = TRUE,
                               query = paste0("SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE cluster = '", args[2], "'"))
 huc_list <- cluster_target$huc12
 ###############################################################################################
@@ -45,7 +45,7 @@ process_huc <- function(huc) {
     target_file <- paste0(args[3], "cluster_", args[2], "_huc_", huc, "_NAIP_metrics.tif")
     naip_files <- naip_index[grepl(huc, naip_index)]
     dem_file <- l_dem_cluster[grepl(huc, l_dem_cluster)] 
-    huc_poly <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg", quiet = TRUE,
+    huc_poly <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", quiet = TRUE,
                             query = paste0("SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE huc12 = '", huc, "'")) |> 
         vect()
     

@@ -2,12 +2,12 @@
 #SBATCH --nodelist=cbsuxu06,cbsuxu07,cbsuxu08,cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
-#SBATCH --mem-per-cpu=36G
+#SBATCH --mem-per-cpu=48G
 #SBATCH --cpus-per-task=2
-#SBATCH --job-name=patch
+#SBATCH --job-name=stack
 #SBATCH --ntasks=5
 #SBATCH --ntasks-per-node=1
-#SBATCH --output=Shell_Scripts/SLURM/slurm-patch-%j.out
+#SBATCH --output=Shell_Scripts/SLURM/slurm-stack-%j.out
 
 
 cd /ibstorage/anthony/NYS_Wetlands_Data/
@@ -18,7 +18,7 @@ module load R/4.4.3
 
 # Define the list of numbers
 #include=(11 12 22 51 53 56 60 64 67 84 86 90 92 102 105 116 120 123 136 138 152 176 183 189 192 193 198 218 225 250)
-# include=(11 64 67 208 123 225)
+# include=(208 123)
 ### Batch 1
 include=(11 22 46 50 64 67 82 95 123 168 208 218 225 250)
 ### Batch 2
@@ -40,10 +40,9 @@ include=(11 22 46 50 64 67 82 95 123 168 208 218 225 250)
 for number in "${include[@]}"; do
     echo "Running Rscript with argument: $number"
     srun --nodes=1 --ntasks=1 --exclusive \
-        Rscript R_Code_Analysis/Raster_ChipsPatches_DL.R \
-        "Data/Training_Data/R_Patches_Vector_Reviewed/" \
-        128 \
-        "$number" >> "Shell_Scripts/logs/patch_${number}_$(date +%Y%m%d).log" 2>&1 &
+        Rscript R_Code_Analysis/Raster_Stack.R \
+        "$number" \
+        "Data/HUC_Raster_Stacks/HUC_DL_Stacks/" >> "Shell_Scripts/logs/stack_${number}_$(date +%Y%m%d).log" 2>&1 &
 done
 
 wait

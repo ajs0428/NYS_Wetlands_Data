@@ -15,7 +15,7 @@ export TMPDIR=/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp/
 module load R/4.4.3
 
 IFS=',' read -ra include <<< "$1"
-GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg"
+GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg"
 DATE=$(date +%Y%m%d)
 
 unset SLURM_MEM_PER_CPU SLURM_MEM_PER_NODE SLURM_MEM_PER_GPU
@@ -43,7 +43,7 @@ echo "Hydro processing completed."
 # for number in "${include[@]}"; do
 #     echo "Running Rscript with argument: $number"
 #     Rscript R_Code_Analysis/hydro_metrics_singleVect_CMD.r \
-#     "Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg" \
+#     "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg" \
 #     "$number" \
 #     "Data/TerrainProcessed/HUC_DEMs/" \
 #     "Data/TerrainProcessed/HUC_Hydro/" >> "Shell_Scripts/logs/hydro_$(date +%Y%m%d).log" 2>&1 

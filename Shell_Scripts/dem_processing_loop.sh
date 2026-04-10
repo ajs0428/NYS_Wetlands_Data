@@ -1,11 +1,11 @@
 #!/bin/bash -l
-#SBATCH --nodelist=cbsuxu01,cbsuxu02,cbsuxu03,cbsuxu04,cbsuxu09,cbsuxu10
+#SBATCH --nodelist=cbsuxu04,cbsuxu05,cbsuxu06,cbsuxu07,cbsuxu08,cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
 #SBATCH --mem-per-cpu=32G
 #SBATCH --cpus-per-task=2
 #SBATCH --job-name=dem_processing
-#SBATCH --ntasks=6
+#SBATCH --ntasks=7
 #SBATCH --ntasks-per-node=1
 #SBATCH --output=Shell_Scripts/SLURM/slurm-dems-%j.out
 
@@ -33,7 +33,7 @@ for number in "${all[@]}"; do
     srun --nodes=1 --ntasks=1 --exclusive \
     Rscript R_Code_Analysis/DEM_Extract_singleVect_CMD.r \
         "Data/NYS_DEM_Indexes" \
-        "Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg" \
+        "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg" \
         "$number" \
         "Data/DEMs/" \
         "Data/TerrainProcessed/HUC_DEMs/" >> "Shell_Scripts/logs/dem_processing_${number}_$(date +%Y%m%d).log" 2>&1 &

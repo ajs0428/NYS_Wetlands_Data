@@ -6,8 +6,9 @@
 cd /ibstorage/anthony/NYS_Wetlands_Data/
 
 # ── Cluster numbers to process ───────────────────────────────────────────────
+include=(22)
 ### Batch 1
-include=(11 22 46 50 64 67 82 95 123 168 208 218 225 250)
+# include=(11 22 46 50 64 67 82 95 123 168 208 218 225 250)
 ### Batch 2
 #include=(1  2  3  4  5  6  7  8  9 10 12 13 14 15 16 17 18 19 20 21 23 24 25 26 27 28 29 30 31 32)
 ### Batch 3
@@ -27,7 +28,7 @@ include=(11 22 46 50 64 67 82 95 123 168 208 218 225 250)
 INCLUDE_STR=$(IFS=,; echo "${include[*]}")
 
 # ── Shared variables ─────────────────────────────────────────────────────────
-GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg"
+GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg"
 LOGDIR="Shell_Scripts/logs"
 SCRIPTDIR="Shell_Scripts"
 

@@ -41,7 +41,7 @@ for number in "${include[@]}"; do
     srun --nodes=1 --ntasks=1 --exclusive \
         Rscript R_Code_Analysis/Wetlands_CHM_reclass.R \
         "$number" \
-        "Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg" \
+        "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg" \
         "Data/NWI/NY_NWI_6347.gpkg" \
         "ATTRIBUTE" >> "Shell_Scripts/logs/wetland_reclass_${number}_$(date +%Y%m%d).log" 2>&1 &
     

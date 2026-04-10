@@ -7,7 +7,7 @@ lf <- l[str_detect(l, "cluster_208") & !str_detect(l, "wbt")]
 
 args <- c(
     "Data/NWI/NY_NWI_6347.gpkg", 
-    "Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg", # 
+    "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", # 
     208 # 
 )
 ########################################################################################

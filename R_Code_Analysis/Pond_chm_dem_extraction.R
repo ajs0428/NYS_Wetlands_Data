@@ -4,7 +4,7 @@ library(stringr)
 library(dplyr)
 library(tidyterra)
 
-clusters <- st_read("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg")
+clusters <- st_read("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg")
 
 pond_files <- list.files("Data/Ponds/data/shape_files/", full.names = TRUE, pattern = ".shp")
 pond_polys <- lapply(pond_files, st_read, quiet = TRUE) |> 

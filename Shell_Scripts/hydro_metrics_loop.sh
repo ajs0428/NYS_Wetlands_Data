@@ -23,7 +23,7 @@ include=(64 67 82 95 218 225 240 250)
 for number in "${include[@]}"; do
     echo "Running Rscript with argument: $number"
     Rscript R_Code_Analysis/hydro_metrics_singleVect_CMD.r \
-    "Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg" \
+    "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg" \
     "$number" \
     "Data/TerrainProcessed/HUC_DEMs/" \
     "Data/TerrainProcessed/HUC_Hydro/" >> "Shell_Scripts/logs/hydro_$(date +%Y%m%d).log" 2>&1 

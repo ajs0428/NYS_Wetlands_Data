@@ -24,7 +24,7 @@ for number in "${include[@]}"; do
     echo "Running Rscript with argument: $number"
     srun --nodes=1 --ntasks=1 --exclusive \
         Rscript R_Code_Analysis/CHM_extraction.R \
-        "Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg" \
+        "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg" \
         "$number" \
         "Data/CHMs/AWS" >> "Shell_Scripts/logs/chm_${number}_$(date +%Y%m%d).log" 2>&1 &
 done

@@ -38,7 +38,7 @@ l_naip <- list.files("Data/NAIP/HUC_NAIP_Processed/", pattern = ".tif", full.nam
 
 ########################################################################################
 
-clusters <- st_read("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg", 
+clusters <- st_read("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", 
                     quiet = TRUE)
 
 adk_files <- list.files("Data/ADK", pattern = ".shp$", full.names = TRUE) |> 

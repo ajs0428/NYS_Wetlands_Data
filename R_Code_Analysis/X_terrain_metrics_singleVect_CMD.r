@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-args = c("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg",
+args = c("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
          11,
          "Data/TerrainProcessed/HUC_DEMs/",
          "slp",

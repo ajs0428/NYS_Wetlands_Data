@@ -22,7 +22,7 @@ for number in "${include[@]}"; do
     echo "Running Rscript with argument: $number"
     Rscript R_Code_Analysis/Wetlands_CHM_reclass.R \
     "$number" \
-    "Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg" \
+    "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg" \
     "Data/NWI/NY_NWI_6347.gpkg" \
     "ATTRIBUTE" >> "Shell_Scripts/logs/wet_rcl_$(date +%Y%m%d).log" 2>&1 
     

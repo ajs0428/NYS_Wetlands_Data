@@ -15,7 +15,7 @@ clusters <- c(11, 22, 46, 50, 64, 67, 82, 95, 123, 168, 208, 218, 225, 250)
 
 lidar_cluster <- function(cluster_num) {
   q <- paste0("SELECT * FROM \"NY_Cluster_Zones_250_NAomit_6347\" WHERE cluster = ", cluster_num)
-  cluster <- st_read("Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg", query = q, quiet = TRUE)
+  cluster <- st_read("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", query = q, quiet = TRUE)
   
   int <- st_intersects(colls, cluster, sparse = FALSE) |> rowSums()
   

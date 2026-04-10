@@ -17,13 +17,13 @@ module load R/4.4.3
 
 # Define the list of numbers
 # include=(11 12 22 46 50 51 53 56 60 64 67 84 86 90 92 102 105 116 120 123 126 136 138 152 176 183 187 189 192 193 198 203 208 218 225 240 250)
-include=(11 64 67 208 123 225)
+include=(22)
 
 for number in "${include[@]}"; do
     echo "Running Rscript with argument: $number"
     srun --nodes=1 --ntasks=1 --exclusive \
         Rscript R_Code_Analysis/Lidar_HUC_Processing.R \
-        "Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg" \
+        "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg" \
         "$number" \
         "Data/Lidar/HUC_Lidar_Metrics/" >> "Shell_Scripts/logs/lidar_huc_${number}_$(date +%Y%m%d).log" 2>&1 &
 done
