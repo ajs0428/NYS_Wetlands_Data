@@ -120,6 +120,8 @@ lidar_huc <- function(huc_num){
 
 lapply(huc_numbers, lidar_huc)
 
+lidar_huc(huc_numbers[[3]])
+
 gc()
 
 ### testing
@@ -161,7 +163,7 @@ gc()
 huc_num <- huc_numbers[[1]]
 huc <- cluster_hucs[cluster_hucs$huc12 ==  huc_num, ]
 lidar_huc_fn <- file.path(out_dir, paste0("Lidar_cluster_", cluster_num, "_huc_", huc_num, ".tif"))
-message("New file created for: ", lidar_huc_fn)
+message(lidar_huc_fn)
 index_intersect <- st_intersects(lidar_index_all_sf_noe, huc, sparse = F)
 index_in_huc <- lidar_index_all_sf_noe[rowSums(index_intersect) > 0, ]
 index_in_huc$COLLECTION |> unique()
