@@ -1,11 +1,9 @@
 library(terra)
 library(sf)
 
-cls <- st_read("Data/NY_HUCS/NY_Cluster_Zones_200.gpkg")
+cls <- st_read("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.shp")
 
-cls_nums <- c(11, 12, 22, 51, 53, 56, 60, 64, 67, 84, 86, 90, 
-               92, 102, 105, 116, 120, 123, 136, 138, 152, 176,
-               183, 189, 192, 193, 198, 208, 218, 225, 250)
+cls_nums <- c(11, 22, 46, 50, 64, 67, 82, 95, 123, 168, 208, 218, 225, 250)
 
 df <- cls |> filter(cluster %in% cls_nums) |> 
     as.data.frame() |> 

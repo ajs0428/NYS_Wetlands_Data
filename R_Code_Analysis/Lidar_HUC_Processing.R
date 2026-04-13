@@ -1,16 +1,16 @@
 ### Combine lidar tiles into HUC rasters
 
 args <- c("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
-          123,
+          64,
           "Data/Lidar/HUC_Lidar_Metrics/")
 
 args <- commandArgs(trailingOnly = TRUE)
 
-(message("these are the arguments: \n", 
+message("these are the arguments: \n", 
          "- Path to cluster of HUCs files: ", args[1], "\n",
          "- Cluster to select: ", args[2], "\n",
          "- Output path for Lidar HUC metrics files:", args[3], "\n"
-))
+)
 
 gpkg_path   <- args[1]
 cluster_num <- args[2]
@@ -24,7 +24,7 @@ library(lidR)
 library(terra)
 
 terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp",
-             memmax = 8,
+             memmax = 64,
              memfrac = 0.5)
 
 ########################################################################################

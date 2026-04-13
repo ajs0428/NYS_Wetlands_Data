@@ -2,17 +2,24 @@
 
 args = c(
     "Data/TerrainProcessed/HUC_DEMs/",
-    "Data/Satellite/GEE_Download_NY_HUC_Sentinel_Indices/ny_huc_indices",
+    "Data/Satellite/GEE_Download_NY_HUC_Sentinel_Indices/",
     "Data/Satellite/HUC_Processed_NY_Sentinel_Indices/",
-    208
+    250
 )
 args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
 
+demFolder <- args[1]
+geeDownloads <- args[2]
+hucExport <- args[3]
+clusterNumber <- args[4]
+
+
+
 (message("these are the arguments: \n", 
-     "- Path to processed DEM files: ", args[1], "\n",
-     "- Path to processed GEE Downloaded Sentinel files: ", args[2], "\n",
-     "- Path to save processed Sentinel files: ", args[3], "\n",
-     "- Cluster number ", args[4], "\n"
+     "- Path to processed DEM files: ", demFolder, "\n",
+     "- Path to processed GEE Downloaded Sentinel files: ", geeDownloads, "\n",
+     "- Path to save processed Sentinel files: ", hucExport, "\n",
+     "- Cluster number ", clusterNumber, "\n"
 ))
 
 ###############################################################################################
@@ -27,17 +34,23 @@ terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp")
 print(tempdir())
 ###############################################################################################
 
-dem_files <- grep(list.files(args[1], full.names = TRUE), pattern = "wbt|NA", invert=TRUE, value=TRUE) 
-dem_files_clust <- dem_files[grepl(dem_files, pattern = paste0("cluster_", args[4], "_"))]
+dem_files <- grep(list.files(demFolder, full.names = TRUE), pattern = "wbt|NA", invert=TRUE, value=TRUE) 
+dem_files_clust <- dem_files[grepl(dem_files, pattern = paste0("cluster_", clusterNumber, "_"))]
 dem_hucs <- str_extract(dem_files_clust, "(?<=huc_)\\d+(?=\\.tif)")
 dem_hucs_pattern <- str_c(dem_hucs, collapse = "|")
 
-gee_files <- list.files(args[2], full.names = TRUE, pattern = ".tif")
+gee_files <- list.files(geeDownloads, full.names = TRUE, pattern = ".tif")
 gee_files_clust <- gee_files[str_detect(gee_files, dem_hucs_pattern)]
 gee_hucs <- str_extract(gee_files_clust, "(?<=/)\\d+(?=_)")
 
 dem_files_w_gee <- dem_files_clust[dem_hucs %in% gee_hucs]
+dem_files_wo_gee <- dem_files_clust[!dem_hucs %in% gee_hucs]
 
+if(length(dem_files_wo_gee) == 0){
+  message("No missing matches with DEMs")
+} else {
+  message("Missing hucs: ", dem_files_wo_gee)
+}
 ###############################################################################################
 
 match_align_project <- function(single_gee_path){
@@ -49,7 +62,7 @@ match_align_project <- function(single_gee_path){
     single_dem_file <- dem_files[str_detect(dem_files, single_gee_huc_num)]
     single_dem_filename <- str_remove(basename(single_dem_file), ".tif")
     message("DEM filename: ",single_dem_filename)
-    gee_sentinel_filename <- paste0(args[3], single_dem_filename, "_sentinel_indices.tif")
+    gee_sentinel_filename <- paste0(hucExport, single_dem_filename, "_sentinel_indices.tif")
     message("GEE filename: ",gee_sentinel_filename)
     # if(file.exists(gee_sentinel_filename)){
         dem_rast <- rast(single_dem_file)
@@ -89,4 +102,4 @@ future_lapply(gee_files_clust, match_align_project, future.seed = TRUE, future.g
 
 ### Non-Parallel
 # Single core run
-# lapply(gee_files_clust,  match_align_project)
+# lapply(gee_files_clust[3],  match_align_project)

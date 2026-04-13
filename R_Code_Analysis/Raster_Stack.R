@@ -14,7 +14,7 @@ set.seed(11)
 ########################################################################################
 
 args <- c(
-  22, # cluster subset options include number or NULL for any
+  64, # cluster subset options include number or NULL for any
   "Data/HUC_Raster_Stacks/HUC_DL_Stacks/" #Save path for HUC Raster Stacks
 )
 
@@ -32,7 +32,7 @@ setGDALconfig("GDAL_PAM_ENABLED", "FALSE") # does not create aux.xml files but m
 ########################################################################################
 
 huc_poly <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", quiet = TRUE,
-                        query = paste0("SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE cluster = '", clusterSubset, "'"))
+                        query = paste0("SELECT * FROM NY_Cluster_Zones_250_CROP_NAomit_6347 WHERE cluster = '", clusterSubset, "'"))
 huc_numbers <- huc_poly$huc12
 
 clust_extract_fun <- function(l){
@@ -78,17 +78,56 @@ l_lidar <- list.files("Data/Lidar/HUC_Lidar_Metrics/",
                       full.names = TRUE)
 l_lidar_cluster <- clust_extract_fun(l_lidar)
 
-length(huc_numbers) == length(l_dem_cluster) & 
-  length(l_naip_cluster) == length(l_dem_cluster) & 
-  length(l_dem_cluster) == length(l_sat_cluster) & 
-  length(l_dem_cluster) == length(l_hydro_cluster) & 
-  length(l_dem_cluster) == length(l_lidar_cluster)
+
+if(length(huc_numbers) != length(l_dem_cluster)){
+  missingD <- huc_numbers[!huc_numbers %in% str_extract(l_dem_cluster, "\\d{12}")]
+  message("HUC numbers not equal to DEM, missing: \n", paste(missingD, collapse = "\n"))
+} 
+if(length(l_naip_cluster) != length(l_dem_cluster)){
+  missingN <- huc_numbers[!huc_numbers %in% str_extract(l_naip_cluster, "\\d{12}")]
+  message("HUC numbers not equal to NAIP, missing: \n", paste(missingN, collapse = "\n"))
+} 
+if(length(l_sat_cluster) != length(l_dem_cluster)){
+  missingS <- huc_numbers[!huc_numbers %in% str_extract(l_sat_cluster, "\\d{12}")]
+  message("HUC numbers not equal to Satellite, missing: \n", paste(missingS, collapse = "\n"))
+} 
+if(length(l_hydro_cluster) != length(l_dem_cluster)){
+  missingH <- huc_numbers[!huc_numbers %in% str_extract(l_hydro_cluster, "\\d{12}")]
+  message("HUC numbers not equal to Hydro, missing: \n", paste(missingH, collapse = "\n"))
+} 
+if(length(l_lidar_cluster) != length(l_dem_cluster)){
+  missingL <- huc_numbers[!huc_numbers %in% str_extract(l_lidar_cluster, "\\d{12}")]
+  message("HUC numbers not equal to Lidar, missing: \n", paste(missingL, collapse = "\n"))
+}
+if(length(l_chm_cluster) != length(l_dem_cluster)){
+  missingC <- huc_numbers[!huc_numbers %in% str_extract(l_chm_cluster, "\\d{12}")]
+  message("HUC numbers not equal to CHM, missing: \n", paste(missingC, collapse = "\n"))
+}
+if(length(l_terr_cluster) != length(l_dem_cluster)*3){
+  missingC <- huc_numbers[!huc_numbers %in% str_extract(l_terr_cluster, "\\d{12}")]
+  message("HUC numbers not equal to CHM, missing: \n", paste(missingC, collapse = "\n"))
+}
+
+
+all_missing <- unique(c(
+  if (exists("missingD")) missingD,
+  if (exists("missingN")) missingN,
+  if (exists("missingS")) missingS,
+  if (exists("missingH")) missingH,
+  if (exists("missingL")) missingL,
+  if (exists("missingC")) missingC
+))
+
 
 #################################################################################################
 
 rast_stack_export <- function(huc_number) {
-  
-  terraOptions(memfrac = 0.2, memmax = 48, tempdir = "Data/tmp")
+  if (huc_number %in% all_missing) {
+    message("Skipping HUC ", huc_number, " missing from one or more datasets")
+    return(huc_number)
+    stop()
+  }
+  terraOptions(memfrac = 0.2, memmax = 64, tempdir = "Data/tmp")
   
   stack_fn <- paste0(savePath, "cluster_", clusterSubset, "_huc_", huc_number, "_stack.tif")
   
@@ -104,7 +143,7 @@ rast_stack_export <- function(huc_number) {
     get_rast_file <- function(file_list, label) {
       matched <- file_list[grepl(huc_number, file_list) & grepl(cluster_id, file_list)]
       if (length(matched) == 0) stop("No ", label, " file found for HUC ", huc_number)
-      if (length(matched) > 1) warning("Multiple ", label, " files for HUC ", huc_number, "; using first")
+      if (length(matched) > 1 & label != "terrain") warning("Multiple ", label, " files for HUC ", huc_number, "; using first")
       matched[1]
     }
     
