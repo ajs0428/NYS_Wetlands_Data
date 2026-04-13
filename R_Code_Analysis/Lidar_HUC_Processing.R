@@ -160,14 +160,22 @@ gc()
 # }
 # 
 # find_rasters_above_1_detail("Data/Lidar/Metrics")
-huc_num <- huc_numbers[[1]]
-huc <- cluster_hucs[cluster_hucs$huc12 ==  huc_num, ]
-lidar_huc_fn <- file.path(out_dir, paste0("Lidar_cluster_", cluster_num, "_huc_", huc_num, ".tif"))
-message(lidar_huc_fn)
-index_intersect <- st_intersects(lidar_index_all_sf_noe, huc, sparse = F)
-index_in_huc <- lidar_index_all_sf_noe[rowSums(index_intersect) > 0, ]
-index_in_huc$COLLECTION |> unique()
-lidar_fn <- tools::file_path_sans_ext(index_in_huc$FILENAME)
-message("length of total lidar filenames in index: ", length(lidar_fn))
-lidar_metrics_in_huc <- current_lidar_metrics[current_lidar_metrics_fn %in% lidar_fn]
-message("length of lidar filenames in huc ",huc_num, ": ", length(lidar_metrics_in_huc))
+# huc_num <- huc_numbers[[3]]
+# huc <- cluster_hucs[cluster_hucs$huc12 ==  huc_num, ]
+# lidar_huc_fn <- file.path(out_dir, paste0("Lidar_cluster_", cluster_num, "_huc_", huc_num, ".tif"))
+# message(lidar_huc_fn)
+# index_intersect <- st_intersects(lidar_index_all_sf_noe, huc, sparse = F)
+# index_in_huc <- lidar_index_all_sf_noe[rowSums(index_intersect) > 0, ]
+# index_in_huc$COLLECTION |> unique()
+# lidar_fn <- tools::file_path_sans_ext(index_in_huc$FILENAME)
+# message("length of total lidar filenames in index: ", length(lidar_fn))
+# lidar_metrics_in_huc <- current_lidar_metrics[current_lidar_metrics_fn %in% lidar_fn]
+# message("length of lidar filenames in huc ",huc_num, ": ", length(lidar_metrics_in_huc))
+# 
+# 
+# fns <- lidar_metrics_in_huc
+# res_tbl <- t(sapply(fns, \(f) res(rast(f))))       
+# org_tbl <- t(sapply(fns, \(f) { r <- rast(f); c(xmin(r) %% 1, ymin(r) %% 1) }))                                                                                 
+# apply(res_tbl, 2, \(x) length(unique(x)))   # should both be 1                                                                                                  
+# unique(round(res_tbl, 8))                                                                                                                                       
+# unique(round(org_tbl, 4))                    # origins aligned modulo 1m?      
