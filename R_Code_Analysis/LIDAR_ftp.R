@@ -96,11 +96,19 @@ compute_lidar_metrics <- function(las_path, out_dir, res = 1) {
 
     metrics <- pixel_metrics(las, ~veg_metrics(z = Z), res = res)
 
-    # Reproject to EPSG:6347 if needed
+    # Reproject to EPSG:6347 snapped to a global integer-meter grid so tiles
+    # from different source CRSs land on a shared origin. Without this each
+    # project() call anchors to the tile's own origin and mosaic() downstream
+    # rejects the mismatched origins.
     target_crs <- "EPSG:6347"
     if (!same.crs(crs(metrics), target_crs)) {
         message("  Reprojecting from ", crs(metrics, describe = TRUE)$code, " to EPSG:6347")
-        metrics <- project(metrics, target_crs, method = "bilinear", res = res)
+        src_bbox <- as.polygons(ext(metrics), crs = crs(metrics))
+        tgt_ext  <- ext(project(src_bbox, target_crs))
+        snap_ext <- ext(floor(xmin(tgt_ext)), ceiling(xmax(tgt_ext)),
+                        floor(ymin(tgt_ext)), ceiling(ymax(tgt_ext)))
+        tmpl <- rast(snap_ext, resolution = res, crs = target_crs)
+        metrics <- project(metrics, tmpl, method = "bilinear")
     }
 
     # Fill interior NA holes with 3x3 mean focal filter (edges unchanged)

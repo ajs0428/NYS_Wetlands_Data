@@ -87,10 +87,13 @@ lidar_huc <- function(huc_num){
         # Crop each tile to HUC extent first to reduce memory
         huc_vect <- vect(huc)
         huc_ext <- ext(huc_vect)
+        huc_bbox <- as.polygons(huc_ext, crs = "EPSG:6347")
         cropped <- lapply(lidar_metrics_in_huc, \(f) {
             r <- rast(f)
-            if (!is.related(vect(ext(r), crs = "EPSG:6347"), huc_ext, "intersects")) return(NULL)
-            crop(r, huc_ext)
+            if (!is.related(vect(ext(r), crs = crs(r)), huc_bbox, "intersects")) return(NULL)
+            cr <- crop(r, huc_ext)
+            if (ncell(cr) == 0) return(NULL)
+            cr
         }) |> purrr::compact()
 
         if (length(cropped) == 0) {
@@ -98,17 +101,26 @@ lidar_huc <- function(huc_num){
             return(NULL)
         }
 
-        if (length(cropped) == 1) {
-            lidar_metrics_huc <- crop(cropped[[1]], huc_vect, mask = TRUE)
-            lidar_metrics_huc[[1]] <- lidar_metrics_huc[[1]] |> classify(cbind(NA, 1)) |> terra::mask(huc_vect)
-            lidar_metrics_huc[[c(2,3)]]  <- lidar_metrics_huc[[c(2,3)]] |> classify(cbind(NA, 0))  |> terra::mask(huc_vect)
+        # Snap all tiles to a HUC-anchored 1m grid so mosaic() accepts them.
+        # compute_lidar_metrics reprojects tiles independently, so their origins
+        # drift by fractions of a cell and sprc()/mosaic() rejects the mix.
+        snap_ext <- ext(floor(xmin(huc_ext)), ceiling(xmax(huc_ext)),
+                        floor(ymin(huc_ext)), ceiling(ymax(huc_ext)))
+        template <- rast(snap_ext, resolution = 1, crs = "EPSG:6347")
+        aligned <- lapply(cropped, \(r) {
+            tmpl_r <- crop(template, ext(r), snap = "out")
+            resample(r, tmpl_r, method = "bilinear")
+        })
+
+        if (length(aligned) == 1) {
+            lidar_metrics_huc <- crop(aligned[[1]], huc_vect, mask = TRUE)
         } else {
-            lidar_metrics_huc <- sprc(cropped) |>
-                terra::mosaic(fun = "mean") |> 
-              crop(huc_vect, mask = TRUE)
-            lidar_metrics_huc[[1]] <- lidar_metrics_huc[[1]] |> classify(cbind(NA, 1)) |> terra::mask(huc_vect)
-            lidar_metrics_huc[[c(2,3)]]  <- lidar_metrics_huc[[c(2,3)]] |> classify(cbind(NA, 0)) |> terra::mask(huc_vect)
+            lidar_metrics_huc <- sprc(aligned) |>
+                terra::mosaic(fun = "mean") |>
+                crop(huc_vect, mask = TRUE)
         }
+        lidar_metrics_huc[[1]] <- lidar_metrics_huc[[1]] |> classify(cbind(NA, 1)) |> terra::mask(huc_vect)
+        lidar_metrics_huc[[c(2,3)]] <- lidar_metrics_huc[[c(2,3)]] |> classify(cbind(NA, 0)) |> terra::mask(huc_vect)
         writeRaster(lidar_metrics_huc, lidar_huc_fn)
         #rm(lidar_metrics_huc)
         # return(lidar_metrics_huc)
