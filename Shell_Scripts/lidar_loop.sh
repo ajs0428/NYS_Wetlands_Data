@@ -2,8 +2,8 @@
 #SBATCH --nodelist=cbsuxu06,cbsuxu07,cbsuxu08,cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
-#SBATCH --mem-per-cpu=24G
-#SBATCH --cpus-per-task=4
+#SBATCH --mem-per-cpu=48G
+#SBATCH --cpus-per-task=2
 #SBATCH --job-name=lidar
 #SBATCH --ntasks=5
 #SBATCH --ntasks-per-node=1

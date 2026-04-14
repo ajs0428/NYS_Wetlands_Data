@@ -124,6 +124,7 @@ lidar_huc <- function(huc_num){
         writeRaster(lidar_metrics_huc, lidar_huc_fn)
         #rm(lidar_metrics_huc)
         # return(lidar_metrics_huc)
+        gc()
     } else {
         message("Already file: ", lidar_huc_fn)
     }
@@ -132,7 +133,7 @@ lidar_huc <- function(huc_num){
 
 lapply(huc_numbers, lidar_huc)
 
-lidar_huc(huc_numbers[[3]])
+# lidar_huc(huc_numbers[[3]])
 
 gc()
 
@@ -172,6 +173,8 @@ gc()
 # }
 # 
 # find_rasters_above_1_detail("Data/Lidar/Metrics")
+
+### Troubleshooting #2
 # huc_num <- huc_numbers[[3]]
 # huc <- cluster_hucs[cluster_hucs$huc12 ==  huc_num, ]
 # lidar_huc_fn <- file.path(out_dir, paste0("Lidar_cluster_", cluster_num, "_huc_", huc_num, ".tif"))
@@ -183,8 +186,8 @@ gc()
 # message("length of total lidar filenames in index: ", length(lidar_fn))
 # lidar_metrics_in_huc <- current_lidar_metrics[current_lidar_metrics_fn %in% lidar_fn]
 # message("length of lidar filenames in huc ",huc_num, ": ", length(lidar_metrics_in_huc))
-# 
-# 
+
+
 # fns <- lidar_metrics_in_huc
 # res_tbl <- t(sapply(fns, \(f) res(rast(f))))       
 # org_tbl <- t(sapply(fns, \(f) { r <- rast(f); c(xmin(r) %% 1, ymin(r) %% 1) }))                                                                                 

@@ -7,17 +7,18 @@
 ###################
 
 args = c("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
-         11,
+         50,
          "Data/TerrainProcessed/HUC_DEMs/",
          "Data/TerrainProcessed/HUC_Hydro/"
          )
+
+args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
+
+
 clusterFile <- args[1]
 clusterNumber <- args[2]
 demFolder <- args[3]
 hydroFolder <- args[4]
-
-
-args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
 
 cat("these are the arguments: \n", 
     "- Path to a file vector study area", clusterFile, "\n",
@@ -118,10 +119,10 @@ slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
 if (nzchar(slurm_cpus)) {
   corenum <- as.integer(slurm_cpus)
 } else {
-  corenum <- min(future::availableCores(), 4)
+  corenum <- min(future::availableCores(), 2)
 }
 
-options(future.globals.maxSize= 128 * 1e9)
+options(future.globals.maxSize= 96 * 1e9)
 # plan(multisession, workers = corenum)
 plan(future.callr::callr, workers = corenum)
 

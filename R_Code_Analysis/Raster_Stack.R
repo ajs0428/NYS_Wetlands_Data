@@ -14,7 +14,7 @@ set.seed(11)
 ########################################################################################
 
 args <- c(
-  64, # cluster subset options include number or NULL for any
+  22, # cluster subset options include number or NULL for any
   "Data/HUC_Raster_Stacks/HUC_DL_Stacks/" #Save path for HUC Raster Stacks
 )
 
@@ -65,6 +65,9 @@ l_naip_cluster <- clust_extract_fun(l_naip)
 l_terr <- list.files("Data/TerrainProcessed/HUC_TerrainMetrics/", 
                      full.names = TRUE)
 l_terr_cluster <- clust_extract_fun(l_terr)
+l_terr_cluster_slp <- l_terr_cluster[grepl("slp", l_terr_cluster)]
+l_terr_cluster_curv <- l_terr_cluster[grepl("curv", l_terr_cluster)]
+l_terr_cluster_dmv <- l_terr_cluster[grepl("dmv", l_terr_cluster)]
 l_hydro <- list.files("Data/TerrainProcessed/HUC_Hydro/", 
                       pattern = ".tif",
                       full.names = TRUE)
@@ -103,11 +106,18 @@ if(length(l_chm_cluster) != length(l_dem_cluster)){
   missingC <- huc_numbers[!huc_numbers %in% str_extract(l_chm_cluster, "\\d{12}")]
   message("HUC numbers not equal to CHM, missing: \n", paste(missingC, collapse = "\n"))
 }
-if(length(l_terr_cluster) != length(l_dem_cluster)*3){
-  missingC <- huc_numbers[!huc_numbers %in% str_extract(l_terr_cluster, "\\d{12}")]
-  message("HUC numbers not equal to CHM, missing: \n", paste(missingC, collapse = "\n"))
+if(length(l_terr_cluster_slp) != length(l_dem_cluster)){
+  missingTs <- huc_numbers[!huc_numbers %in% str_extract(l_terr_cluster_slp, "\\d{12}")]
+  message("HUC numbers not equal to Terrain slp, missing: \n", paste(missingTs, collapse = "\n"))
 }
-
+if(length(l_terr_cluster_curv) != length(l_dem_cluster)){
+  missingTc <- huc_numbers[!huc_numbers %in% str_extract(l_terr_cluster_curv, "\\d{12}")]
+  message("HUC numbers not equal to Terrain curv, missing: \n", paste(missingTc, collapse = "\n"))
+}
+if(length(l_terr_cluster_dmv) != length(l_dem_cluster)){
+  missingTd <- huc_numbers[!huc_numbers %in% str_extract(l_terr_cluster_dmv, "\\d{12}")]
+  message("HUC numbers not equal to Terrain curv, missing: \n", paste(missingTd, collapse = "\n"))
+}
 
 all_missing <- unique(c(
   if (exists("missingD")) missingD,
@@ -115,10 +125,49 @@ all_missing <- unique(c(
   if (exists("missingS")) missingS,
   if (exists("missingH")) missingH,
   if (exists("missingL")) missingL,
-  if (exists("missingC")) missingC
+  if (exists("missingC")) missingC,
+  if (exists("missingTs")) missingTs,
+  if (exists("missingTc")) missingTc,
+  if (exists("missingTd")) missingTd
 ))
 
+all_missing_hucs_df <- list(
+  missingD = if (exists("missingD")) missingD,
+  missingN = if (exists("missingN")) missingN,
+  missingS = if (exists("missingS")) missingS,
+  missingH = if (exists("missingH")) missingH,
+  missingL = if (exists("missingL")) missingL,
+  missingC = if (exists("missingC")) missingC,
+  missingTs = if (exists("missingTs")) missingTs,
+  missingTc = if (exists("missingTc")) missingTc,
+  missingTd = if (exists("missingTd")) missingTd
+)  |>
+  purrr::imap(\(vals, nm) tibble(source = nm, huc = vals)) |>
+  bind_rows() |> 
+  dplyr::mutate(
+    cluster = clusterSubset,
+    source = case_when(source == "missingD" ~ "DEM",
+                       source == "missingN" ~ "NAIP",
+                       source == "missingS" ~ "Satellite",
+                       source == "missingH" ~ "Hydro",
+                       source == "missingL" ~ "Lidar",
+                       source == "missingC" ~ "CHM",
+                       source == "missingTs" ~ "TerrainSlp",
+                       source == "missingTc" ~ "TerrainCurv",
+                       source == "missingTd" ~ "TerrainDMV",
+                       .default = source)
+  )
 
+if (!"huc" %in% names(all_missing_hucs_df)) {
+  all_missing_hucs_df <- all_missing_hucs_df |> 
+    mutate(huc = NA_character_) |> 
+    select(source, huc, cluster)
+} else {
+  all_missing_hucs_df <- all_missing_hucs_df |> 
+    select(source, huc, cluster)
+}
+
+readr::write_csv(all_missing_hucs_df, paste0("Data/MissingProcessing/cluster_", clusterSubset, "_missingHUCprocessing.csv"))
 #################################################################################################
 
 rast_stack_export <- function(huc_number) {
@@ -127,7 +176,7 @@ rast_stack_export <- function(huc_number) {
     return(huc_number)
     stop()
   }
-  terraOptions(memfrac = 0.2, memmax = 64, tempdir = "Data/tmp")
+  terraOptions(memfrac = 0.2, memmax = 16, tempdir = "Data/tmp")
   
   stack_fn <- paste0(savePath, "cluster_", clusterSubset, "_huc_", huc_number, "_stack.tif")
   
@@ -160,7 +209,7 @@ rast_stack_export <- function(huc_number) {
                         )
     
     terr_rast <- rast(get_rast_file(l_terr_cluster, "terrain")) |>
-      tidyterra::select(-starts_with("TPI_"), -starts_with("dmv"))
+      tidyterra::select(-dplyr::starts_with("TPI_"), -dplyr::starts_with("dmv"))
     
     hydro_rast <- rast(get_rast_file(l_hydro_cluster, "hydro"))
     hydro_rast$flowacc <- log(hydro_rast$flowacc)
@@ -185,7 +234,12 @@ rast_stack_export <- function(huc_number) {
     
     
     stack <- rast(aligned)
-    writeRaster(stack, filename = stack_fn, overwrite = TRUE)
+    writeRaster(stack, filename = stack_fn, overwrite = TRUE,
+                filetype = "COG",
+                gdal = c("COMPRESS=LZW", 
+                         "BLOCKSIZE=256",
+                         "OVERVIEW_RESAMPLING=BILINEAR",
+                         "NUM_THREADS=ALL_CPUS"))
     message("Wrote stack: ", stack_fn)
     terra::tmpFiles(remove = TRUE)
     return(invisible(stack_fn))
@@ -211,7 +265,7 @@ if (nzchar(slurm_cpus)) {
 print(corenum)
 options(future.globals.maxSize= 48.0 * 1e9)
 # plan(multisession, workers = corenum)
-plan(future.callr::callr)
+plan(future.callr::callr, workers = corenum)
 
 future_lapply(huc_numbers, rast_stack_export,
               future.seed = TRUE,
