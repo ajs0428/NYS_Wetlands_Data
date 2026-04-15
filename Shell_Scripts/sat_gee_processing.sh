@@ -19,13 +19,16 @@ module load R/4.4.3
 # include=(11 12 22 51 53 56 60 64 67 84 86 90 92 102 105 116 120 123 136 138 152 176 183 189 192 193 198 208 218 225 250)
 include=(11 22 46 50 64 67 82 95 123 168 208 218 225 250)
 for number in "${include[@]}"; do
-Rscript R_Code_Analysis/Sentinel_FromGEE_Processing.R \
+  srun --nodes=1 --ntasks=1 --exclusive \
+  Rscript R_Code_Analysis/Sentinel_FromGEE_Processing.R \
     "Data/TerrainProcessed/HUC_DEMs/" \
     "Data/Satellite/GEE_Download_NY_HUC_Sentinel_Indices/" \
     "Data/Satellite/HUC_Processed_NY_Sentinel_Indices/" \
-    "$number" >> "Shell_Scripts/logs/sat_gee_$(date +%Y%m%d).log" 2>&1 
+    "$number" >> "Shell_Scripts/logs/sat_gee_"$number"_$(date +%Y%m%d).log" 2>&1 &
 	
 done
+
+wait
 
 echo "All Satellite GEE Processed Rscripts executions completed."
 

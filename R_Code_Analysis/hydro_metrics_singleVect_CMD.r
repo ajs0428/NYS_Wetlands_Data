@@ -7,7 +7,7 @@
 ###################
 
 args = c("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
-         50,
+         22,
          "Data/TerrainProcessed/HUC_DEMs/",
          "Data/TerrainProcessed/HUC_Hydro/"
          )
@@ -89,13 +89,11 @@ hydro_func <- function(huc_num){
         # rm(rb)
         # rm(rbf)
         # gc()
-    } else {
-        message("File exists for ", hc_fn)
-    }
+    } 
     
     fa_twi_name <- paste0(hydroFolder, tools::file_path_sans_ext(basename(hc_fn)), "_TWI_Facc.tif")
 
-    if(!file.exists(fa_twi_name)){
+    if(!file.exists(fa_twi_name) & file.exists(hc_fn)){
         message("New TWI and Flow Acc for ", fa_twi_name)
         dem_rast <- rast(hc_fn)
         fs <- dem_rast |>
@@ -122,7 +120,7 @@ if (nzchar(slurm_cpus)) {
   corenum <- min(future::availableCores(), 2)
 }
 
-options(future.globals.maxSize= 96 * 1e9)
+options(future.globals.maxSize= 128 * 1e9)
 # plan(multisession, workers = corenum)
 plan(future.callr::callr, workers = corenum)
 
@@ -132,6 +130,7 @@ future_lapply(dem_hucs,
               future.packages = c("terra", "sf", "dplyr", "tidyr", "stringr", "flowdem"),
               future.globals = TRUE)
 
+gc()
 # terra::tmpFiles(remove = TRUE)
 
 ################################################################################################

@@ -1,8 +1,8 @@
 #!/usr/bin/env Rscript
 
-args = c(50,
+args = c(22,
          "Data/TerrainProcessed/HUC_DEMs/",
-         "slp",
+         "curv",
          "Data/TerrainProcessed/HUC_TerrainMetrics/"
 )
 args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
@@ -160,7 +160,7 @@ if (nzchar(slurm_cpus)) {
 
 options(future.globals.maxSize=64.0 * 1e9)
 # plan(multisession, workers = corenum)
-plan(future.callr::callr)
+plan(future.callr::callr, workers = corenum)
 
 future_lapply(
     list_of_huc_dems,

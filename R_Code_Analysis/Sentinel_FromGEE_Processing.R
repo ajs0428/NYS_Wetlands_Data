@@ -4,7 +4,7 @@ args = c(
     "Data/TerrainProcessed/HUC_DEMs/",
     "Data/Satellite/GEE_Download_NY_HUC_Sentinel_Indices/",
     "Data/Satellite/HUC_Processed_NY_Sentinel_Indices/",
-    250
+    46
 )
 args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
 
@@ -91,7 +91,7 @@ slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
 if (nzchar(slurm_cpus)) {
   corenum <- as.integer(slurm_cpus)
 } else {
-  corenum <- min(future::availableCores(), 4)
+  corenum <- min(future::availableCores(), 2)
 }
 options(future.globals.maxSize= 64 * 1e9)
 # plan(multisession, workers = corenum)
@@ -99,7 +99,8 @@ plan(future.callr::callr, workers = corenum)
 
 future_lapply(gee_files_clust, match_align_project, future.seed = TRUE, future.globals = TRUE)
 
+gc()
 
 ### Non-Parallel
 # Single core run
-# lapply(gee_files_clust[3],  match_align_project)
+# lapply(gee_files_clust,  match_align_project)

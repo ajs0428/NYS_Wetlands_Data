@@ -2,7 +2,7 @@
 #SBATCH --nodelist=cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
-#SBATCH --mem-per-cpu=96G
+#SBATCH --mem-per-cpu=128G
 #SBATCH --cpus-per-task=1
 #SBATCH --job-name=hydro
 #SBATCH --ntasks=2
