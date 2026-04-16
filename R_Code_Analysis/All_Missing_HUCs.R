@@ -5,8 +5,6 @@ library(purrr)
 
 ###############
 
-system("bash Shell_Scripts/precheck_missing_hucs.sh")
-
 missing_huc_files <- list.files("Data/MissingProcessing/", full.names = TRUE)
 missing_huc_df <- readr::read_csv(missing_huc_files) |>
   filter(!is.na(huc))
@@ -15,7 +13,7 @@ print(missing_huc_df, n = nrow(missing_huc_df))
 summ_missing_huc_df <- missing_huc_df |>
   distinct(cluster, source) |>
   arrange(source, cluster)
-
+summ_missing_huc_df
 ###############
 # Per-source specs: Rscript path, SLURM resources, and ordered args.
 # `$number` is substituted per cluster inside the generated for-loop.

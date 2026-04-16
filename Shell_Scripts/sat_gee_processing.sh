@@ -2,7 +2,7 @@
 #SBATCH --nodelist=cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
-#SBATCH --mem-per-cpu=32G
+#SBATCH --mem-per-cpu=72G
 #SBATCH --cpus-per-task=2
 #SBATCH --job-name=sat_gee_processing
 #SBATCH --ntasks=2

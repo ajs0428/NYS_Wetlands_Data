@@ -28,16 +28,13 @@ library(future.apply)
 library(future.callr)
 library(stringr)
 
-# Configure terra for efficiency
-terraOptions(
-    tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp"
-)
 
 setGDALconfig("GDAL_PAM_ENABLED", "FALSE") # does not create aux.xml files
 ###############################################################################################
 
 process_scale <- function(dem_path, scale_factor, output_file, metric, scale_label) {
     setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
+    terraOptions(memfrac = 0.4, memmax = 128, tempdir = "Data/tmp")
     if (file.exists(output_file)) {
         message(paste0(metric, " ", scale_label, " already exists, skipping"))
         return(invisible(NULL))

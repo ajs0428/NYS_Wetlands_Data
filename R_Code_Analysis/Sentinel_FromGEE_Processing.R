@@ -54,7 +54,8 @@ if(length(dem_files_wo_gee) == 0){
 ###############################################################################################
 
 match_align_project <- function(single_gee_path){
-
+    
+    terraOptions(memfrac = 0.4, memmax = 72, tempdir = "Data/tmp")
     single_gee_basename <- basename(single_gee_path)
     message("GEE basename: ", single_gee_basename)
     single_gee_huc_num <- str_extract(single_gee_basename, "^\\d+")
@@ -67,7 +68,7 @@ match_align_project <- function(single_gee_path){
     # if(file.exists(gee_sentinel_filename)){
         dem_rast <- rast(single_dem_file)
         gee_rast_process <- rast(single_gee_path) |>
-            terra::project(y = dem_rast, method = "cubicspline", mask = TRUE,
+            terra::project(y = dem_rast, method = "bilinear", mask = TRUE,
                            filename = gee_sentinel_filename, overwrite = TRUE)
 
         tryCatch({
@@ -93,7 +94,7 @@ if (nzchar(slurm_cpus)) {
 } else {
   corenum <- min(future::availableCores(), 2)
 }
-options(future.globals.maxSize= 64 * 1e9)
+options(future.globals.maxSize= 72 * 1e9)
 # plan(multisession, workers = corenum)
 plan(future.callr::callr, workers = corenum)
 

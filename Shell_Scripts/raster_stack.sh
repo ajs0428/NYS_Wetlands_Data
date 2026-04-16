@@ -1,11 +1,11 @@
 #!/bin/bash -l
-#SBATCH --nodelist=cbsuxu06,cbsuxu07,cbsuxu08,cbsuxu09,cbsuxu10
+#SBATCH --nodelist=cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
-#SBATCH --mem-per-cpu=48G
-#SBATCH --cpus-per-task=2
+#SBATCH --mem-per-cpu=128G
+#SBATCH --cpus-per-task=1
 #SBATCH --job-name=stack
-#SBATCH --ntasks=5
+#SBATCH --ntasks=2
 #SBATCH --ntasks-per-node=1
 #SBATCH --output=Shell_Scripts/SLURM/slurm-stack-%j.out
 

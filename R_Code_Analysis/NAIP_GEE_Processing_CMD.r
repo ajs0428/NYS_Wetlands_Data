@@ -2,7 +2,7 @@
 
 args = c(
     "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
-    208,
+    46,
     "Data/NAIP/HUC_NAIP_Processed/"
 )
 args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
@@ -25,7 +25,7 @@ library(future.apply)
 library(parallel)
 library(doParallel)
 
-terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_GHG/Data/tmp")
+terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp")
 print(tempdir())
 setGDALconfig("GDAL_PAM_ENABLED", "FALSE") # does not create aux.xml files
 ###############################################################################################
@@ -37,7 +37,7 @@ l_dem <- list.files("Data/TerrainProcessed/HUC_DEMs/", pattern = ".tif", full.na
 l_dem_cluster <- l_dem[str_detect(l_dem, paste0("cluster_", args[2])) & !str_detect(l_dem, "wbt")]
 
 cluster_target <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", quiet = TRUE,
-                              query = paste0("SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE cluster = '", args[2], "'"))
+                              query = paste0("SELECT * FROM NY_Cluster_Zones_250_CROP_NAomit_6347 WHERE cluster = '", args[2], "'"))
 huc_list <- cluster_target$huc12
 ###############################################################################################
 
@@ -46,11 +46,11 @@ process_huc <- function(huc) {
     naip_files <- naip_index[grepl(huc, naip_index)]
     dem_file <- l_dem_cluster[grepl(huc, l_dem_cluster)] 
     huc_poly <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", quiet = TRUE,
-                            query = paste0("SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE huc12 = '", huc, "'")) |> 
+                            query = paste0("SELECT * FROM NY_Cluster_Zones_250_CROP_NAomit_6347 WHERE huc12 = '", huc, "'")) |> 
         vect()
     
     # uncomment the if statement with file.exists to ignore files already created
-    #if(!file.exists(target_file)){
+    if(!file.exists(target_file)){
     print("no NAIP processed yet")
     
     naip_rast <- naip_files |> 
@@ -62,9 +62,9 @@ process_huc <- function(huc) {
                        filename = target_file, overwrite = TRUE) 
     rm(naip_rast)
     gc()
-    # } else {
-    #     print("NAIP already processed")
-    # }
+    } else {
+        print("NAIP already processed")
+    }
     
     return(NULL)  
 }
@@ -91,10 +91,7 @@ future_lapply(
 )
 
 ### Run with non-parallel
-# results <- lapply(
-#     X = huc_list[1], 
-#     FUN = process_huc
-# )
+# results <- lapply(X = huc_list, FUN = process_huc)
 # 
 # 
 # 

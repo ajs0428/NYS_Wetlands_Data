@@ -176,7 +176,7 @@ rast_stack_export <- function(huc_number) {
     return(huc_number)
     stop()
   }
-  terraOptions(memfrac = 0.2, memmax = 16, tempdir = "Data/tmp")
+  terraOptions(memfrac = 0.4, memmax = 64, tempdir = "Data/tmp")
   
   stack_fn <- paste0(savePath, "cluster_", clusterSubset, "_huc_", huc_number, "_stack.tif")
   
@@ -234,12 +234,8 @@ rast_stack_export <- function(huc_number) {
     
     
     stack <- rast(aligned)
-    writeRaster(stack, filename = stack_fn, overwrite = TRUE,
-                filetype = "COG",
-                gdal = c("COMPRESS=LZW", 
-                         "BLOCKSIZE=256",
-                         "OVERVIEW_RESAMPLING=BILINEAR",
-                         "NUM_THREADS=ALL_CPUS"))
+    message("Begin writing stack: ", stack_fn)
+    writeRaster(stack, filename = stack_fn, overwrite = TRUE)
     message("Wrote stack: ", stack_fn)
     terra::tmpFiles(remove = TRUE)
     return(invisible(stack_fn))
@@ -254,26 +250,26 @@ rast_stack_export <- function(huc_number) {
 
 ### Parallel 
 
-slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
-
-if (nzchar(slurm_cpus)) {
-  corenum <- as.integer(slurm_cpus)
-} else {
-  corenum <- min(future::availableCores(), 2)
-}
-
-print(corenum)
-options(future.globals.maxSize= 48.0 * 1e9)
-# plan(multisession, workers = corenum)
-plan(future.callr::callr, workers = corenum)
-
-future_lapply(huc_numbers, rast_stack_export,
-              future.seed = TRUE,
-              future.packages = c("terra", "sf", "dplyr", "tidyr", "stringr", "tidyterra"),
-              future.globals = TRUE
-)
+# slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
+# 
+# if (nzchar(slurm_cpus)) {
+#   corenum <- as.integer(slurm_cpus)
+# } else {
+#   corenum <- min(future::availableCores(), 1)
+# }
+# 
+# print(corenum)
+# options(future.globals.maxSize= 96.0 * 1e9)
+# # plan(multisession, workers = corenum)
+# plan(future.callr::callr, workers = corenum)
+# 
+# future_lapply(huc_numbers, rast_stack_export,
+#               future.seed = TRUE,
+#               future.packages = c("terra", "sf", "dplyr", "tidyr", "stringr", "tidyterra"),
+#               future.globals = TRUE
+# )
 
 
 ### Non-parallel/Sequential
-# lapply(huc_numbers, rast_stack_export)
+lapply(huc_numbers, rast_stack_export)
 

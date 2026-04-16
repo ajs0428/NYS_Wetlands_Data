@@ -108,7 +108,7 @@ rast_chip_patch_create <- function(wetland_file){
     patchsize = as.numeric(patchSize)
     huc_num <- str_extract(wetland_file, "(?<=huc_)\\d+")
     cluster_num <- str_extract(wetland_file, "(?<=cluster_)\\d+")
-    
+    message("HUC num: ", huc_num)
     if(cluster_num != clusterSubset & !is.null(clusterSubset)){
         message("skip this cluster and huc, selecting cluster: ", clusterSubset)
         return(invisible(NULL))
@@ -146,6 +146,7 @@ rast_chip_patch_create <- function(wetland_file){
     } else {
       stack <- rast(stack_fn)
     }
+    
 
     ### Union all the polygons then rejoin and separate as groups
         ### so that each patch of touching polygons is a separate
@@ -172,7 +173,7 @@ rast_chip_patch_create <- function(wetland_file){
 
         tryCatch({
 
-            dem_crop <- crop(dem_rast, tw_vect, touches = TRUE, mask = TRUE)
+            dem_crop <- crop(stack["DEM"], tw_vect, touches = TRUE, mask = TRUE)
 
             tw_rast <- tw_vect  |>
                 terra::rasterize(y = dem_crop, field = "MOD_CLASS", touches = TRUE)
@@ -239,7 +240,7 @@ if (nzchar(slurm_cpus)) {
 print(corenum)
 options(future.globals.maxSize= 32.0 * 1e9)
 # plan(multisession, workers = corenum)
-plan(future.callr::callr)
+plan(future.callr::callr, workers = corenum)
 
 future_lapply(l_wet_cluster, rast_chip_patch_create,
               future.seed = TRUE,

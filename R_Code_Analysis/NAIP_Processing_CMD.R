@@ -2,16 +2,20 @@
 
 args = c(
     "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
-    208,
+    95,
     "Data/NAIP/HUC_NAIP_Processed/"
 )
 args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
 
-(cat("these are the arguments: \n", 
-     "- Path to cluster:", args[1], "\n",
-     "- Cluster:", args[2], "\n",
-     "- Path to NAIP Processed:", args[3], "\n"
-))
+clusterPath <- args[1]
+clusterSubset <- args[2]
+outputPath <- args[3]
+
+message("these are the arguments: \n", 
+     "- Path to cluster:", clusterPath, "\n",
+     "- Cluster:", clusterSubset, "\n",
+     "- Path to NAIP Processed:", outputPath, "\n"
+)
 
 ###############################################################################################
 
@@ -32,8 +36,8 @@ naip_index <- st_read("Data/NAIP/noaa_digital_coast_2017/tileindex_NY_NAIP_2017.
     st_transform(st_crs("EPSG:6347"))
 
 #Cluster of HUCs
-cluster_target <- sf::st_read(args[1], quiet = TRUE) |> 
-    dplyr::filter(cluster == args[2]) 
+cluster_target <- sf::st_read(clusterPath, quiet = TRUE) |> 
+    dplyr::filter(cluster == clusterSubset) 
 cluster_crs <- st_crs(cluster_target)
 cluster_hucs <- cluster_target[["huc12"]]
 
@@ -55,8 +59,8 @@ vi2 <- function(r, g, nir) {
 
 process_huc <- function(huc_num) {
     setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
-    target_file <- paste0(args[3], "cluster_", args[2], "_huc_", huc_num, "_NAIP_metrics.tif")
-    dem_filename <- paste0("Data/TerrainProcessed/HUC_DEMs", "/cluster_", args[2], "_huc_", huc_num, ".tif")
+    target_file <- paste0(outputPath, "cluster_", clusterSubset, "_huc_", huc_num, "_NAIP_metrics.tif")
+    dem_filename <- paste0("Data/TerrainProcessed/HUC_DEMs", "/cluster_", clusterSubset, "_huc_", huc_num, ".tif")
     huc <- cluster_target[cluster_target$huc12 == huc_num, ]
     # uncomment the if statement with file.exists to ignore files already created
     if(!file.exists(target_file)){
@@ -106,13 +110,16 @@ future_lapply(
     FUN = process_huc,
     future.packages = c("terra", "sf", "dplyr"),
     future.seed = TRUE, 
-    future.globals = list(
-        args = args,
-        cluster_target = cluster_target,
-        cluster_crs = cluster_crs,
-        naip_int_cluster = naip_int_cluster,
-        vi2 = vi2
-    )
+    future.globals = TRUE
+    # future.globals = list(
+    #     args = args,
+    #     cluster_target = cluster_target,
+    #     cluster_crs = cluster_crs,
+    #     naip_int_cluster = naip_int_cluster,
+    #     vi2 = vi2
+    # )
 )
+
+gc()
 
 # lapply(cluster_hucs, FUN = process_huc)
