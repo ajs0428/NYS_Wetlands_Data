@@ -17,7 +17,7 @@ set.seed(11)
 args <- c(
     "Data/Training_Data/R_Patches_Vector_Reviewed/", #Path to GIS reviewed wetland vector patches
     128, # patch size 1/2
-    208 # cluster subset options include number or NULL for any
+    225 # cluster subset options include number or NULL for any
 )
 
 args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
@@ -218,7 +218,7 @@ rast_chip_patch_create <- function(wetland_file){
 }
 
 ### Non-parallel
-# system.time({lapply(l_wet_cluster[1], rast_chip_patch_create)})
+# system.time({lapply(l_wet_cluster, rast_chip_patch_create)})
 # 
 # l_dem_cluster[[1]] |> rast() |> plot()
 # l_hydro_cluster[[1]] |> rast() |> plot()

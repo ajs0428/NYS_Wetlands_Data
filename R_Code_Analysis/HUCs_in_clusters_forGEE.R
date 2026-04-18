@@ -1,3 +1,4 @@
+### This script finds the cluster groups of HUCs to write to an external file for GEE to loop over
 library(terra)
 library(sf)
 
