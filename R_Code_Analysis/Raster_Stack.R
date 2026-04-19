@@ -208,8 +208,9 @@ rast_stack_export <- function(huc_number) {
                         -dplyr::contains("RVI"), -dplyr::contains("VH_VV_ratio")
                         )
     
-    terr_rast <- rast(get_rast_file(l_terr_cluster, "terrain")) |>
-      tidyterra::select(-dplyr::starts_with("TPI_"), -dplyr::starts_with("dmv"))
+    terr_slp_rast <- rast(get_rast_file(l_terr_cluster_slp, "terrain")) |>
+      tidyterra::select(-dplyr::starts_with("TPI_"))
+    terr_curv_rast <- rast(get_rast_file(l_terr_cluster_curv, "terrain"))
     
     hydro_rast <- rast(get_rast_file(l_hydro_cluster, "hydro"))
     hydro_rast$flowacc <- log(hydro_rast$flowacc)
@@ -220,7 +221,8 @@ rast_stack_export <- function(huc_number) {
     lidar_rast <- rast(get_rast_file(l_lidar_cluster, "LiDAR"))
     
     # --- Align and stack ---
-    rast_list <- list(dem_rast, terr_rast, hydro_rast, chm_rast, sat_rast, naip_rast, lidar_rast)
+    rast_list <- list(dem_rast, terr_slp_rast, terr_curv_rast, hydro_rast, 
+                      chm_rast, sat_rast, naip_rast, lidar_rast)
     ref <- rast_list[[1]]
     
     aligned <- lapply(rast_list, \(r) {
@@ -239,6 +241,7 @@ rast_stack_export <- function(huc_number) {
     message("Wrote stack: ", stack_fn)
     terra::tmpFiles(remove = TRUE)
     return(invisible(stack_fn))
+    gc()
     
   }, error = \(e) {
     warning("Failed for HUC ", huc_number, ": ", conditionMessage(e))
@@ -273,3 +276,4 @@ rast_stack_export <- function(huc_number) {
 ### Non-parallel/Sequential
 lapply(huc_numbers, rast_stack_export)
 
+gc()

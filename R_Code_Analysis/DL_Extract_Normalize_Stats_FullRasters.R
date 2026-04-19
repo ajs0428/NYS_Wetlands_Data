@@ -66,8 +66,8 @@ for (f in stack_files) {
   # but does NOT load it entirely into RAM — terra streams it.
   mm <- minmax(r_sub, compute = TRUE)
   
-  global_mins <- pmin(global_mins, mm["min", ])
-  global_maxs <- pmax(global_maxs, mm["max", ])
+  global_mins <- pmin(global_mins, mm["min", ], na.rm = T)
+  global_maxs <- pmax(global_maxs, mm["max", ], na.rm = T)
 }
 
 # --- Build output list ---
@@ -90,3 +90,4 @@ for (band in target_bands) {
   cat(sprintf("  %-15s  min: %12.4f  max: %12.4f\n",
               band, global_mins[band], global_maxs[band]))
 }
+
