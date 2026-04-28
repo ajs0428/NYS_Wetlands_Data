@@ -19,7 +19,6 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(tidyterra))
 library(future)
 library(future.apply)
-library(mori)
 
 terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp")
 print(tempdir())
@@ -84,7 +83,6 @@ all_crossing_features <- lapply(chms_gpkg_list, chm_ind_fun)
 
 final_crossing_features <- dplyr::bind_rows(all_crossing_features)
 
-mori::share(final_crossing_features)
 # final_crossing_features_rasts <- paste0(args[3], "/", final_crossing_features$location)
 # final_crossing_features_vrt <- vrt(final_crossing_features_rasts) |> 
 #                                 terra::project("EPSG:6347")

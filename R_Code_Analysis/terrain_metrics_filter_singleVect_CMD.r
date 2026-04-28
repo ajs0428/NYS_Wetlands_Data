@@ -29,7 +29,14 @@ library(stringr)
 setGDALconfig("GDAL_PAM_ENABLED", "FALSE") # does not create aux.xml files
 
 # SLURM allocates 96 GB / 1 core per task — no in-script parallelism needed.
-terraOptions(memmax = 80, tempdir = "Data/tmp")
+# Per-PID tempdir under the shared tmp root so concurrent slp/curv/dmv jobs
+# don't trample each other's terra spillover files (terra's tmpFiles() does
+# not filter by session, so a sibling job's cleanup can delete in-progress
+# spat_*.tif files belonging to another job).
+tmp_root <- "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp"
+tmp_session <- file.path(tmp_root, paste0("terrain_", METRIC, "_", Sys.getpid()))
+dir.create(tmp_session, recursive = TRUE, showWarnings = FALSE)
+terraOptions(memmax = 80, tempdir = tmp_session)
 ###############################################################################################
 
 process_scale <- function(dem_path, scale_factor, output_file, metric, scale_label) {
@@ -147,3 +154,6 @@ message(paste0("Found ", length(list_of_huc_dems), " DEMs to process"))
 ###############################################################################################
 
 lapply(list_of_huc_dems, terrain_function, metric = METRIC)
+
+# Clean up this job's private tempdir on success.
+unlink(tmp_session, recursive = TRUE, force = TRUE)
