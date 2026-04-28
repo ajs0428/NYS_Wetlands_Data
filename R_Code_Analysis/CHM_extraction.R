@@ -116,6 +116,11 @@ mori::share(final_crossing_features)
 target_hucs <- cluster_target$huc12
 
 process_huc <- function(cluster_huc_name) {
+    # Per-worker terra cap: 2 SLURM cores × 32 GB ≈ 64 GB, fits in 72 GB allocation.
+    terra::terraOptions(
+        tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp",
+        memmax = 32
+    )
     chm_filename <- paste0("Data/CHMs/HUC_CHMs", "/cluster_", args[2], "_huc_", cluster_huc_name, "_CHM.tif")
     dem_filename <- paste0("Data/TerrainProcessed/HUC_DEMs", "/cluster_", args[2], "_huc_", cluster_huc_name, ".tif")
     message(chm_filename)
@@ -155,15 +160,17 @@ process_huc <- function(cluster_huc_name) {
     
 }
 
-if(future::availableCores() > 16){
-    corenum <-  4
+# Honor SLURM allocation. availableCores() reads the *node*, not the cgroup,
+# which is why the previous hardcoded fallback oversubscribed CPUs.
+slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
+if (nzchar(slurm_cpus)) {
+    corenum <- as.integer(slurm_cpus)
 } else {
-    corenum <-  (future::availableCores())
+    corenum <- min(future::availableCores(), 2)
 }
 print(corenum)
 options(future.globals.maxSize= 48.0 * 1e9)
-# plan(multisession, workers = corenum)
-plan(future.callr::callr)
+plan(future.callr::callr, workers = corenum)
 
 future_lapply(
     target_hucs,

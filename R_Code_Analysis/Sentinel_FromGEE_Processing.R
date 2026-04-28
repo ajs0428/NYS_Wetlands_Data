@@ -54,9 +54,10 @@ if(length(dem_files_wo_gee) == 0){
 ###############################################################################################
 
 match_align_project <- function(single_gee_path){
-    
-    terraOptions(memfrac = 0.4, memmax = 72, tempdir = "Data/tmp")
-  
+    # Per-worker terra cap: 2 SLURM cores × 28 GB ≈ 56 GB, fits in 64 GB allocation.
+    terra::terraOptions(memmax = 28, tempdir = "Data/tmp")
+
+
     single_gee_basename <- basename(single_gee_path)
     message("GEE basename: ", single_gee_basename)
     single_gee_huc_num <- str_extract(single_gee_basename, "^\\d+")

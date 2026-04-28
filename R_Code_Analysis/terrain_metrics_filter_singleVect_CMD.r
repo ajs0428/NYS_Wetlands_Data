@@ -23,18 +23,17 @@ cat("these are the arguments: \n",
 library(terra)
 library(sf)
 library(MultiscaleDTM)
-library(future)
-library(future.apply)
-library(future.callr)
 library(stringr)
 
 
 setGDALconfig("GDAL_PAM_ENABLED", "FALSE") # does not create aux.xml files
+
+# SLURM allocates 96 GB / 1 core per task — no in-script parallelism needed.
+terraOptions(memmax = 80, tempdir = "Data/tmp")
 ###############################################################################################
 
 process_scale <- function(dem_path, scale_factor, output_file, metric, scale_label) {
     setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
-    terraOptions(memfrac = 0.4, memmax = 128, tempdir = "Data/tmp")
     if (file.exists(output_file)) {
         message(paste0(metric, " ", scale_label, " already exists, skipping"))
         return(invisible(NULL))
@@ -147,27 +146,4 @@ message(paste0("Found ", length(list_of_huc_dems), " DEMs to process"))
 
 ###############################################################################################
 
-slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
-
-if (nzchar(slurm_cpus)) {
-  corenum <- as.integer(slurm_cpus)
-} else {
-  corenum <- min(future::availableCores(), 2)
-}
-
-options(future.globals.maxSize=64.0 * 1e9)
-# plan(multisession, workers = corenum)
-plan(future.callr::callr, workers = corenum)
-
-future_lapply(
-    list_of_huc_dems,
-    terrain_function,
-    metric = METRIC,
-    future.seed = TRUE, 
-    future.globals = TRUE,
-    future.scheduling = 1.0  # Dynamic load balancing
-)
-
-#### Testing
-
-# lapply(list_of_huc_dems, terrain_function, metric = METRIC)
+lapply(list_of_huc_dems, terrain_function, metric = METRIC)

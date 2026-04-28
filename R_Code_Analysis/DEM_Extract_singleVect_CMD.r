@@ -31,11 +31,12 @@ library(future.apply)
 library(stringr)
 suppressPackageStartupMessages(library(tidyterra))
 
-# Configure terra for efficiency
+# Main-process terra config (workers re-set their own inside cluster_extract).
+# memmax is GB; memfrac is a fraction of *node* RAM (not the SLURM cgroup), so
+# it's misleading on shared HPC nodes — we rely on memmax only.
 terraOptions(
     tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp",
-    memmax = 36,
-    memfrac = 0.6      # Use up to 60% of RAM before writing to disk
+    memmax = 28
 )
 ###############################################################################################
 
@@ -91,6 +92,11 @@ cluster_target <- sf::st_read(args[2], quiet = TRUE) |>
 cluster_hucs <- cluster_target$huc12
 
 cluster_extract <- function(huc){
+    # Per-worker terra cap: 2 SLURM cores × 28 GB ≈ 56 GB, fits in 64 GB allocation.
+    terra::terraOptions(
+        tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp",
+        memmax = 28
+    )
     huc_sf <- cluster_target[cluster_target$huc12 == huc, ]
     
     dem_ind_huc <- dem_ind_full[rowSums(st_intersects(dem_ind_full, huc_sf, sparse = FALSE)) != 0,] # |> 

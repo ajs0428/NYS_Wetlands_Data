@@ -23,9 +23,10 @@ library(dplyr)
 library(lidR)
 library(terra)
 
+# SLURM allocates 64 GB / 1 core. memfrac is dropped because it reads node RAM
+# (not the cgroup) on shared HPC nodes; memmax is the safe cap.
 terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp",
-             memmax = 64,
-             memfrac = 0.5)
+             memmax = 56)
 
 ########################################################################################
 message("=== Lidar Metrics Pipeline ===")

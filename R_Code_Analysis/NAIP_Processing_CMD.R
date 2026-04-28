@@ -59,6 +59,11 @@ vi2 <- function(r, g, nir) {
 
 process_huc <- function(huc_num) {
     setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
+    # Per-worker terra cap: 2 SLURM cores × 28 GB ≈ 56 GB, fits in 64 GB allocation.
+    terra::terraOptions(
+        tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp",
+        memmax = 28
+    )
     target_file <- paste0(outputPath, "cluster_", clusterSubset, "_huc_", huc_num, "_NAIP_metrics.tif")
     dem_filename <- paste0("Data/TerrainProcessed/HUC_DEMs", "/cluster_", clusterSubset, "_huc_", huc_num, ".tif")
     huc <- cluster_target[cluster_target$huc12 == huc_num, ]

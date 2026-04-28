@@ -33,14 +33,14 @@ library(terra)
 library(sf)
 library(dplyr)
 library(tidyr)
-library(future)
-library(future.apply)
 library(stringr)
 # library(flowdem)
 library(whitebox)
 suppressPackageStartupMessages(library(tidyterra))
 
-terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp")
+# SLURM allocates 64 GB / 1 core per task — no in-script parallelism.
+terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp",
+             memmax = 56)
 print(tempdir())
 
 ###############################################################################################
@@ -110,32 +110,10 @@ hydro_func <- function(huc_num){
     }
 }
 
-### Parallel
-
-slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
-
-if (nzchar(slurm_cpus)) {
-  corenum <- as.integer(slurm_cpus)
-} else {
-  corenum <- min(future::availableCores(), 2)
-}
-
-options(future.globals.maxSize= 128 * 1e9)
-# plan(multisession, workers = corenum)
-plan(future.callr::callr, workers = corenum)
-
-future_lapply(dem_hucs,
-              hydro_func,
-              future.seed = TRUE,
-              future.packages = c("terra", "sf", "dplyr", "tidyr", "stringr", "flowdem"),
-              future.globals = TRUE)
+lapply(dem_hucs, hydro_func)
 
 gc()
 # terra::tmpFiles(remove = TRUE)
-
-################################################################################################
-# non-parallel
-# lapply(dem_hucs, hydro_func)
 
 # r <- rast(list_of_huc_hydro_dems[[1]])
 # s <- terra::terrain(r, v = "slope")
