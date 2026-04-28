@@ -19,9 +19,9 @@ DATE=$(date +%Y%m%d)
 
 unset SLURM_MEM_PER_CPU SLURM_MEM_PER_NODE SLURM_MEM_PER_GPU
 
-echo "=== CHM extraction ==="
+echo "=== DEM extraction ==="
 for number in "${include[@]}"; do
-    echo "  Cluster $number – CHM"
+    echo "  Cluster $number – DEM"
     srun --nodes=1 --ntasks=1 --exclusive \
         Rscript R_Code_Analysis/DEM_Extract_singleVect_CMD.r \
         "Data/NYS_DEM_Indexes" \
