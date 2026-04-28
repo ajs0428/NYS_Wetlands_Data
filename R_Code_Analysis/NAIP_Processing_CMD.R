@@ -2,7 +2,7 @@
 
 args = c(
     "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
-    95,
+    82,
     "Data/NAIP/HUC_NAIP_Processed/"
 )
 args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
@@ -92,6 +92,8 @@ process_huc <- function(huc_num) {
     
     return(NULL)  
 }
+
+###############################################################################################
 
 slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
 

@@ -2,16 +2,16 @@
 
 args = c(
     "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
-    46,
+    82,
     "Data/NAIP/HUC_NAIP_Processed/"
 )
 args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
 
-(cat("these are the arguments: \n", 
+message("these are the arguments: \n", 
     "- Path to cluster:", args[1], "\n",
     "- Cluster:", args[2], "\n",
     "- Path to NAIP Processed:", args[3], "\n"
-))
+)
 
 ###############################################################################################
 
@@ -45,26 +45,27 @@ process_huc <- function(huc) {
     target_file <- paste0(args[3], "cluster_", args[2], "_huc_", huc, "_NAIP_metrics.tif")
     naip_files <- naip_index[grepl(huc, naip_index)]
     dem_file <- l_dem_cluster[grepl(huc, l_dem_cluster)] 
-    huc_poly <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", quiet = TRUE,
-                            query = paste0("SELECT * FROM NY_Cluster_Zones_250_CROP_NAomit_6347 WHERE huc12 = '", huc, "'")) |> 
-        vect()
-    
-    # uncomment the if statement with file.exists to ignore files already created
-    if(!file.exists(target_file)){
-    print("no NAIP processed yet")
-    
-    naip_rast <- naip_files |> 
-        lapply(FUN = terra::rast) |> 
-        terra::sprc() |> 
-        terra::mosaic() |> 
-        terra::project(y = rast(dem_file)) |> 
-        terra::crop(y = rast(dem_file), mask = TRUE,
-                       filename = target_file, overwrite = TRUE) 
-    rm(naip_rast)
-    gc()
-    } else {
-        print("NAIP already processed")
-    }
+    print(naip_files)
+    # huc_poly <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", quiet = TRUE,
+    #                         query = paste0("SELECT * FROM NY_Cluster_Zones_250_CROP_NAomit_6347 WHERE huc12 = '", huc, "'")) |> 
+    #     vect()
+    # 
+    # # uncomment the if statement with file.exists to ignore files already created
+    # if(!file.exists(target_file)){
+    # print("no NAIP processed yet")
+    # 
+    # naip_rast <- naip_files |> 
+    #     lapply(FUN = terra::rast) |> 
+    #     terra::sprc() |> 
+    #     terra::mosaic() |> 
+    #     terra::project(y = rast(dem_file)) |> 
+    #     terra::crop(y = rast(dem_file), mask = TRUE,
+    #                    filename = target_file, overwrite = TRUE) 
+    # rm(naip_rast)
+    # gc()
+    # } else {
+    #     print("NAIP already processed")
+    # }
     
     return(NULL)  
 }
@@ -91,7 +92,7 @@ future_lapply(
 )
 
 ### Run with non-parallel
-# results <- lapply(X = huc_list, FUN = process_huc)
+# lapply(X = huc_list, FUN = process_huc)
 # 
 # 
 # 

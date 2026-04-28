@@ -1,0 +1,114 @@
+---
+title: "Troubleshooting bad rasters from DL predictions"
+format: html
+---
+
+
+```{r}
+#| label: setup
+
+library(terra)
+library(sf)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(here)
+here()
+
+```
+
+
+Current list of bad rasters
+
+- cluster 82 huc 042701010203
+- cluster 218 huc 041300030301
+- cluster 218 huc 041300030206
+- cluster 218 huc 041402010101
+- cluster 11 huc 042900030101
+- cluster 11 huc 042900030601
+- cluster 225 huc 042900050201
+- cluster 22 huc 043002010302
+
+```{r}
+bad_list <- list("042701010203", "041300030301", "041300030206", "041402010101", "042900030101", "042900030601", "042900050201", "043002010302")
+```
+
+
+To check plot the raster stacks with a subset of the names
+
+- DEM, slope, curve, twi, CHM, EVI, r (red naip), pct_below_1m 
+
+```{r}
+#| eval: false
+rast("Data/HUC_Raster_Stacks/HUC_DL_Stacks/cluster_82_huc_042701010203_stack.tif", lyrs = c("DEM", "slope_local", "Geomorph_local", "meanc_local", "twi", "CHM", "EVI", "r", "pct_below_1m" )) |> plot()
+```
+
+Function version: 
+```{r}
+plot_fun <- function(huc){
+  l <- list.files(here("Data/HUC_Raster_Stacks/HUC_DL_Stacks/"), full.names = TRUE)
+  fn <- l[grepl(huc, l)]
+  cluster <- str_extract(fn, "(?<=cluster_)\\d+(?=_)")
+  # fn <- paste0("Data/HUC_Raster_Stacks/HUC_DL_Stacks/cluster_", cluster, "_huc_", huc, "_stack.tif")
+  r <- rast(here(fn), lyrs = c("DEM", "twi", "CHM", "EVI", "r", "pct_below_1m" ))
+  plot(r, main = paste0("cluster: ", cluster))
+}
+
+r <- plot_fun("042701010203")
+```
+
+
+apply across all bad raster lists
+```{r}
+#| eval: false
+
+lapply(bad_list, plot_fun)
+```
+
+
+```{r}
+v_r <- values(r[["r"]], na.rm = TRUE)
+v_D <- values(r[["DEM"]], na.rm = TRUE)
+
+terra::app
+```
+
+
+The length of the non-NA values is lower for the bad band 
+
+write a new function to capture that and save to a readable dataframe 
+
+```{r}
+val_fun <- function(huc){
+  l <- list.files(here("Data/HUC_Raster_Stacks/HUC_DL_Stacks/"), full.names = TRUE)
+  fn <- l[grepl(huc, l)]
+  cluster <- str_extract(fn, "(?<=cluster_)\\d+(?=_)")
+  # fn <- paste0("Data/HUC_Raster_Stacks/HUC_DL_Stacks/cluster_", cluster, "_huc_", huc, "_stack.tif")
+  r <- rast(here(fn), lyrs = c("DEM", "twi", "CHM", "EVI", "r", "pct_below_1m" ))
+
+  stats <- global(r, fun = "notNA")
+  stats$layer <- names(r)
+  stats_return <- stats |> arrange(notNA) |> 
+    mutate(cluster = cluster, 
+           huc = huc)
+  return(stats_return)
+}
+
+val_l <- lapply(bad_list, val_fun)
+
+```
+
+
+```{r}
+val_df <- bind_rows(val_l)
+rownames(val_df) <- NULL
+val_df |> group_by(huc) |> mutate(group_mean = mean(notNA),
+                                  group_std = sd(notNA),
+                                  big_diff = case_when(notNA < abs(group_mean - group_std) ~ "YesBad",
+                                                       .default = "No"))
+```
+
+```{r}
+plot_fun(22, "043002010302")
+```
+

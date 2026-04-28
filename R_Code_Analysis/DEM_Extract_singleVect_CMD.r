@@ -7,7 +7,7 @@
 
 args = c("Data/NYS_DEM_Indexes",
          "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
-         22,
+         64,
          "Data/DEMs/",
          "Data/TerrainProcessed/HUC_DEMs"
 )
@@ -34,8 +34,8 @@ suppressPackageStartupMessages(library(tidyterra))
 # Configure terra for efficiency
 terraOptions(
     tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp",
-    memfrac = 0.6,      # Use up to 60% of RAM before writing to disk
-    threads = 2         # Internal threading for terra operations (per worker)
+    memmax = 36,
+    memfrac = 0.6      # Use up to 60% of RAM before writing to disk
 )
 ###############################################################################################
 
