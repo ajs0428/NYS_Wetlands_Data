@@ -25,7 +25,7 @@ for number in "${include[@]}"; do
     srun --nodes=1 --ntasks=1 --exclusive \
         Rscript R_Code_Analysis/Sentinel_FromGEE_Processing.R \
         "Data/TerrainProcessed/HUC_DEMs/" \
-        "Data/Satellite/GEE_Download_NY_HUC_Sentinel_Indices/ny_huc_indices" \
+        "Data/Satellite/GEE_Download_NY_HUC_Sentinel_Indices/" \
         "Data/Satellite/HUC_Processed_NY_Sentinel_Indices/" \
         "$number" \
         >> "Shell_Scripts/logs/sat_gee_${number}_${DATE}.log" 2>&1 &

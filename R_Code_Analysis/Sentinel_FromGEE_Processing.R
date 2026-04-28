@@ -4,8 +4,9 @@ args = c(
     "Data/TerrainProcessed/HUC_DEMs/",
     "Data/Satellite/GEE_Download_NY_HUC_Sentinel_Indices/",
     "Data/Satellite/HUC_Processed_NY_Sentinel_Indices/",
-    46
+    82
 )
+
 args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
 
 demFolder <- args[1]
@@ -14,13 +15,12 @@ hucExport <- args[3]
 clusterNumber <- args[4]
 
 
-
-(message("these are the arguments: \n", 
+message("these are the arguments: \n", 
      "- Path to processed DEM files: ", demFolder, "\n",
      "- Path to processed GEE Downloaded Sentinel files: ", geeDownloads, "\n",
      "- Path to save processed Sentinel files: ", hucExport, "\n",
      "- Cluster number ", clusterNumber, "\n"
-))
+)
 
 ###############################################################################################
 library(terra)
@@ -49,13 +49,14 @@ dem_files_wo_gee <- dem_files_clust[!dem_hucs %in% gee_hucs]
 if(length(dem_files_wo_gee) == 0){
   message("No missing matches with DEMs")
 } else {
-  message("Missing hucs: ", dem_files_wo_gee)
+  message("Missing hucs: ", dem_files_wo_gee, appendLF = TRUE)
 }
 ###############################################################################################
 
 match_align_project <- function(single_gee_path){
     
     terraOptions(memfrac = 0.4, memmax = 72, tempdir = "Data/tmp")
+  
     single_gee_basename <- basename(single_gee_path)
     message("GEE basename: ", single_gee_basename)
     single_gee_huc_num <- str_extract(single_gee_basename, "^\\d+")
@@ -65,7 +66,8 @@ match_align_project <- function(single_gee_path){
     message("DEM filename: ",single_dem_filename)
     gee_sentinel_filename <- paste0(hucExport, single_dem_filename, "_sentinel_indices.tif")
     message("GEE filename: ",gee_sentinel_filename)
-    # if(file.exists(gee_sentinel_filename)){
+    
+    if(!file.exists(gee_sentinel_filename)){
         dem_rast <- rast(single_dem_file)
         gee_rast_process <- rast(single_gee_path) |>
             terra::project(y = dem_rast, method = "bilinear", mask = TRUE,
@@ -77,9 +79,9 @@ match_align_project <- function(single_gee_path){
             message("Error on stacking?: ", e$message)
             return(NA)
         })
-    # } else {
-    #     message(paste0("file already exists skipping", gee_sentinel_filename))
-    # }
+    } else {
+        message(paste0("file already exists skipping", gee_sentinel_filename))
+    }
     rm(dem_rast)
     rm(gee_rast_process)
     gc()
