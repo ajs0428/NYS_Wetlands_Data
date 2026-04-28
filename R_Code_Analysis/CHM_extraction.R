@@ -123,12 +123,12 @@ process_huc <- function(cluster_huc_name) {
     dem_filename <- paste0("Data/TerrainProcessed/HUC_DEMs", "/cluster_", args[2], "_huc_", cluster_huc_name, ".tif")
     message(chm_filename)
     
-    dem_rast <- rast(dem_filename)
     is_not_empty <- function(r) {
         !all(is.na(values(r)))
     }
 
     if(!file.exists(chm_filename) & file.exists(dem_filename)){
+        dem_rast <- rast(dem_filename)
         huc_target <- cluster_target[cluster_target$huc12 == cluster_huc_name, ]
         huc_chms <- st_filter(final_crossing_features, huc_target, .predicate = st_intersects)
         huc_file_locs <- paste0(args[3], "/",  huc_chms$location)
