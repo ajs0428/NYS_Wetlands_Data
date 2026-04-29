@@ -69,26 +69,20 @@ print(non_wbt_list)
 hydro_func <- function(huc_num){
     
     dem_fn <- list_of_huc_dems[grepl(huc_num, list_of_huc_dems)]
+    dem_fn_abs <- paste0("/ibstorage/anthony/NYS_Wetlands_Data/", dem_fn)
     hc_fn <- paste0("Data/TerrainProcessed/HUC_DEM_Hydro/cluster_", clusterNumber, "_huc_", huc_num, "_wbt.tif")
+    hc_fn_abs <- paste0("/ibstorage/anthony/NYS_Wetlands_Data/", hc_fn)
     
-    if(!file.exists(hc_fn)){
-        message("Hydro-Conditioning for ", hc_fn)
+    if(!file.exists(hc_fn_abs)){
+        message("Hydro-Conditioning for ", hc_fn_abs)
         wbt_fill_depressions(
-            dem = dem_fn, 
-            output = hc_fn, 
+            dem = dem_fn_abs, 
+            output = hc_fn_abs, 
             # dist = 500,
             # min_dist = 100,
             # max_cost = 500, 
             # flat_increment = 0.5
         )
-        # r <- rast(dem)
-        # rb <- flowdem::breach(r)
-        # rbf <- flowdem::fill(rb, epsilon = TRUE)
-        # writeRaster(rbf, filename = hc_fn, datatype = "FLT8S", overwrite = TRUE)
-        # rm(r)
-        # rm(rb)
-        # rm(rbf)
-        # gc()
     } 
     
     fa_twi_name <- paste0(hydroFolder, tools::file_path_sans_ext(basename(hc_fn)), "_TWI_Facc.tif")

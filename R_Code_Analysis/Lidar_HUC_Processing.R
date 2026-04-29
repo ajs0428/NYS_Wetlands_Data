@@ -26,7 +26,7 @@ library(terra)
 # SLURM allocates 64 GB / 1 core. memfrac is dropped because it reads node RAM
 # (not the cgroup) on shared HPC nodes; memmax is the safe cap.
 terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp",
-             memmax = 56)
+             memmax = 32)
 
 ########################################################################################
 message("=== Lidar Metrics Pipeline ===")
@@ -112,7 +112,8 @@ lidar_huc <- function(huc_num){
             tmpl_r <- crop(template, ext(r), snap = "out")
             resample(r, tmpl_r, method = "bilinear")
         })
-
+        gc()
+        
         if (length(aligned) == 1) {
             lidar_metrics_huc <- crop(aligned[[1]], huc_vect, mask = TRUE)
         } else {
@@ -123,8 +124,8 @@ lidar_huc <- function(huc_num){
         lidar_metrics_huc[[1]] <- lidar_metrics_huc[[1]] |> classify(cbind(NA, 1)) |> terra::mask(huc_vect)
         lidar_metrics_huc[[c(2,3)]] <- lidar_metrics_huc[[c(2,3)]] |> classify(cbind(NA, 0)) |> terra::mask(huc_vect)
         writeRaster(lidar_metrics_huc, lidar_huc_fn)
-        #rm(lidar_metrics_huc)
-        # return(lidar_metrics_huc)
+        rm(cropped, aligned, lidar_metrics_huc, huc_vect)
+        terra::tmpFiles(remove = TRUE)
         gc()
     } else {
         message("Already file: ", lidar_huc_fn)
