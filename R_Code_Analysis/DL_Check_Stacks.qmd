@@ -51,10 +51,10 @@ plot_fun <- function(huc){
   cluster <- str_extract(fn, "(?<=cluster_)\\d+(?=_)")
   # fn <- paste0("Data/HUC_Raster_Stacks/HUC_DL_Stacks/cluster_", cluster, "_huc_", huc, "_stack.tif")
   r <- rast(here(fn), lyrs = c("DEM", "twi", "CHM", "EVI", "r", "pct_below_1m" ))
-  plot(r, main = paste0("cluster: ", cluster))
+  plot(r, main = paste0("cluster: ", cluster, " huc: ", huc))
 }
 
-r <- plot_fun("042701010203")
+r <- plot_fun("042900030101")
 ```
 
 

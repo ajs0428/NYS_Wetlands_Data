@@ -99,7 +99,6 @@ process_scale <- function(dem_path, scale_factor, output_file, metric, scale_lab
   
   # Explicit cleanup of intermediate
   rm(smoothed, result)
-  gc(verbose = FALSE)
   
   return(invisible(NULL))
 }
@@ -134,7 +133,6 @@ terrain_function <- function(dem_path, metric) {
   
   # Cleanup
   gc(verbose = FALSE)
-  tmpFiles(remove = TRUE)
   
   return(invisible(NULL))
 }

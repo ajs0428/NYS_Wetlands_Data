@@ -168,3 +168,7 @@ if (!"huc" %in% names(all_missing_hucs_df)) {
 }
 
 readr::write_csv(all_missing_hucs_df, paste0("Data/MissingProcessing/cluster_", clusterSubset, "_missingHUCprocessing.csv"))
+
+
+### Run code below to summarise all .csv
+# list.files("Data/MissingProcessing/", full.names = TRUE) |> lapply(read.csv) |> bind_rows() |> na.omit() |> dplyr::arrange(source)

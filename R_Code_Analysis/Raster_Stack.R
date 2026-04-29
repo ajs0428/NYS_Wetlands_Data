@@ -239,9 +239,9 @@ rast_stack_export <- function(huc_number) {
     message("Begin writing stack: ", stack_fn)
     writeRaster(stack, filename = stack_fn, overwrite = TRUE)
     message("Wrote stack: ", stack_fn)
-    terra::tmpFiles(remove = TRUE)
-    return(invisible(stack_fn))
+    rm(rast_list, aligned, stack, ref)
     gc()
+    return(invisible(stack_fn))
     
   }, error = \(e) {
     warning("Failed for HUC ", huc_number, ": ", conditionMessage(e))

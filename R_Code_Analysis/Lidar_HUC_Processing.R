@@ -125,7 +125,6 @@ lidar_huc <- function(huc_num){
         lidar_metrics_huc[[c(2,3)]] <- lidar_metrics_huc[[c(2,3)]] |> classify(cbind(NA, 0)) |> terra::mask(huc_vect)
         writeRaster(lidar_metrics_huc, lidar_huc_fn)
         rm(cropped, aligned, lidar_metrics_huc, huc_vect)
-        terra::tmpFiles(remove = TRUE)
         gc()
     } else {
         message("Already file: ", lidar_huc_fn)
