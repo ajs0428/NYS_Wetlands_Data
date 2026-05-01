@@ -5,7 +5,7 @@
 ###   Rscript compute_global_band_stats.R <stack_dir> <output_json>
 ###
 ### Example:
-###   Rscript R_Code_Analysis/DL_Raster_Normalize_Extract.R Data/HUC_Raster_Stacks/HUC_DL_Stacks/ \
+###   Rscript R_Code_Analysis/DL_Extract_Normalize_Stats_FullRasters Data/HUC_Raster_Stacks/HUC_DL_Stacks/ \
 ###         Data/HUC_Raster_Stacks/HUC_DL_Stacks_Extracted_Values.json
 
 library(terra)

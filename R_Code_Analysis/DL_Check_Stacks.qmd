@@ -54,7 +54,7 @@ plot_fun <- function(huc){
   plot(r, main = paste0("cluster: ", cluster, " huc: ", huc))
 }
 
-r <- plot_fun("042900030101")
+# r <- plot_fun("042900030101")
 ```
 
 

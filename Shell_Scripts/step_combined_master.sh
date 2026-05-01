@@ -6,11 +6,11 @@
 cd /ibstorage/anthony/NYS_Wetlands_Data/
 
 # ── Cluster numbers to process ───────────────────────────────────────────────
-# include=(22)
+include=(225)
 ### Batch 1
 # include=(11 22 46 50 64 67 82 95 123 168 208 218 225 250)
 ### Batch 2
-include=(1  2  3  4  5  6  7  8)
+# include=(1  2  3  4  5  6  7  8)
 ### Batch 3
 #include=(9 10 12 13 14 15)
 ### Batch 4

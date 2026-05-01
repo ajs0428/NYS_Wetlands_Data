@@ -4,7 +4,7 @@ args = c(
     "Data/TerrainProcessed/HUC_DEMs/",
     "Data/Satellite/GEE_Download_NY_HUC_Sentinel_Indices/",
     "Data/Satellite/HUC_Processed_NY_Sentinel_Indices/",
-    82
+    225
 )
 
 args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here

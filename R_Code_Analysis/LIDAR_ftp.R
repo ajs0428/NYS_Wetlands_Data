@@ -187,11 +187,11 @@ process_tile <- function(tile_name, tile_url, out_dir) {
 # Args: gpkg_path, cluster_number, index_path, output_dir
 #
 # Example:
-#   Rscript R_Code_Analysis/Lidar_ftp.R \
-#     "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg" \
-#     208 \
-#     "Data/Lidar/Indexes/NYS_Central_Finger_Lakes_2020.gpkg" \
-#     "Data/Lidar/Metrics"
+  # Rscript R_Code_Analysis/Lidar_ftp.R \
+  #   "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg" \
+  #   208 \
+  #   "Data/Lidar/Indexes/NYS_Central_Finger_Lakes_2020.gpkg" \
+  #   "Data/Lidar/Metrics"
 ###############################################################################
 args <- c("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
               82,
