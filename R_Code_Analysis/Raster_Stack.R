@@ -202,27 +202,34 @@ rast_stack_export <- function(huc_number) {
     
     chm_rast <- rast(get_rast_file(l_chm_cluster, "CHM"))
     
-    sat_rast <- rast(get_rast_file(l_sat_cluster, "SAT")) |>
-      tidyterra::select(-dplyr::contains("NDVI"), -dplyr::contains("MNDWI"), 
-                        -dplyr::contains("PSRI"), -dplyr::contains("DPSVI"), 
-                        -dplyr::contains("RVI"), -dplyr::contains("VH_VV_ratio")
-                        )
+    # sat_rast <- rast(get_rast_file(l_sat_cluster, "SAT")) |>
+    #   tidyterra::select(-dplyr::contains("NDVI"), -dplyr::contains("MNDWI"), 
+    #                     -dplyr::contains("PSRI"), -dplyr::contains("DPSVI"), 
+    #                     -dplyr::contains("RVI"), -dplyr::contains("VH_VV_ratio")
+    #                     )
     
     terr_slp_rast <- rast(get_rast_file(l_terr_cluster_slp, "terrain")) |>
       tidyterra::select(-dplyr::starts_with("TPI_"))
-    terr_curv_rast <- rast(get_rast_file(l_terr_cluster_curv, "terrain"))
+    # terr_curv_rast <- rast(get_rast_file(l_terr_cluster_curv, "terrain"))
     
     hydro_rast <- rast(get_rast_file(l_hydro_cluster, "hydro"))
     hydro_rast$flowacc <- log(hydro_rast$flowacc)
     
-    naip_rast <- rast(get_rast_file(l_naip_cluster, "NAIP"))
-    set.names(naip_rast, c("r", "g", "b", "nir", "n_ndvi", "n_ndwi"))
+    naip_rast <- rast(get_rast_file(l_naip_cluster, "NAIP")) |>
+      tidyterra::select(-dplyr::contains("ndvi"), -dplyr::contains("ndwi"))
+    #set.names(naip_rast, c("r", "g", "b", "nir"))
     
     lidar_rast <- rast(get_rast_file(l_lidar_cluster, "LiDAR"))
     
     # --- Align and stack ---
-    rast_list <- list(dem_rast, terr_slp_rast, terr_curv_rast, hydro_rast, 
-                      chm_rast, sat_rast, naip_rast, lidar_rast)
+    rast_list <- list(dem_rast, 
+                      terr_slp_rast, 
+                      #terr_curv_rast, 
+                      hydro_rast, 
+                      chm_rast, 
+                      #sat_rast, 
+                      naip_rast, 
+                      lidar_rast)
     ref <- rast_list[[1]]
     
     aligned <- lapply(rast_list, \(r) {
