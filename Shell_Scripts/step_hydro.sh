@@ -23,7 +23,7 @@ unset SLURM_MEM_PER_CPU SLURM_MEM_PER_NODE SLURM_MEM_PER_GPU
 for number in "${include[@]}"; do
     echo "  Cluster $number – Hydro"
     srun --nodes=1 --ntasks=1 --exclusive \
-        Rscript R_Code_Analysis/hydro_metrics_singleVect_CMD.r \
+        Rscript R_Code_Analysis/hydro_metrics_singleVect_CMD.R \
         "$GPKG" \
         "$number" \
         "Data/TerrainProcessed/HUC_DEMs/" \
@@ -42,7 +42,7 @@ echo "Hydro processing completed."
 # # Loop through each number in the list
 # for number in "${include[@]}"; do
 #     echo "Running Rscript with argument: $number"
-#     Rscript R_Code_Analysis/hydro_metrics_singleVect_CMD.r \
+#     Rscript R_Code_Analysis/hydro_metrics_singleVect_CMD.R \
 #     "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg" \
 #     "$number" \
 #     "Data/TerrainProcessed/HUC_DEMs/" \

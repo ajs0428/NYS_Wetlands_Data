@@ -23,7 +23,7 @@ echo "=== DEM extraction ==="
 for number in "${include[@]}"; do
     echo "  Cluster $number – DEM"
     srun --nodes=1 --ntasks=1 --exclusive \
-        Rscript R_Code_Analysis/DEM_Extract_singleVect_CMD.r \
+        Rscript R_Code_Analysis/DEM_Extract_singleVect_CMD.R \
         "Data/NYS_DEM_Indexes" \
         "$GPKG" \
         "$number" \

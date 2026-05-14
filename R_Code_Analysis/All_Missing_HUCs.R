@@ -20,7 +20,7 @@ summ_missing_huc_df
 
 source_specs <- list(
   DEM = list(
-    script = "R_Code_Analysis/DEM_Extract_singleVect_CMD.r",
+    script = "R_Code_Analysis/DEM_Extract_singleVect_CMD.R",
     job_name = "dem_missing",
     nodelist = "cbsuxu04,cbsuxu05,cbsuxu06,cbsuxu07,cbsuxu08,cbsuxu09,cbsuxu10",
     mem = "32G", cpus = 2, ntasks = 5, ntasks_per_node = 1,
@@ -56,7 +56,7 @@ source_specs <- list(
              '"$number"')
   ),
   TerrainCurv = list(
-    script = "R_Code_Analysis/terrain_metrics_noparallel_filter_singleVect_CMD.r",
+    script = "R_Code_Analysis/terrain_metrics_noparallel_filter_singleVect_CMD.R",
     job_name = "curv_missing",
     nodelist = "cbsuxu09,cbsuxu10",
     mem = "128G", cpus = 1, ntasks = 2, ntasks_per_node = NA,
@@ -68,7 +68,7 @@ source_specs <- list(
              '"Data/TerrainProcessed/HUC_TerrainMetrics/"')
   ),
   TerrainDMV = list(
-    script = "R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.r",
+    script = "R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.R",
     job_name = "dmv_missing",
     nodelist = "cbsuxu09,cbsuxu10",
     mem = "48G", cpus = 3, ntasks = 2, ntasks_per_node = NA,
@@ -80,7 +80,7 @@ source_specs <- list(
              '"Data/TerrainProcessed/HUC_TerrainMetrics/"')
   ),
   TerrainSlp = list(
-    script = "R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.r",
+    script = "R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.R",
     job_name = "slp_missing",
     nodelist = "cbsuxu09,cbsuxu10",
     mem = "64G", cpus = 2, ntasks = 2, ntasks_per_node = NA,
@@ -114,7 +114,7 @@ source_specs <- list(
              '"Data/Lidar/HUC_Lidar_Metrics/"')
   ),
   Hydro = list(
-    script = "R_Code_Analysis/hydro_metrics_singleVect_CMD.r",
+    script = "R_Code_Analysis/hydro_metrics_singleVect_CMD.R",
     job_name = "hydro_missing",
     nodelist = "cbsuxu09,cbsuxu10",
     mem = "128G", cpus = 1, ntasks = 2, ntasks_per_node = 1,

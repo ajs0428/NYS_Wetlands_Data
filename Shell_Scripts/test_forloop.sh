@@ -10,7 +10,7 @@ include=(11 12 22 51 53 56 192 193 198 218 225 250)
 # Loop through each number in the list
 for number in "${include[@]}"; do
     echo "Running Rscript with argument: $number"
-    Rscript R_Code_Analysis/test_loop.r \
+    Rscript R_Code_Analysis/test_loop.R \
     "Data/NY_HUCS/NY_Cluster_Zones_200.gpkg" \
     "$number" \
     "Data/TerrainProcessed/HUC_DEMs/" \

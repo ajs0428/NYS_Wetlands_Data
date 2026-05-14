@@ -3,7 +3,7 @@
 cd /ibstorage/anthony/NYS_Wetlands_GHG
 module load R/4.4.3
 
-Rscript R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.r \
+Rscript R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.R \
 	"Data/NY_HUCS/NY_Cluster_Zones_200.gpkg" \
 	208 \
 	"Data/TerrainProcessed/HUC_DEMs" \

@@ -22,7 +22,7 @@ include=(64 67 82 95 218 225 240 250)
 # Loop through each number in the list
 for number in "${include[@]}"; do
     echo "Running Rscript with argument: $number"
-    Rscript R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.r \
+    Rscript R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.R \
     "$number" \
     "Data/TerrainProcessed/HUC_DEMs" \
     "slp" \

@@ -6,7 +6,7 @@ module load R/4.4.3
 
 # Starting with making HUC terrain data
 
-Rscript R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.r \
+Rscript R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.R \
         "Data/NY_HUCS/NY_Cluster_Zones_200.gpkg" \
         208 \
 	"Data/TerrainProcessed/HUC_DEMs" \
@@ -18,7 +18,7 @@ echo "Monitor with: tail -f terrain.log"
 
 wait
 
-Rscript R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.r \
+Rscript R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.R \
         "Data/NY_HUCS/NY_Cluster_Zones_200.gpkg" \
         208 \
 	"Data/TerrainProcessed/HUC_DEMs" \
@@ -31,7 +31,7 @@ echo "Monitor with: tail -f terrain.log"
 wait
 
 
-Rscript R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.r \
+Rscript R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.R \
         "Data/NY_HUCS/NY_Cluster_Zones_200.gpkg" \
         208 \
 	"Data/TerrainProcessed/HUC_DEMs" \
@@ -48,7 +48,7 @@ wait
 cd /ibstorage/anthony/NYS_Wetlands_GHG
 module load R/4.4.3
 
-Rscript R_Code_Analysis/raster_data_extraction.r \
+Rscript R_Code_Analysis/raster_data_extraction.R \
         "Data/NY_HUCS/NY_Cluster_Zones_200.gpkg" \
         208 \
 	"Data/TerrainProcessed/HUC_TerrainMetrics/" \

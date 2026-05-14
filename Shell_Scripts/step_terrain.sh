@@ -26,7 +26,7 @@ echo "=== Terrain metric: $metric ==="
 for number in "${include[@]}"; do
     echo "  Cluster $number – $metric"
     srun --nodes=1 --ntasks=1 --exclusive \
-        Rscript R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.r \
+        Rscript R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.R \
         "$number" \
         "Data/TerrainProcessed/HUC_DEMs" \
         "$metric" \

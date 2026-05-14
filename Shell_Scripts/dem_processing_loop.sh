@@ -81,7 +81,7 @@ for number in "${include[@]}"; do
     echo "Running Rscript with argument: $number"
     
     srun --nodes=1 --ntasks=1 --exclusive \
-    Rscript R_Code_Analysis/DEM_Extract_singleVect_CMD.r \
+    Rscript R_Code_Analysis/DEM_Extract_singleVect_CMD.R \
         "Data/NYS_DEM_Indexes" \
         "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg" \
         "$number" \

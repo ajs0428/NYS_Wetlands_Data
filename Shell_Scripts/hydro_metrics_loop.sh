@@ -24,7 +24,7 @@ include=(11 22 46 50 64 67 82 95 123 168 208 218 225 250)
 for number in "${include[@]}"; do
     echo "Running Rscript with argument: $number"
     srun --nodes=1 --ntasks=1 --exclusive \
-        Rscript R_Code_Analysis/hydro_metrics_singleVect_CMD.r \
+        Rscript R_Code_Analysis/hydro_metrics_singleVect_CMD.R \
         "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg" \
         "$number" \
         "Data/TerrainProcessed/HUC_DEMs/" \

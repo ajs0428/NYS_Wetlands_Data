@@ -24,7 +24,7 @@ include=(22)
 for number in "${include[@]}"; do
     echo "Running Rscript with argument: $number" 
     # srun --nodes=1 --ntasks=1 --exclusive \
-    Rscript R_Code_Analysis/terrain_metrics_noparallel_filter_singleVect_CMD.r \
+    Rscript R_Code_Analysis/terrain_metrics_noparallel_filter_singleVect_CMD.R \
     "$number" \
     "Data/TerrainProcessed/HUC_DEMs" \
     "curv" \

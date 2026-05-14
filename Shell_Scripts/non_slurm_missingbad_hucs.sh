@@ -13,7 +13,7 @@ GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg"
 # ### Run DEM
 # for number in "${include[@]}"; do
 #     echo "Running Rscript with argument: $number"
-#     Rscript R_Code_Analysis/DEM_Extract_singleVect_CMD.r \
+#     Rscript R_Code_Analysis/DEM_Extract_singleVect_CMD.R \
 #         "Data/NYS_DEM_Indexes" \
 #         "$GPKG" \
 #         "$number" \
@@ -25,7 +25,7 @@ GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg"
 # ### Run Curvature 
 # for number in "${include[@]}"; do
 #     echo "Running Rscript with argument: $number" 
-#     Rscript R_Code_Analysis/terrain_metrics_noparallel_filter_singleVect_CMD.r \
+#     Rscript R_Code_Analysis/terrain_metrics_noparallel_filter_singleVect_CMD.R \
 #     "$number" \
 #     "Data/TerrainProcessed/HUC_DEMs" \
 #     "curv" \
@@ -36,7 +36,7 @@ GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg"
 # ### Run Slope 
 # for number in "${include[@]}"; do
 #     echo "Running Rscript with argument: $number" 
-#     Rscript R_Code_Analysis/terrain_metrics_noparallel_filter_singleVect_CMD.r \
+#     Rscript R_Code_Analysis/terrain_metrics_noparallel_filter_singleVect_CMD.R \
 #     "$number" \
 #     "Data/TerrainProcessed/HUC_DEMs" \
 #     "slp" \
@@ -47,7 +47,7 @@ GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg"
 # ### Run DMV 
 # for number in "${include[@]}"; do
 #     echo "Running Rscript with argument: $number" 
-#     Rscript R_Code_Analysis/terrain_metrics_noparallel_filter_singleVect_CMD.r \
+#     Rscript R_Code_Analysis/terrain_metrics_noparallel_filter_singleVect_CMD.R \
 #     "$number" \
 #     "Data/TerrainProcessed/HUC_DEMs" \
 #     "dmv" \
@@ -58,7 +58,7 @@ GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg"
 # ### Run hydro 
 # for number in "${include[@]}"; do
 #     echo "Running hydro_metrics with argument: $number"
-#     Rscript R_Code_Analysis/hydro_metrics_singleVect_CMD.r \
+#     Rscript R_Code_Analysis/hydro_metrics_singleVect_CMD.R \
 #         "$GPKG" \
 #         "$number" \
 #         "Data/TerrainProcessed/HUC_DEMs/" \
@@ -96,7 +96,7 @@ GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg"
 ### Run LiDAR 
 for number in "${include[@]}"; do
     echo "Running Lidar_HUC_Processing with argument: $number"
-      Rscript R_Code_Analysis/terrain_metrics_noparallel_filter_singleVect_CMD.r \
+      Rscript R_Code_Analysis/terrain_metrics_noparallel_filter_singleVect_CMD.R \
           "$number" \
           "Data/TerrainProcessed/HUC_DEMs" \
           "curv" \

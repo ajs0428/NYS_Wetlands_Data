@@ -22,7 +22,7 @@ include=(11 12 22 51 53 56 60 64 67 84 86 90 92 102 105 116 120 123 136 138 152 
 
 for number in "${include[@]}"; do
     echo "Running Rscript with argument: $number"
-    Rscript R_Code_Analysis/training_pts_extract.r \
+    Rscript R_Code_Analysis/training_pts_extract.R \
 	"Data/NY_HUCS/NY_Cluster_Zones_250_NAomit.gpkg" \
 	"$number" \
 	"Data/TerrainProcessed/HUC_TerrainMetrics/" \
