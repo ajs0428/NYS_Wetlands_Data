@@ -17,7 +17,7 @@ library(future.apply)
 
 args <- c(
   "Data/HUC_DL_Predictions/", 
-  "TRUE", 
+  "FALSE", 
   "Data/HUC_DL_Predictions/HUC_DL_Predictions_Clean/" 
 )
 
@@ -80,7 +80,7 @@ if (nzchar(slurm_cpus)) {
   corenum <- min(future::availableCores(), 3)
 }
 
-print(corenum)
+message("Core number:", corenum)
 options(future.globals.maxSize= 36.0 * 1e9)
 # plan(multisession, workers = corenum)
 plan(future.callr::callr, workers = corenum)
@@ -95,6 +95,6 @@ gc()
 
 ### Sequential
 
-# lapply(list_of_predicted[1:3], crop_export_smooth)
+# lapply(list_of_predicted, crop_export_smooth)
 # 
 # gc()

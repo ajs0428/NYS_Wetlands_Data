@@ -17,7 +17,7 @@ set.seed(11)
 args <- c(
     "Data/Training_Data/R_Patches_Vector_Reviewed/", #Path to GIS reviewed wetland vector patches
     128, # patch size 1/2
-    225 # cluster subset options include number or NULL for any
+    64 # cluster subset options include number or NULL for any
 )
 
 args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
@@ -40,52 +40,52 @@ l_wet_cluster_nums <- sub(".*cluster_(\\d+).*", "\\1", l_wet) |> unique()
 l_wet_extracted_clusters <- sub(".*cluster_(\\d+)_.*", "\\1", l_wet)
 l_wet_cluster <- l_wet[grepl(paste0("cluster_", clusterSubset, "_"), l_wet)]
 print(l_wet_cluster)
-clust_extract_fun <- function(l){
-    # extracted_clusters <- sub(".*cluster_(\\d+)_.*", "\\1", l)
-    if(str_detect(deparse(substitute(l)), "dem")){
-        message("DEM")
-        l_clust <- l[grepl(paste0("cluster_", clusterSubset, "_"), l) & 
-                         !str_detect(l, "wbt")]
-    } else if(str_detect(deparse(substitute(l)), "terr")){
-        message("Terrain")
-        l_clust <- l[grepl(paste0("cluster_", clusterSubset, "_"), l) & 
-                   str_detect(l, "local") & 
-                   !str_detect(l, "10m|1000m")]
-    } else {
-        message(str_remove(deparse(substitute(l)), "l_"))
-        l_clust <- l[grepl(paste0("cluster_", clusterSubset, "_"), l)]
-    }
-    return(l_clust)
-}
-l_dem <- list.files("Data/TerrainProcessed/HUC_DEMs/", pattern = ".tif", full.names = TRUE) 
-l_dem_cluster <- clust_extract_fun(l_dem)
-l_dem_cluster_nums <- str_extract(l_dem, "(?<=cluster_)\\d+(?=_)") |> unique() # All the DEM clusters
-
-l_chm <- list.files("Data/CHMs/HUC_CHMs/", pattern = ".tif", full.names = TRUE) 
-l_chm_cluster <- clust_extract_fun(l_chm)
-
-l_naip <- list.files("Data/NAIP/HUC_NAIP_Processed/", pattern = ".tif", full.names = TRUE) 
-l_naip_cluster <- clust_extract_fun(l_naip)
-
-l_terr <- list.files("Data/TerrainProcessed/HUC_TerrainMetrics/", 
-                             full.names = TRUE)
-l_terr_cluster <- clust_extract_fun(l_terr)
-l_hydro <- list.files("Data/TerrainProcessed/HUC_Hydro/", 
-                      pattern = ".tif",
-                      full.names = TRUE)
-l_hydro_cluster <- clust_extract_fun(l_hydro)
-l_sat <- list.files("Data/Satellite/HUC_Processed_NY_Sentinel_Indices/", 
-                            full.names = TRUE)
-l_sat_cluster <- clust_extract_fun(l_sat)
-
-
-l_lidar <- list.files("Data/Lidar/HUC_Lidar_Metrics/", 
-                      full.names = TRUE)
-l_lidar_cluster <- clust_extract_fun(l_lidar)
-
-length(l_naip_cluster) == length(l_dem_cluster) & length(l_dem_cluster) == length(l_sat_cluster) & length(l_dem_cluster) == length(l_hydro_cluster)
-
-logpath <- "Data/Training_Data/R_Patches_Vector/Vector_Patch_Checklist.csv"
+# clust_extract_fun <- function(l){
+#     # extracted_clusters <- sub(".*cluster_(\\d+)_.*", "\\1", l)
+#     if(str_detect(deparse(substitute(l)), "dem")){
+#         message("DEM")
+#         l_clust <- l[grepl(paste0("cluster_", clusterSubset, "_"), l) & 
+#                          !str_detect(l, "wbt")]
+#     } else if(str_detect(deparse(substitute(l)), "terr")){
+#         message("Terrain")
+#         l_clust <- l[grepl(paste0("cluster_", clusterSubset, "_"), l) & 
+#                    str_detect(l, "local") & 
+#                    !str_detect(l, "10m|1000m")]
+#     } else {
+#         message(str_remove(deparse(substitute(l)), "l_"))
+#         l_clust <- l[grepl(paste0("cluster_", clusterSubset, "_"), l)]
+#     }
+#     return(l_clust)
+# }
+# l_dem <- list.files("Data/TerrainProcessed/HUC_DEMs/", pattern = ".tif", full.names = TRUE) 
+# l_dem_cluster <- clust_extract_fun(l_dem)
+# l_dem_cluster_nums <- str_extract(l_dem, "(?<=cluster_)\\d+(?=_)") |> unique() # All the DEM clusters
+# 
+# l_chm <- list.files("Data/CHMs/HUC_CHMs/", pattern = ".tif", full.names = TRUE) 
+# l_chm_cluster <- clust_extract_fun(l_chm)
+# 
+# l_naip <- list.files("Data/NAIP/HUC_NAIP_Processed/", pattern = ".tif", full.names = TRUE) 
+# l_naip_cluster <- clust_extract_fun(l_naip)
+# 
+# l_terr <- list.files("Data/TerrainProcessed/HUC_TerrainMetrics/", 
+#                              full.names = TRUE)
+# l_terr_cluster <- clust_extract_fun(l_terr)
+# l_hydro <- list.files("Data/TerrainProcessed/HUC_Hydro/", 
+#                       pattern = ".tif",
+#                       full.names = TRUE)
+# l_hydro_cluster <- clust_extract_fun(l_hydro)
+# l_sat <- list.files("Data/Satellite/HUC_Processed_NY_Sentinel_Indices/", 
+#                             full.names = TRUE)
+# l_sat_cluster <- clust_extract_fun(l_sat)
+# 
+# 
+# l_lidar <- list.files("Data/Lidar/HUC_Lidar_Metrics/", 
+#                       full.names = TRUE)
+# l_lidar_cluster <- clust_extract_fun(l_lidar)
+# 
+# length(l_naip_cluster) == length(l_dem_cluster) & length(l_dem_cluster) == length(l_sat_cluster) & length(l_dem_cluster) == length(l_hydro_cluster)
+# 
+# logpath <- "Data/Training_Data/R_Patches_Vector/Vector_Patch_Checklist.csv"
 ########################################################################################
 # fct_df <- data.frame(ID = 0:4, MOD_CLASS = c("EMW", "FSW", "OWW", "SSW", "UPL"))
 fct_df <- data.frame(ID = 0:3, MOD_CLASS = c("EMW", "FSW", "SSW", "UPL"))
@@ -119,30 +119,31 @@ rast_chip_patch_create <- function(wetland_file){
     stack_fn <- paste0("Data/HUC_Raster_Stacks/HUC_DL_Stacks/", "cluster_", cluster_num, "_huc_", huc_num, "_stack.tif")
     
     if (!file.exists(stack_fn)) {
+      message("missing stack for: ", huc_num)
     # huc_poly <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", quiet = TRUE,
     #                               query = paste0("SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE huc12 = '", huc_num, "'"))
-    dem_rast <- l_dem_cluster[grepl(huc_num, l_dem_cluster) & grepl(paste0("cluster_", cluster_num), l_dem_cluster)] |> rast()
-    set.names(dem_rast, "DEM")
-    chm_rast <- l_chm_cluster[grepl(huc_num, l_chm_cluster) & grepl(paste0("cluster_", cluster_num), l_chm_cluster)] |> rast()
-    sat_rast <- l_sat_cluster[grepl(huc_num, l_sat_cluster)& grepl(paste0("cluster_", cluster_num), l_sat_cluster)] |> rast() |>
-        tidyterra::select(-NDVI, -MNDWI, -PSRI, -DPSVI, -RVI, -VH_VV_ratio)
-    terr_rast <- l_terr_cluster[grepl(huc_num, l_terr_cluster)& grepl(paste0("cluster_", cluster_num), l_terr_cluster)] |> rast() |> 
-      tidyterra::select(-TPI_local, -dmv_local)
-    hydro_rast <- l_hydro_cluster[grepl(huc_num, l_hydro_cluster) & grepl(paste0("cluster_", cluster_num), l_hydro_cluster)] |> rast()
-    hydro_rast$flowacc <- log(hydro_rast$flowacc)
-    naip_rast <- l_naip_cluster[grepl(huc_num, l_naip_cluster)& grepl(paste0("cluster_", cluster_num), l_naip_cluster)] |> rast()
-    lidar_rast <- l_lidar_cluster[grepl(huc_num, l_lidar_cluster)& grepl(paste0("cluster_", cluster_num), l_lidar_cluster)] |> rast()
-    set.names(naip_rast, c("r", "g", "b", "nir", "n_ndvi", "n_ndwi"))
-    message(ext(dem_rast))
-    message(ext(chm_rast))
-    message(ext(sat_rast))
-    message(ext(terr_rast))
-    message(ext(hydro_rast))
-    message(ext(naip_rast))
-    message(ext(lidar_rast))
-
-    stack <- c(dem_rast, terr_rast, hydro_rast, chm_rast, sat_rast, naip_rast, lidar_rast)
-        writeRaster(stack, filename = stack_fn, overwrite = TRUE)
+    # dem_rast <- l_dem_cluster[grepl(huc_num, l_dem_cluster) & grepl(paste0("cluster_", cluster_num), l_dem_cluster)] |> rast()
+    # set.names(dem_rast, "DEM")
+    # chm_rast <- l_chm_cluster[grepl(huc_num, l_chm_cluster) & grepl(paste0("cluster_", cluster_num), l_chm_cluster)] |> rast()
+    # sat_rast <- l_sat_cluster[grepl(huc_num, l_sat_cluster)& grepl(paste0("cluster_", cluster_num), l_sat_cluster)] |> rast() |>
+    #     tidyterra::select(-NDVI, -MNDWI, -PSRI, -DPSVI, -RVI, -VH_VV_ratio)
+    # terr_rast <- l_terr_cluster[grepl(huc_num, l_terr_cluster)& grepl(paste0("cluster_", cluster_num), l_terr_cluster)] |> rast() |> 
+    #   tidyterra::select(-TPI_local, -dmv_local)
+    # hydro_rast <- l_hydro_cluster[grepl(huc_num, l_hydro_cluster) & grepl(paste0("cluster_", cluster_num), l_hydro_cluster)] |> rast()
+    # hydro_rast$flowacc <- log(hydro_rast$flowacc)
+    # naip_rast <- l_naip_cluster[grepl(huc_num, l_naip_cluster)& grepl(paste0("cluster_", cluster_num), l_naip_cluster)] |> rast()
+    # lidar_rast <- l_lidar_cluster[grepl(huc_num, l_lidar_cluster)& grepl(paste0("cluster_", cluster_num), l_lidar_cluster)] |> rast()
+    # set.names(naip_rast, c("r", "g", "b", "nir", "n_ndvi", "n_ndwi"))
+    # message(ext(dem_rast))
+    # message(ext(chm_rast))
+    # message(ext(sat_rast))
+    # message(ext(terr_rast))
+    # message(ext(hydro_rast))
+    # message(ext(naip_rast))
+    # message(ext(lidar_rast))
+    # 
+    # stack <- c(dem_rast, terr_rast, hydro_rast, chm_rast, sat_rast, naip_rast, lidar_rast)
+    #     writeRaster(stack, filename = stack_fn, overwrite = TRUE)
     } else {
       stack <- rast(stack_fn)
     }
@@ -218,7 +219,7 @@ rast_chip_patch_create <- function(wetland_file){
 }
 
 ### Non-parallel
-# system.time({lapply(l_wet_cluster, rast_chip_patch_create)})
+# system.time({lapply(l_wet_cluster[1], rast_chip_patch_create)})
 # 
 # l_dem_cluster[[1]] |> rast() |> plot()
 # l_hydro_cluster[[1]] |> rast() |> plot()
