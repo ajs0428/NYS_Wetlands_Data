@@ -16,8 +16,8 @@ set.seed(11)
 ########################################################################################
 
 args <- c(
-    64,
-    "Data/Training_Data/NHP_HUC_Wetlands_For_Field_Validation/", #Path to wetland polygons
+    225,
+    "Data/Training_Data/R_Patches_Vector_Reviewed//", #Path to wetland polygons
     128,
     FALSE # This should be false and then re-run as TRUE once GIS edits have taken place
 )
@@ -94,7 +94,7 @@ chip_patch_create <- function(wetland_file){
     createRastPatches <- as.logical(args[4])
     huc_num <- str_extract(wetland_file, "(?<=huc_)\\d+")
     huc_poly <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", quiet = TRUE,
-                                  query = paste0("SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE huc12 = '", huc_num, "'"))
+                                  query = paste0("SELECT * FROM NY_Cluster_Zones_250_CROP_NAomit_6347 WHERE huc12 = '", huc_num, "'"))
     
     target_wetlands <- st_read(wetland_file, quiet = TRUE) # target wetlands
     tw_centroid <- st_centroid(target_wetlands) |> st_geometry() |> st_cast(to = "MULTIPOINT") #centroid cast to multipoint
@@ -221,7 +221,7 @@ chip_patch_create <- function(wetland_file){
     }
     
     fn_full_patch <- paste0("Data/R_Patches_Vector/", sourceWetlands,"_cluster_", args[1], "_huc_", huc_num, "_", patchsize*2, "m.gpkg" )
-    if(file.exists(fn_full_patch)){
+    if(!file.exists(fn_full_patch)){
         full_patch_file <- list.files("Data/R_Patches_Vector/", 
                                       full.names = TRUE, 
                                       pattern = paste0("_cluster_", args[1], "_huc_", huc_num, "_", "patch.*\\.gpkg$")) |> 
@@ -265,7 +265,7 @@ future_lapply(l_wet_cluster, chip_patch_create,
               future.globals = TRUE)
 
 ### Non-parallel
-# system.time({lapply(l_wet_cluster, chip_patch_create)})
+# system.time({lapply(l_wet_cluster[3], chip_patch_create)})
 
 
 # l_patches <- list.files("Data/R_Patches_Vector")

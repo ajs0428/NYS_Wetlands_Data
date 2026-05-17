@@ -17,7 +17,7 @@ set.seed(11)
 args <- c(
     "Data/Training_Data/R_Patches_Vector_Reviewed/", #Path to GIS reviewed wetland vector patches
     128, # patch size 1/2
-    64 # cluster subset options include number or NULL for any
+    250 # cluster subset options include number or NULL for any
 )
 
 args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
@@ -148,7 +148,7 @@ rast_chip_patch_create <- function(wetland_file){
       stack <- rast(stack_fn)
     }
     
-
+    
     ### Union all the polygons then rejoin and separate as groups
         ### so that each patch of touching polygons is a separate
             ### object that can be used to crop the rasters
@@ -163,12 +163,13 @@ rast_chip_patch_create <- function(wetland_file){
     tw_union_area <- tw_union |>
         mutate(area = as.numeric(st_area(geom))) |>
         filter(area >= ((patchsize*2)**2)-0.5) #remove patches that are smaller than the 256*256 dimensions
-    tw_grouped_list <- tw_valid |> st_join(tw_union_area, left = FALSE) |>
-        filter(st_is_valid(geom)) |>
-        group_split(group_id)
-
+    tw_grouped_list <- tw_valid |> st_join(tw_union_area, left = FALSE) %>%
+        dplyr::filter(st_is_valid(.)) |>
+        dplyr::group_split(group_id)
+    
     #### Each patch should be a separate file that is patchsize*2 x patchsize*2
     for(i in seq_along(tw_grouped_list)){
+        # message("The number is ", i)
         skip_to_next <- FALSE
         tw_vect <- vect(tw_grouped_list[[i]])
 
@@ -185,6 +186,7 @@ rast_chip_patch_create <- function(wetland_file){
             levels(tw_rast_sub) <- fct_df
 
             fn <- paste0("Data/Training_Data/R_Patches/", sourceWetlands,"_cluster_", cluster_num, "_huc_", huc_num, "_patch_", i, "_", patchsize*2, "m.tif" )
+            
             # fn_labels <- paste0("Data/Training_Data/R_Patches_Labels/", "labels_only_", sourceWetlands, "_cluster_", cluster_num, "_huc_", huc_num, "_patch_", i, "_", patchsize*2, "m.tif" )
 
             # Regular Patches with all predictors
@@ -219,7 +221,7 @@ rast_chip_patch_create <- function(wetland_file){
 }
 
 ### Non-parallel
-# system.time({lapply(l_wet_cluster[1], rast_chip_patch_create)})
+# system.time({lapply(l_wet_cluster, rast_chip_patch_create)})
 # 
 # l_dem_cluster[[1]] |> rast() |> plot()
 # l_hydro_cluster[[1]] |> rast() |> plot()
