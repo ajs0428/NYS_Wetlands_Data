@@ -10,12 +10,11 @@
 #SBATCH --time=24:00:00
 #SBATCH --output=Shell_Scripts/SLURM/slurm-ortho-%j.out
 
-# NOTE: verify this matches where the repo lives on the cluster. Your ortho test
-# run wrote temp files under /ibstorage/anthony/NYS_Wetlands_GHG/tmp, so the
-# project dir may differ from the LiDAR loop's path below.
+# Standalone ortho download (hardcoded cluster list below). Equivalent to
+# step_ortho.sh, which takes the cluster list as an argument instead.
 cd /ibstorage/anthony/NYS_Wetlands_Data/
 
-export TMPDIR=/ibstorage/anthony/tmp
+export TMPDIR=/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp/
 
 module load R/4.4.3
 
