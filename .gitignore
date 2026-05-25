@@ -19,3 +19,4 @@ Models/*
 
 !.gitignore
 !*.Rproj*
+.Rproj.user
