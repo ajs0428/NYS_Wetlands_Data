@@ -258,6 +258,14 @@ process_ortho_tile <- function(tile_name, dl_url, ftp_url, out_dir) {
   #   "Data/Ortho/Tiles" \
   #   4bd
 ###############################################################################
+args <- c(
+    "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
+    "208",
+    "2020",
+    "Data/Ortho/Tiles", 
+    "4bd"
+)
+
 args <- commandArgs(trailingOnly = TRUE)
 
 if (length(args) < 4) {
