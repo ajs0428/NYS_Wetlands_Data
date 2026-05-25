@@ -10,8 +10,20 @@
 #SBATCH --time=24:00:00
 #SBATCH --output=Shell_Scripts/SLURM/slurm-ortho-%j.out
 
-# Standalone ortho download (hardcoded cluster list below). Equivalent to
-# step_ortho.sh, which takes the cluster list as an argument instead.
+# =============================================================================
+# ORTHO DOWNLOAD -- standalone version (cluster list hardcoded in this file)
+#
+#   Usage:  sbatch Shell_Scripts/ortho_loop.sh        (takes NO arguments)
+#   Set the imagery year at `YEAR=` below; it applies to all clusters.
+#   The 14-cluster list is hardcoded at `clusters=( ... )` below -- edit there.
+#
+# For a single cluster, or to pass the year/clusters on the command line, use
+# step_ortho.sh instead:  sbatch step_ortho.sh "208" 2023 4bd
+#
+# NO `conda activate` is needed: the ORTHO_GDALWARP wrapper activates the conda
+# 'ortho' env inside its own subprocess for the JP2 decode/reproject only. This
+# job just needs `module load R`.
+# =============================================================================
 cd /ibstorage/anthony/NYS_Wetlands_Data/
 
 export TMPDIR=/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp/

@@ -9,11 +9,23 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --output=Shell_Scripts/SLURM/slurm-ortho-%j.out
 
-# Usage: sbatch step_ortho.sh "<comma-sep clusters>" [year] [bands]
-#   e.g. sbatch step_ortho.sh "208,225" 2020 4bd
-# year/bands default to 2020/4bd so step_combined_master.sh can call it with
-# just the cluster list. mem is lighter than the other steps because the JP2
-# decode/reproject runs in an external gdalwarp (streaming), not in R.
+# =============================================================================
+# ORTHO DOWNLOAD -- argument-driven version (clusters passed on the command line)
+#
+#   Usage:  sbatch step_ortho.sh "<comma-sep clusters>" [year] [bands]
+#   Single cluster:   sbatch step_ortho.sh "208" 2023 4bd
+#   Several clusters: sbatch step_ortho.sh "208,225,11" 2023 4bd
+#   year/bands are optional and default to 2020 / 4bd, so step_combined_master.sh
+#   can call this with just the cluster list.
+#
+# For the full standing set of 14 clusters with the year hardcoded inside the
+# file (no arguments), use ortho_loop.sh instead.
+#
+# NO `conda activate` is needed: the ORTHO_GDALWARP wrapper activates the conda
+# 'ortho' env inside its own subprocess for the JP2 decode/reproject only. This
+# job just needs `module load R`. mem is lighter than the other steps because
+# that gdalwarp streams the warp outside of R.
+# =============================================================================
 
 cd /ibstorage/anthony/NYS_Wetlands_Data/
 export TMPDIR=/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp/
