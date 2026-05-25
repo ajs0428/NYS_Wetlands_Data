@@ -190,23 +190,33 @@ download_ortho_tile <- function(dl_url, ftp_url, dest_dir, max_tries = 3) {
     jp2[1]
 }
 
+# Path to a JPEG2000-capable gdalwarp. terra's bundled GDAL on BioHPC is built
+# WITHOUT a JP2 driver, so rast() cannot read .jp2 directly. Point this at a
+# GDAL install that reports JP2OpenJPEG (see `gdalwarp --formats | grep -i jp2`)
+# via the ORTHO_GDALWARP env var; defaults to whatever is on PATH.
+ortho_gdalwarp <- Sys.getenv("ORTHO_GDALWARP", unset = "gdalwarp")
+
 ### Reproject + resample a .jp2 to 1 m EPSG:6347, snapped to the integer-meter
 # grid so tiles share an origin with the LiDAR metrics (required for mosaic()).
+# Uses gdalwarp directly (not terra::rast) so it works even when terra's GDAL
+# lacks a JP2 driver. -tap forces the output grid onto integer-meter multiples
+# (equivalent to the floor/ceil snap in compute_lidar_metrics()).
 reproject_ortho_tile <- function(jp2_path, out_path, res = 1,
                                  target_crs = "EPSG:6347") {
-    r <- rast(jp2_path)
+    args <- c("-t_srs", target_crs,
+              "-tr", res, res, "-tap",
+              "-r", "bilinear",
+              "-of", "GTiff", "-overwrite",
+              "-co", "COMPRESS=DEFLATE",
+              shQuote(jp2_path), shQuote(out_path))
 
-    # Snap reprojected extent to an integer-meter grid, build a template, and
-    # project onto it (identical strategy to compute_lidar_metrics()).
-    src_bbox <- as.polygons(ext(r), crs = crs(r))
-    tgt_ext  <- ext(project(src_bbox, target_crs))
-    snap_ext <- ext(floor(xmin(tgt_ext)), ceiling(xmax(tgt_ext)),
-                    floor(ymin(tgt_ext)), ceiling(ymax(tgt_ext)))
-    tmpl <- rast(snap_ext, resolution = res, crs = target_crs,
-                 nlyrs = nlyr(r))
-    r <- project(r, tmpl, method = "bilinear")
+    log <- suppressWarnings(
+        system2(ortho_gdalwarp, args, stdout = TRUE, stderr = TRUE))
+    status <- attr(log, "status")
 
-    writeRaster(r, out_path, overwrite = TRUE, datatype = "INT1U")
+    if ((!is.null(status) && status != 0) || !file.exists(out_path)) {
+        stop("gdalwarp failed: ", paste(log, collapse = " | "))
+    }
     out_path
 }
 

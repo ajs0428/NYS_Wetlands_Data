@@ -293,7 +293,20 @@ if (n_workers > 1) {
 - **Missing tiles**: Some areas may have no coverage for a given year. Log warnings but don't fail.
 - **Download failures**: FTP/HTTPS can be flaky. Implement retry logic (e.g., 3 attempts with backoff) in `download_ortho_tile()`.
 - **Disk space**: JP2s and their zip containers can be large. Clean up zips and raw JP2s after reprojection.
-- **GDAL JP2 driver**: Ensure GDAL on BioHPC has JP2 support (`JP2OpenJPEG` or `JP2ECW` driver). Can verify with `terra::gdal(drivers=TRUE)` or `sf::sf_extSoftVersion()`.
+- **GDAL JP2 driver (CONFIRMED MISSING on BioHPC)**: `terra::gdal(drivers=TRUE)` on BioHPC lists
+  `JPEG` but **no** `JP2OpenJPEG`/`JP2ECW`/`JP2KAK`/`JPEG2000`, so `terra::rast()` errors with
+  "not recognized as a supported file format" on `.jp2`. The script therefore decodes/reprojects
+  via an **external JPEG2000-capable `gdalwarp`** (configurable through the `ORTHO_GDALWARP` env var),
+  not `terra::rast()`. Before running, locate a JP2-enabled GDAL:
+  - Check current PATH: `gdalinfo --formats | grep -i jp2`
+  - Cornell BioHPC alternatives: `ls -d /programs/*gdal* 2>/dev/null`, then test each
+    `<dir>/bin/gdalinfo --formats | grep -i jp2`
+  - Or conda: `conda create -n ortho -c conda-forge gdal libgdal-jp2openjpeg`
+    (GDAL ≥3.9 ships JP2OpenJPEG as the separate `libgdal-jp2openjpeg` plugin)
+  Then either prepend its `bin/` to `PATH` (leaving `ORTHO_GDALWARP=gdalwarp`) or set
+  `ORTHO_GDALWARP=/full/path/to/gdalwarp`. The three sidecar files (`.jp2`, `.j2w`, `.aux`) are kept
+  together on extract so gdalwarp can pick up the georeferencing; if gdalwarp reports a missing source
+  SRS, add `-s_srs` per state-plane zone.
 
 ---
 
