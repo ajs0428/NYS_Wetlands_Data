@@ -330,7 +330,7 @@ if (n_workers > 1) {
     plan(sequential)
 }
 
-results <- future_lapply(seq_len(nrow(unique_tiles))[1], function(idx) {
+results <- future_lapply(seq_len(nrow(unique_tiles)), function(idx) {
     process_ortho_tile(unique_tiles$tile_name[idx],
                        unique_tiles$dl_url[idx],
                        unique_tiles$ftp_url[idx],
