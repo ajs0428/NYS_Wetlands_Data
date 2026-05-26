@@ -15,11 +15,10 @@ export TMPDIR=/ibstorage/anthony/tmp
 
 module load R/4.4.3
 
+#Batch import
+source Shell_Scripts/batch_config.sh
+include=("${batch1[@]}")
 
-# Define the list of numbers
-# include=(11 12 22 51 53 56 60 64 67 84 86 90 92 102 105 116 120 123 136 138 152 176 183 189 192 193 198 208 218 225 250)
-# include=(11 22 46 50 64 67 82 95 123 168 208 218 225 250)
-include=(22)
 # Loop through each number in the list
 for number in "${include[@]}"; do
     echo "Running Rscript with argument: $number" 

@@ -43,7 +43,8 @@ YEAR=2023          # imagery year applied to every cluster (edit as needed)
 BANDS=4bd
 
 # Same cluster set as lidar_loop.sh
-clusters=(11 22 46 50 64 67 82 95 123 168 208 218 225 250)
+source Shell_Scripts/batch_config.sh
+include=("${batch1[@]}")
 
 for cluster in "${clusters[@]}"; do
     echo "Running ortho download for cluster $cluster (year $YEAR, $BANDS)"
