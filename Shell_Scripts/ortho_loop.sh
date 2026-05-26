@@ -39,7 +39,7 @@ mkdir -p Shell_Scripts/SLURM Shell_Scripts/logs
 
 GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg"
 OUTDIR="Data/Ortho/Tiles"
-YEAR=2020          # imagery year applied to every cluster (edit as needed)
+YEAR=2023          # imagery year applied to every cluster (edit as needed)
 BANDS=4bd
 
 # Same cluster set as lidar_loop.sh
