@@ -22,8 +22,11 @@
 #   Usage:  sbatch step_ortho_huc.sh "<comma-sep clusters>" [year]
 #   Single cluster:   sbatch step_ortho_huc.sh "208" 2023
 #   Several clusters: sbatch step_ortho_huc.sh "208,225,11" 2023
-#   year defaults to 2020. To process ONE HUC12 of one cluster, call the R
-#   script directly with a 7th arg (the huc12 code) instead of using this loop.
+#   `year` (default 2020) is the PREFERRED year: each HUC12 uses that year where
+#   it has coverage and only fills gaps with the nearest other year(s), so HUCs
+#   stay single-year where possible (years used are logged + written to the
+#   GeoTIFF metadata). To process ONE HUC12 of one cluster, call the R script
+#   directly with a 7th arg (the huc12 code) instead of using this loop.
 # =============================================================================
 
 cd /ibstorage/anthony/NYS_Wetlands_Data/

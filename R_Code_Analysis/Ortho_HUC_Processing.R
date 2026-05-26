@@ -59,14 +59,24 @@ dir.create(outputPath, recursive = TRUE, showWarnings = FALSE)
 ortho_index <- st_read(orthoIndex, quiet = TRUE) |>
     st_transform(st_crs("EPSG:6347"))
 
-# Keep only tiles for the requested year so we never mosaic mixed-year imagery
-# (the year is the trailing token of the tile filename, e.g. ..._4bd_2023.tif).
-ortho_index <- ortho_index[grepl(paste0("_", year, "\\.tif$"), ortho_index$location), ]
-message("Ortho tiles in index for year ", year, ": ", nrow(ortho_index))
-if (nrow(ortho_index) == 0) {
-    stop("No ortho tiles found in the index for year ", year,
-         ". Did Ortho_ftp.R run and was gdaltindex_ortho.sh re-run afterwards?")
+# Tag each tile with its imagery year (trailing token of the filename, e.g.
+# ..._4bd_2023.tif) and drop any non-conforming names. We do NOT hard-filter to
+# one year: a HUC12 on a collection boundary may need a second year to fill the
+# part the preferred year doesn't cover (see select_tiles_for_huc).
+ortho_index$tile_year <- sub(".*_(\\d{4})\\.tif$", "\\1", ortho_index$location)
+ortho_index <- ortho_index[grepl("_\\d{4}\\.tif$", ortho_index$location), ]
+years_available <- sort(unique(ortho_index$tile_year))
+message("Ortho tile years available in index: ", paste(years_available, collapse = ", "))
+if (!year %in% years_available) {
+    stop("Preferred year ", year, " has no tiles in the index (have: ",
+         paste(years_available, collapse = ", "),
+         "). Did Ortho_ftp.R run for that year and was gdaltindex_ortho.sh re-run afterwards?")
 }
+
+# Fraction of a HUC's area allowed to remain uncovered before we treat the
+# current year as "not fully covering" and pull in another year to fill it.
+# Guards against sliver/float artifacts from the polygon difference.
+GAP_TOL <- 0.001  # 0.1% of HUC area
 
 # Cluster of HUCs
 cluster_target <- sf::st_read(clusterPath, quiet = TRUE) |>
@@ -86,6 +96,44 @@ ortho_int_cluster <- st_filter(ortho_index, cluster_target, .predicate = st_inte
 message("Ortho tiles overlapping cluster ", clusterSubset, ": ", nrow(ortho_int_cluster))
 
 ###############################################################################################
+
+# Choose which tiles cover a HUC12, preferring a single (homogeneous) year.
+# Strategy: take the preferred year's tiles first; if they leave more than
+# GAP_TOL of the HUC uncovered, fill the remaining gap with the nearest-in-time
+# year(s), each restricted to tiles that actually touch the gap. Returns the
+# tile paths in mosaic order (preferred first, so fun="first" keeps the
+# preferred year wherever it exists) plus the ordered list of years used.
+select_tiles_for_huc <- function(tiles_huc, huc_geom, preferred_year, years_available) {
+    huc_geom <- sf::st_make_valid(huc_geom)
+    huc_area <- as.numeric(sf::st_area(huc_geom))
+
+    # Year search order: preferred first, then nearest-in-time (newer breaks ties).
+    others <- setdiff(years_available, preferred_year)
+    others <- others[order(abs(as.integer(others) - as.integer(preferred_year)),
+                           -as.integer(others))]
+    year_order <- c(preferred_year, others)
+
+    selected   <- tiles_huc[0, ]   # empty, same columns -> preserves mosaic order
+    used_years <- character(0)
+    covered    <- NULL
+    for (yr in year_order) {
+        gap <- if (is.null(covered)) huc_geom else sf::st_difference(huc_geom, covered)
+        gap <- sf::st_make_valid(gap)
+        gap_area <- if (length(gap) == 0) 0 else sum(as.numeric(sf::st_area(gap)))
+        if (gap_area / huc_area < GAP_TOL) break          # HUC effectively covered
+
+        yr_tiles <- tiles_huc[tiles_huc$tile_year == yr, ]
+        if (nrow(yr_tiles) == 0) next
+        yr_tiles <- yr_tiles[lengths(sf::st_intersects(yr_tiles, gap)) > 0, ]  # only those touching the gap
+        if (nrow(yr_tiles) == 0) next
+
+        selected   <- rbind(selected, yr_tiles)
+        used_years <- c(used_years, yr)
+        yr_union   <- sf::st_union(sf::st_geometry(yr_tiles))
+        covered    <- if (is.null(covered)) yr_union else sf::st_union(covered, yr_union)
+    }
+    list(locs = selected$location, years = used_years)
+}
 
 process_huc <- function(huc_num) {
     setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
@@ -112,21 +160,34 @@ process_huc <- function(huc_num) {
         warning("No ortho tiles overlap HUC ", huc_num, " -- skipping.")
         return(NULL)
     }
-    message("Processing ", target_file, " from ", nrow(ortho_tiles_huc), " tile(s)")
+
+    # Prefer the requested year; fill any uncovered gap with the nearest year(s).
+    sel <- select_tiles_for_huc(ortho_tiles_huc, st_geometry(huc), year, years_available)
+    if (length(sel$locs) == 0) {
+        warning("No tiles selected for HUC ", huc_num, " -- skipping.")
+        return(NULL)
+    }
+    homog <- if (length(sel$years) <= 1) "homogeneous" else "MIXED"
+    message("Processing ", target_file, " from ", length(sel$locs),
+            " tile(s); years used: ", paste(sel$years, collapse = "+"), " (", homog, ")")
 
     # Resolve tile paths relative to Data/Ortho/ (index `location` is relative).
-    locs <- ortho_tiles_huc$location
-    locs <- ifelse(file.exists(locs), locs, file.path("Data/Ortho", locs))
+    locs <- ifelse(file.exists(sel$locs), sel$locs, file.path("Data/Ortho", sel$locs))
 
     huc_vect <- vect(huc)
     # Tiles are already EPSG:6347 / 1 m, so mosaic -> crop/mask -> resample onto
     # the HUC12's DEM grid (the final resample is what guarantees pixel-for-pixel
-    # alignment with the DEM/LiDAR stack regardless of any origin offset).
+    # alignment with the DEM/LiDAR stack regardless of any origin offset). locs is
+    # ordered preferred-year-first, so fun="first" keeps the preferred year
+    # wherever it has coverage and only fills gaps with the later years.
     o <- terra::sprc(locs) |>
         terra::mosaic(fun = "first") |>
         terra::crop(huc_vect, mask = TRUE) |>
         terra::resample(y = rast(dem_filename), method = "bilinear")
     set.names(o, c("r", "g", "b", "nir"))
+    # Record imagery provenance in the GeoTIFF metadata (no sidecar needed).
+    terra::metags(o) <- c(ortho_years = paste(sel$years, collapse = ","),
+                          ortho_preferred_year = as.character(year))
 
     writeRaster(o, filename = target_file, overwrite = TRUE)
     rm(o)
