@@ -67,3 +67,4 @@ print(global(d, "max", na.rm = TRUE))
 cat("\n--- geometry on shared bands ---\n")
 cat("dims identical:", identical(dim(new[[common]]), dim(old[[common]])), "\n")
 cat("extent identical:", identical(as.vector(ext(new)), as.vector(ext(old))), "\n")
+

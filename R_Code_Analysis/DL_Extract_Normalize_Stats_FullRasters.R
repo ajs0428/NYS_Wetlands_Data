@@ -131,3 +131,4 @@ for (band in target_bands) {
   cat(sprintf("  %-15s  min: %12.4f  max: %12.4f\n",
               band, global_mins[band], global_maxs[band]))
 }
+
