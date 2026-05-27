@@ -174,15 +174,32 @@ process_huc <- function(huc_num) {
     # Resolve tile paths relative to Data/Ortho/ (index `location` is relative).
     locs <- ifelse(file.exists(sel$locs), sel$locs, file.path("Data/Ortho", sel$locs))
 
+    # Each tile carries a 0-valued collar from the -tap grid-snap at download
+    # time. Under mosaic(fun="first") that collar would overwrite a neighbour's
+    # real pixels and draw black seams along the tile grid. Flag the collar as NA
+    # so neighbours fill it -- but ONLY where all four bands are 0 (true collar),
+    # so a legit single-band zero such as NIR~0 over water is preserved.
+    tiles <- lapply(locs, function(f) {
+        r <- terra::rast(f)
+        collar <- (r[[1]] == 0) & (r[[2]] == 0) & (r[[3]] == 0) & (r[[4]] == 0)
+        r[collar] <- NA
+        r
+    })
+
     huc_vect <- vect(huc)
     # Tiles are already EPSG:6347 / 1 m, so mosaic -> crop/mask -> resample onto
     # the HUC12's DEM grid (the final resample is what guarantees pixel-for-pixel
-    # alignment with the DEM/LiDAR stack regardless of any origin offset). locs is
+    # alignment with the DEM/LiDAR stack regardless of any origin offset). tiles is
     # ordered preferred-year-first, so fun="first" keeps the preferred year
     # wherever it has coverage and only fills gaps with the later years.
-    o <- terra::sprc(locs) |>
-        terra::mosaic(fun = "first") |>
-        terra::crop(huc_vect, mask = TRUE) |>
+    o <- terra::sprc(tiles) |>
+        terra::mosaic(fun = "first")
+    # Close any hairline NA seam left where tiles only abut (both collars NA at
+    # the shared edge). na.policy="only" fills NA cells from their neighbours and
+    # leaves real pixels untouched; done BEFORE crop so it can't bleed past the
+    # HUC boundary. Same gap-fill idiom as the DEM extraction step.
+    o <- terra::focal(o, w = 3, fun = "mean", na.policy = "only", na.rm = TRUE)
+    o <- terra::crop(o, huc_vect, mask = TRUE) |>
         terra::resample(y = rast(dem_filename), method = "bilinear")
     set.names(o, c("r", "g", "b", "nir"))
     # Record imagery provenance in the GeoTIFF metadata (no sidecar needed).
