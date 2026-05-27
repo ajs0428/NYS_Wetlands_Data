@@ -42,52 +42,7 @@ l_wet_cluster_nums <- sub(".*cluster_(\\d+).*", "\\1", l_wet) |> unique()
 l_wet_extracted_clusters <- sub(".*cluster_(\\d+)_.*", "\\1", l_wet)
 l_wet_cluster <- l_wet[grepl(paste0("cluster_", clusterSubset, "_"), l_wet)]
 print(l_wet_cluster)
-# clust_extract_fun <- function(l){
-#     # extracted_clusters <- sub(".*cluster_(\\d+)_.*", "\\1", l)
-#     if(str_detect(deparse(substitute(l)), "dem")){
-#         message("DEM")
-#         l_clust <- l[grepl(paste0("cluster_", clusterSubset, "_"), l) & 
-#                          !str_detect(l, "wbt")]
-#     } else if(str_detect(deparse(substitute(l)), "terr")){
-#         message("Terrain")
-#         l_clust <- l[grepl(paste0("cluster_", clusterSubset, "_"), l) & 
-#                    str_detect(l, "local") & 
-#                    !str_detect(l, "10m|1000m")]
-#     } else {
-#         message(str_remove(deparse(substitute(l)), "l_"))
-#         l_clust <- l[grepl(paste0("cluster_", clusterSubset, "_"), l)]
-#     }
-#     return(l_clust)
-# }
-# l_dem <- list.files("Data/TerrainProcessed/HUC_DEMs/", pattern = ".tif", full.names = TRUE) 
-# l_dem_cluster <- clust_extract_fun(l_dem)
-# l_dem_cluster_nums <- str_extract(l_dem, "(?<=cluster_)\\d+(?=_)") |> unique() # All the DEM clusters
-# 
-# l_chm <- list.files("Data/CHMs/HUC_CHMs/", pattern = ".tif", full.names = TRUE) 
-# l_chm_cluster <- clust_extract_fun(l_chm)
-# 
-# l_naip <- list.files("Data/NAIP/HUC_NAIP_Processed/", pattern = ".tif", full.names = TRUE) 
-# l_naip_cluster <- clust_extract_fun(l_naip)
-# 
-# l_terr <- list.files("Data/TerrainProcessed/HUC_TerrainMetrics/", 
-#                              full.names = TRUE)
-# l_terr_cluster <- clust_extract_fun(l_terr)
-# l_hydro <- list.files("Data/TerrainProcessed/HUC_Hydro/", 
-#                       pattern = ".tif",
-#                       full.names = TRUE)
-# l_hydro_cluster <- clust_extract_fun(l_hydro)
-# l_sat <- list.files("Data/Satellite/HUC_Processed_NY_Sentinel_Indices/", 
-#                             full.names = TRUE)
-# l_sat_cluster <- clust_extract_fun(l_sat)
-# 
-# 
-# l_lidar <- list.files("Data/Lidar/HUC_Lidar_Metrics/", 
-#                       full.names = TRUE)
-# l_lidar_cluster <- clust_extract_fun(l_lidar)
-# 
-# length(l_naip_cluster) == length(l_dem_cluster) & length(l_dem_cluster) == length(l_sat_cluster) & length(l_dem_cluster) == length(l_hydro_cluster)
-# 
-# logpath <- "Data/Training_Data/R_Patches_Vector/Vector_Patch_Checklist.csv"
+
 ########################################################################################
 # fct_df <- data.frame(ID = 0:4, MOD_CLASS = c("EMW", "FSW", "OWW", "SSW", "UPL"))
 fct_df <- data.frame(ID = 0:3, MOD_CLASS = c("EMW", "FSW", "SSW", "UPL"))
@@ -127,7 +82,6 @@ rast_chip_patch_create <- function(wetland_file){
         message("Skipping HUC ", huc_num, ": one or more source datasets missing")
         return(invisible(NULL))
     }
-
 
     ### Union all the polygons then rejoin and separate as groups
         ### so that each patch of touching polygons is a separate
