@@ -9,6 +9,8 @@ library(readr)
 library(future)
 library(future.apply)
 
+source("R_Code_Analysis/huc_stack.R") # shared in-memory stack recipe
+
 set.seed(11)
 
 ########################################################################################
@@ -39,10 +41,8 @@ l_patches <- list.files(patchPath, pattern = "\\.gpkg$", full.names = TRUE)
 l_patches_cluster <- l_patches[grepl(paste0("cluster_", clusterSubset, "_"), l_patches)]
 print(l_patches_cluster)
 
-## List raster stacks
-l_stacks <- list.files("Data/HUC_Raster_Stacks/HUC_DL_Stacks/",
-                        pattern = "\\.tif$", full.names = TRUE)
-l_stacks_cluster <- l_stacks[grepl(paste0("cluster_", clusterSubset, "_"), l_stacks)]
+## Predictor stacks are assembled in memory per HUC (see huc_stack.R); no
+## saved *_stack.tif files are read, so source rasters are not duplicated.
 
 ## Output directory
 outDir <- "Data/Training_Data/Point_Extractions/"
@@ -52,6 +52,7 @@ if (!dir.exists(outDir)) dir.create(outDir, recursive = TRUE)
 
 point_extract_fun <- function(patch_file) {
     setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
+    source("R_Code_Analysis/huc_stack.R") # ensure recipe is available in callr workers
 
     ## Parse identifiers from filename
     huc_num <- str_extract(patch_file, "(?<=huc_)\\d+")
@@ -80,23 +81,17 @@ point_extract_fun <- function(patch_file) {
         return(NULL)
     }
 
-    ## Find matching raster stack
-    stack_match <- l_stacks_cluster[grepl(huc_num, l_stacks_cluster) &
-                                     grepl(paste0("cluster_", cluster_num), l_stacks_cluster)]
-
-    if (length(stack_match) == 0) {
-        message("No matching raster stack for cluster ", cluster_num, " HUC ", huc_num, ", skipping.")
+    ## Resolve per-HUC source rasters and build the predictor stack in memory,
+    ## cropped to the extent of this file's patches (no saved stack read).
+    paths <- huc_source_paths(huc_num, cluster_num)
+    if (!huc_sources_ready(paths, huc_num)) {
+        message("Skipping HUC ", huc_num, ": one or more source datasets missing")
         return(NULL)
     }
-    if (length(stack_match) > 1) {
-        message("Multiple stack matches found, using first: ", stack_match[1])
-        stack_match <- stack_match[1]
-    }
-
     stack_rast <- tryCatch(
-        rast(stack_match),
+        build_huc_stack_patch(paths, vect(st_union(polys)), mask = FALSE),
         error = function(e) {
-            message("Error loading raster stack: ", conditionMessage(e))
+            message("Error building stack: ", conditionMessage(e))
             return(NULL)
         }
     )

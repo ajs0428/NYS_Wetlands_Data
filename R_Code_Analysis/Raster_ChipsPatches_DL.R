@@ -10,6 +10,8 @@ library(readr)
 library(future)
 library(future.apply)
 
+source("R_Code_Analysis/huc_stack.R") # shared in-memory stack recipe
+
 set.seed(11)
 
 ########################################################################################
@@ -95,6 +97,7 @@ set.seed(420)
 
 rast_chip_patch_create <- function(wetland_file){
     setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
+    source("R_Code_Analysis/huc_stack.R") # ensure recipe is available in callr workers
     ## Setup vars
     if (grepl("NWI", basename(wetland_file))) {
         sourceWetlands <- "NWI"
@@ -116,39 +119,16 @@ rast_chip_patch_create <- function(wetland_file){
         message("Processing for all clusters in folder")
     }
     
-    stack_fn <- paste0("Data/HUC_Raster_Stacks/HUC_DL_Stacks/", "cluster_", cluster_num, "_huc_", huc_num, "_stack.tif")
-    
-    if (!file.exists(stack_fn)) {
-      message("missing stack for: ", huc_num)
-    # huc_poly <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", quiet = TRUE,
-    #                               query = paste0("SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE huc12 = '", huc_num, "'"))
-    # dem_rast <- l_dem_cluster[grepl(huc_num, l_dem_cluster) & grepl(paste0("cluster_", cluster_num), l_dem_cluster)] |> rast()
-    # set.names(dem_rast, "DEM")
-    # chm_rast <- l_chm_cluster[grepl(huc_num, l_chm_cluster) & grepl(paste0("cluster_", cluster_num), l_chm_cluster)] |> rast()
-    # sat_rast <- l_sat_cluster[grepl(huc_num, l_sat_cluster)& grepl(paste0("cluster_", cluster_num), l_sat_cluster)] |> rast() |>
-    #     tidyterra::select(-NDVI, -MNDWI, -PSRI, -DPSVI, -RVI, -VH_VV_ratio)
-    # terr_rast <- l_terr_cluster[grepl(huc_num, l_terr_cluster)& grepl(paste0("cluster_", cluster_num), l_terr_cluster)] |> rast() |> 
-    #   tidyterra::select(-TPI_local, -dmv_local)
-    # hydro_rast <- l_hydro_cluster[grepl(huc_num, l_hydro_cluster) & grepl(paste0("cluster_", cluster_num), l_hydro_cluster)] |> rast()
-    # hydro_rast$flowacc <- log(hydro_rast$flowacc)
-    # naip_rast <- l_naip_cluster[grepl(huc_num, l_naip_cluster)& grepl(paste0("cluster_", cluster_num), l_naip_cluster)] |> rast()
-    # lidar_rast <- l_lidar_cluster[grepl(huc_num, l_lidar_cluster)& grepl(paste0("cluster_", cluster_num), l_lidar_cluster)] |> rast()
-    # set.names(naip_rast, c("r", "g", "b", "nir", "n_ndvi", "n_ndwi"))
-    # message(ext(dem_rast))
-    # message(ext(chm_rast))
-    # message(ext(sat_rast))
-    # message(ext(terr_rast))
-    # message(ext(hydro_rast))
-    # message(ext(naip_rast))
-    # message(ext(lidar_rast))
-    # 
-    # stack <- c(dem_rast, terr_rast, hydro_rast, chm_rast, sat_rast, naip_rast, lidar_rast)
-    #     writeRaster(stack, filename = stack_fn, overwrite = TRUE)
-    } else {
-      stack <- rast(stack_fn)
+    ## Resolve the per-HUC source rasters (lazy pointers). The stack is built
+    ## in memory per patch below via build_huc_stack_patch() -- no *_stack.tif
+    ## is read or written, so source rasters are never duplicated on disk.
+    paths <- huc_source_paths(huc_num, cluster_num)
+    if (!huc_sources_ready(paths, huc_num)) {
+        message("Skipping HUC ", huc_num, ": one or more source datasets missing")
+        return(invisible(NULL))
     }
-    
-    
+
+
     ### Union all the polygons then rejoin and separate as groups
         ### so that each patch of touching polygons is a separate
             ### object that can be used to crop the rasters
@@ -175,7 +155,9 @@ rast_chip_patch_create <- function(wetland_file){
 
         tryCatch({
 
-            dem_crop <- crop(stack["DEM"], tw_vect, touches = TRUE, mask = TRUE)
+            # Build the predictor stack for just this patch window, in memory.
+            stack <- build_huc_stack_patch(paths, tw_vect)
+            dem_crop <- stack[["DEM"]]
 
             tw_rast <- tw_vect  |>
                 terra::rasterize(y = dem_crop, field = "MOD_CLASS", touches = TRUE)
@@ -192,8 +174,7 @@ rast_chip_patch_create <- function(wetland_file){
             # Regular Patches with all predictors
             #if(!file.exists(fn)){
                 tryCatch({
-                    cropped_stack <- crop(stack, tw_vect, mask = TRUE)
-                    cropped_stack_labeled <- c(cropped_stack, tw_rast_sub)
+                    cropped_stack_labeled <- c(stack, tw_rast_sub)
                     writeRaster(cropped_stack_labeled, filename = fn, overwrite = TRUE)
                 }, error = function(e) { message("Cropping Stack")
                                                  skip_to_next <<- TRUE}

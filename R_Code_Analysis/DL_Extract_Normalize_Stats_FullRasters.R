@@ -1,93 +1,133 @@
-### Compute global min/max band statistics across HUC raster stacks
-### Outputs a JSON file for use in the DL normalization pipeline
+### Compute global min/max band statistics across full HUC raster stacks
+### Outputs a JSON file for use in the DL normalization pipeline.
+###
+### Stacks are assembled in memory per HUC via the shared huc_stack.R recipe
+### (build_huc_stack_full) -- no saved *_stack.tif files are read, so the
+### normalization stats stay in lock-step with the bands the chip/point
+### pipelines produce, and source rasters are never duplicated on disk.
+###
+### Population: ALL HUCs in the requested cluster (from the cluster polygon),
+### not just HUCs that happen to have training patches -- so the min/max ranges
+### cover the full prediction domain the PyTorch model normalizes against.
 ###
 ### Usage:
-###   Rscript compute_global_band_stats.R <stack_dir> <output_json>
-###
+###   Rscript DL_Extract_Normalize_Stats_FullRasters.R <cluster> <output_json>
 ### Example:
-###   Rscript R_Code_Analysis/DL_Extract_Normalize_Stats_FullRasters Data/HUC_Raster_Stacks/HUC_DL_Stacks/ \
+###   Rscript R_Code_Analysis/DL_Extract_Normalize_Stats_FullRasters.R 250 \
 ###         Data/HUC_Raster_Stacks/HUC_DL_Stacks_Extracted_Values.json
 
 library(terra)
+library(sf)
 library(jsonlite)
+library(future)
+library(future.apply)
 
-args <- c("Data/HUC_Raster_Stacks/HUC_DL_Stacks/",
+source("R_Code_Analysis/huc_stack.R")
+
+args <- c("250",
           "Data/HUC_Raster_Stacks/HUC_DL_Stacks_Extracted_Values.json")
 
 args <- commandArgs(trailingOnly = TRUE)
 
 if (length(args) < 2) {
-  stop("Usage: Rscript compute_global_band_stats.R <stack_dir> <output_json>")
+  stop("Usage: Rscript DL_Extract_Normalize_Stats_FullRasters.R <cluster> <output_json>")
 }
 
-stack_dir <- args[1]
-output_json <- args[2]
+clusterSubset <- args[1]
+output_json   <- args[2]
 
-# --- Band configuration ---
+cat("Cluster:", clusterSubset, "\n")
+cat("Output :", output_json, "\n\n")
+
+setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
+
+# --- Band configuration ------------------------------------------------------
 # Bands that use min_max normalization (need global stats).
 # shift_scale (NDVI, MNDWI, NDYI) and one_hot (Geomorph_local) are
-# analytically defined in dl_band_config.json — skip them here.
-# MOD_CLASS is the label band — also skip.
+# analytically defined in dl_band_config.json -- skip them here.
+# MOD_CLASS is the label band -- also skip (and it is not in the predictor
+# stack anyway; kept here for safety).
 skip_bands <- c("MOD_CLASS", "NDVI", "MNDWI", "NDYI", "EVI", "GDVI",
-                "n_ndvi","n_ndwi", "Geomorph_local")
+                "n_ndvi", "n_ndwi", "Geomorph_local")
 
-# --- Discover stack files ---
-stack_files <- list.files(stack_dir, pattern = "\\.tif$", full.names = TRUE)
+# --- Discover all HUCs in the cluster ----------------------------------------
+huc_poly <- sf::st_read(
+  "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", quiet = TRUE,
+  query = paste0("SELECT * FROM NY_Cluster_Zones_250_CROP_NAomit_6347 WHERE cluster = '",
+                 clusterSubset, "'")
+)
+huc_numbers <- huc_poly$huc12
 
-if (length(stack_files) == 0) {
-  stop("No .tif files found in ", stack_dir)
+if (length(huc_numbers) == 0) {
+  stop("No HUCs found for cluster ", clusterSubset)
+}
+cat("Found", length(huc_numbers), "HUCs in cluster", clusterSubset, "\n\n")
+
+# --- Per-HUC min/max (streamed, no full load into RAM) -----------------------
+per_huc_minmax <- function(huc_number) {
+  source("R_Code_Analysis/huc_stack.R") # ensure recipe is available in callr workers
+  setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
+  terraOptions(memfrac = 0.4, memmax = 64, tempdir = "Data/tmp")
+
+  paths <- huc_source_paths(huc_number, clusterSubset)
+  if (!huc_sources_ready(paths, huc_number)) return(NULL)
+
+  stk <- tryCatch(build_huc_stack_full(paths), error = function(e) {
+    message("Build failed for HUC ", huc_number, ": ", conditionMessage(e)); NULL
+  })
+  if (is.null(stk)) return(NULL)
+
+  keep <- setdiff(names(stk), skip_bands)
+  # minmax(compute = TRUE) streams the (lazily resampled) stack block-by-block.
+  mm <- minmax(stk[[keep]], compute = TRUE)
+  list(min = mm["min", ], max = mm["max", ])
 }
 
-cat("Found", length(stack_files), "stack files\n")
+# --- Parallel map ------------------------------------------------------------
+slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
+corenum <- if (nzchar(slurm_cpus)) as.integer(slurm_cpus) else min(future::availableCores(), 4)
+cat("Workers:", corenum, "\n")
+options(future.globals.maxSize = 32.0 * 1e9)
+plan(future.callr::callr, workers = corenum)
 
-# --- Initialize from first file ---
-r1 <- rast(stack_files[1])
-all_bands <- names(r1)
-target_bands <- setdiff(all_bands, skip_bands)
+results <- future_lapply(
+  huc_numbers, per_huc_minmax,
+  future.seed = TRUE,
+  future.packages = c("terra", "stringr", "tidyterra")
+)
+results <- Filter(Negate(is.null), results)
 
-cat("All bands:", paste(all_bands, collapse = ", "), "\n")
-cat("Computing stats for:", paste(target_bands, collapse = ", "), "\n")
-cat("Skipping (non min_max):", paste(intersect(all_bands, skip_bands), collapse = ", "), "\n\n")
+if (length(results) == 0) {
+  stop("No HUCs produced statistics (all missing sources or failed).")
+}
 
-global_mins <- setNames(rep(Inf, length(target_bands)), target_bands)
+# --- Reduce: global min/max per band -----------------------------------------
+target_bands <- names(results[[1]]$min)
+global_mins <- setNames(rep(Inf,  length(target_bands)), target_bands)
 global_maxs <- setNames(rep(-Inf, length(target_bands)), target_bands)
 
-# --- Iterate over stacks ---
-for (f in stack_files) {
-  cat("Processing:", basename(f), "\n")
-  r <- rast(f)
-  
-  # Subset to target bands
-  r_sub <- r[[target_bands]]
-  
-  # minmax(compute = TRUE) forces calculation from pixel values if
-  # the metadata doesn't already store them. This reads the raster
-  
-  # but does NOT load it entirely into RAM — terra streams it.
-  mm <- minmax(r_sub, compute = TRUE)
-  
-  global_mins <- pmin(global_mins, mm["min", ], na.rm = T)
-  global_maxs <- pmax(global_maxs, mm["max", ], na.rm = T)
+for (res in results) {
+  global_mins <- pmin(global_mins, res$min[target_bands], na.rm = TRUE)
+  global_maxs <- pmax(global_maxs, res$max[target_bands], na.rm = TRUE)
 }
 
-# --- Build output list ---
+cat("\nComputed stats over", length(results), "HUCs for bands:\n  ",
+    paste(target_bands, collapse = ", "), "\n")
+
+# --- Build output list -------------------------------------------------------
 stats_list <- lapply(target_bands, \(band) {
-  list(
-    band = band,
-    min  = unname(global_mins[band]),
-    max  = unname(global_maxs[band])
-  )
+  list(band = band,
+       min  = unname(global_mins[band]),
+       max  = unname(global_maxs[band]))
 })
 names(stats_list) <- target_bands
 
-# --- Write JSON ---
+# --- Write JSON --------------------------------------------------------------
 dir.create(dirname(output_json), recursive = TRUE, showWarnings = FALSE)
 write_json(stats_list, output_json, pretty = TRUE, auto_unbox = TRUE)
 
-cat("\nGlobal band statistics written to:", output_json, "\n")
-cat("\nSummary:\n")
+cat("\nGlobal band statistics written to:", output_json, "\n\nSummary:\n")
 for (band in target_bands) {
   cat(sprintf("  %-15s  min: %12.4f  max: %12.4f\n",
               band, global_mins[band], global_maxs[band]))
 }
-
