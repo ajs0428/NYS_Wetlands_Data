@@ -19,10 +19,11 @@
 #      (from DEM_Extract_singleVect_CMD.R / step_dem.sh).
 #   3. Rebuild the tile footprint index:  bash Shell_Scripts/gdaltindex_ortho.sh
 #
-#   Usage:  sbatch step_ortho_huc.sh "<comma-sep clusters>" [year]
-#   Single cluster:   sbatch step_ortho_huc.sh "208" 2023
-#   Several clusters: sbatch step_ortho_huc.sh "208,225,11" 2023
-#   `year` (default 2020) is the PREFERRED year: each HUC12 uses that year where
+#   Usage:  sbatch step_ortho_huc.sh [year]
+#   Clusters come from Shell_Scripts/batch_config.sh -- edit the `include=` line
+#   below to the batch you want to run (batch1..batch18), the same pattern as
+#   the other *_loop.sh scripts. Example: sbatch step_ortho_huc.sh 2024
+#   `year` (default 2024) is the PREFERRED year: each HUC12 uses that year where
 #   it has coverage and only fills gaps with the nearest other year(s), so HUCs
 #   stay single-year where possible (years used are logged + written to the
 #   GeoTIFF metadata). To process ONE HUC12 of one cluster, call the R script
@@ -33,8 +34,11 @@ cd /ibstorage/anthony/NYS_Wetlands_Data/
 export TMPDIR=/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp/
 module load R/4.4.3
 
-IFS=',' read -ra include <<< "$1"
-YEAR="${2:-2020}"
+# Cluster batch: edit `include=` to the batch you want (batch1..batch18).
+source Shell_Scripts/batch_config.sh
+include=("${batch1[@]}")
+
+YEAR="${1:-2024}"   # preferred imagery year (optional CLI arg)
 GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg"
 ORTHO_INDEX="Data/Ortho/ortho_tiles.gpkg"
 DEM_DIR="Data/TerrainProcessed/HUC_DEMs"
