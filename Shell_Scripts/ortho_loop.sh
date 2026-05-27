@@ -39,12 +39,12 @@ mkdir -p Shell_Scripts/SLURM Shell_Scripts/logs
 
 GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg"
 OUTDIR="Data/Ortho/Tiles"
-YEAR=2023          # imagery year applied to every cluster (edit as needed)
+YEAR=2024          # imagery year applied to every cluster (edit as needed)
 BANDS=4bd
 
 # Same cluster set as lidar_loop.sh
 source Shell_Scripts/batch_config.sh
-include=("${batch1[@]}")
+clusters=("${batch1[@]}")
 
 for cluster in "${clusters[@]}"; do
     echo "Running ortho download for cluster $cluster (year $YEAR, $BANDS)"
