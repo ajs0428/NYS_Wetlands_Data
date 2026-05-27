@@ -16,10 +16,10 @@ library(stringr)
 source("R_Code_Analysis/huc_stack.R")
 
 ## ---- FILL IN: pick a HUC that has BOTH a reviewed patch gpkg and an old stack
-CLUSTER   <- "250"
-HUC       <- "041402011009"                 # 12-digit HUC
+CLUSTER   <- "11"
+HUC       <- "042900030103"                 # 12-digit HUC
 PATCHSIZE <- 128                             # same as the chip script's patchSize
-SOURCE    <- "NWI"                           # wetland source prefix (NWI/NHP/Laba/...)
+SOURCE    <- "ADK_WCT"                           # wetland source prefix (NWI/NHP/Laba/...)
 PATCH_DIR <- "Data/Training_Data/R_Patches_Vector_Reviewed/"
 OLD_STACK <- paste0("Data/HUC_Raster_Stacks/HUC_DL_Stacks/",
                     "cluster_", CLUSTER, "_huc_", HUC, "_stack.tif")
@@ -41,7 +41,7 @@ tw_union_area <- tw_union |>
   mutate(area = as.numeric(st_area(geom))) |>
   filter(area >= ((PATCHSIZE * 2)^2) - 0.5)
 tw_grouped <- tw_valid |> st_join(tw_union_area, left = FALSE) |>
-  filter(st_is_valid(geometry)) |> group_split(group_id)
+  filter(st_is_valid(geom)) |> group_split(group_id)
 stopifnot(length(tw_grouped) >= 1)
 
 tw_vect <- vect(tw_grouped[[1]])             # first patch in this HUC

@@ -86,8 +86,8 @@ huc_layers <- function(paths) {
   dem <- rast(pick1(paths$dem, "DEM"))
   set.names(dem, "DEM")
 
-  terr <- rast(pick1(paths$terr, "terrain")) |>
-    tidyterra::select(-tidyterra::starts_with("TPI_"))
+  terr <- rast(pick1(paths$terr, "terrain")) 
+  terr <- terra::subset(terr, grep("^TPI_", names(terr), invert = TRUE))
 
   hydro <- rast(pick1(paths$hydro, "hydro"))
   hydro$flowacc <- log(hydro$flowacc)
