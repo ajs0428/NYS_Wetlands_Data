@@ -29,6 +29,7 @@ huc_source_dirs <- function() {
     hydro = "Data/TerrainProcessed/HUC_Hydro/",
     chm   = "Data/CHMs/HUC_CHMs/",
     naip  = "Data/NAIP/HUC_NAIP_Processed/",
+    ortho = "Data/Ortho/HUC_Ortho/",
     lidar = "Data/Lidar/HUC_Lidar_Metrics/"
   )
 }
@@ -54,6 +55,7 @@ huc_source_paths <- function(huc_number, cluster_num, dirs = huc_source_dirs()) 
     hydro = match_one(dirs$hydro),
     chm   = match_one(dirs$chm),
     naip  = match_one(dirs$naip),
+    ortho  = match_one(dirs$ortho),
     lidar = match_one(dirs$lidar)
   )
 }
@@ -93,12 +95,15 @@ huc_layers <- function(paths) {
   chm <- rast(pick1(paths$chm, "CHM"))
 
   naip <- rast(pick1(paths$naip, "NAIP")) |>
-    tidyterra::select(-tidyterra::contains("ndvi"), -tidyterra::contains("ndwi"))
+    terra::subset(c("ndvi", "ndwi"), negate = TRUE) 
+  
+  ortho <- rast(pick1(paths$ortho, "Ortho"))
+  names(ortho) <- paste0(names(ortho), "_lo")
 
   lidar <- rast(pick1(paths$lidar, "lidar"))
 
   # Named list, in stack order (DEM first = the reference grid).
-  list(dem = dem, terr = terr, hydro = hydro, chm = chm, naip = naip, lidar = lidar)
+  list(dem = dem, terr = terr, hydro = hydro, chm = chm, naip = naip, ortho = ortho, lidar = lidar)
 }
 
 ## --- Align one raster to a reference grid (resample only if needed) ----------
