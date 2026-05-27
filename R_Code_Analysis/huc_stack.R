@@ -149,7 +149,9 @@ build_huc_stack_patch <- function(paths, geom, buffer_px = 5, mask = TRUE) {
   }
 
   others <- lyrs[setdiff(names(lyrs), "dem")]
-  out <- rast(c(dem_crop, lapply(unname(others), align_patch)))
+  # Flat list of SpatRasters (DEM first) -> rast() concatenates the layers.
+  patch_lyrs <- c(list(dem_crop), lapply(unname(others), align_patch))
+  out <- rast(patch_lyrs)
   if (mask) out <- terra::mask(out, dem_crop)
   out
 }
