@@ -53,6 +53,10 @@ set.seed(420)
 rast_chip_patch_create <- function(wetland_file){
     setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
     source("R_Code_Analysis/huc_stack.R") # ensure recipe is available in callr workers
+    # Cap terra memory well below the per-task cgroup (mem-per-cpu * cpus-per-task,
+    # shared across callr workers). terra otherwise sizes off total node RAM, not
+    # the SLURM allocation, and the in-memory resample gets OOM-killed.
+    terraOptions(memmax = 20, memfrac = 0.4, tempdir = "Data/tmp")
     ## Setup vars
     if (grepl("NWI", basename(wetland_file))) {
         sourceWetlands <- "NWI"

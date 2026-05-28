@@ -53,6 +53,9 @@ if (!dir.exists(outDir)) dir.create(outDir, recursive = TRUE)
 point_extract_fun <- function(patch_file) {
     setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
     source("R_Code_Analysis/huc_stack.R") # ensure recipe is available in callr workers
+    # Cap terra memory below the per-task cgroup (terra otherwise sizes off total
+    # node RAM, not the SLURM allocation) so the in-memory resample doesn't OOM.
+    terraOptions(memmax = 20, memfrac = 0.4, tempdir = "Data/tmp")
 
     ## Parse identifiers from filename
     huc_num <- str_extract(patch_file, "(?<=huc_)\\d+")
