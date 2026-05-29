@@ -24,17 +24,18 @@ library(future.apply)
 
 source("R_Code_Analysis/huc_stack.R")
 
-args <- c("250",
-          "Data/HUC_Raster_Stacks/HUC_DL_Stacks_Extracted_Values.json")
+args <- c("225", "Data/HUC_Raster_Stacks/HUC_DL_Stacks_Extracted_Values.json")
 
 args <- commandArgs(trailingOnly = TRUE)
 
 if (length(args) < 2) {
-  stop("Usage: Rscript DL_Extract_Normalize_Stats_FullRasters.R <cluster> <output_json>")
+  stop(
+    "Usage: Rscript DL_Extract_Normalize_Stats_FullRasters.R <cluster> <output_json>"
+  )
 }
 
 clusterSubset <- args[1]
-output_json   <- args[2]
+output_json <- args[2]
 
 cat("Cluster:", clusterSubset, "\n")
 cat("Output :", output_json, "\n\n")
@@ -47,14 +48,27 @@ setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
 # analytically defined in dl_band_config.json -- skip them here.
 # MOD_CLASS is the label band -- also skip (and it is not in the predictor
 # stack anyway; kept here for safety).
-skip_bands <- c("MOD_CLASS", "NDVI", "MNDWI", "NDYI", "EVI", "GDVI",
-                "n_ndvi", "n_ndwi", "Geomorph_local")
+skip_bands <- c(
+  "MOD_CLASS",
+  "NDVI",
+  "MNDWI",
+  "NDYI",
+  "EVI",
+  "GDVI",
+  "n_ndvi",
+  "n_ndwi",
+  "Geomorph_local"
+)
 
 # --- Discover all HUCs in the cluster ----------------------------------------
 huc_poly <- sf::st_read(
-  "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", quiet = TRUE,
-  query = paste0("SELECT * FROM NY_Cluster_Zones_250_CROP_NAomit_6347 WHERE cluster = '",
-                 clusterSubset, "'")
+  "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
+  quiet = TRUE,
+  query = paste0(
+    "SELECT * FROM NY_Cluster_Zones_250_CROP_NAomit_6347 WHERE cluster = '",
+    clusterSubset,
+    "'"
+  )
 )
 huc_numbers <- huc_poly$huc12
 
@@ -72,25 +86,33 @@ per_huc_minmax <- function(huc_number) {
   terraOptions(memfrac = 0.4, memmax = 16, tempdir = "Data/tmp")
 
   paths <- huc_source_paths(huc_number, clusterSubset)
-  if (!huc_sources_ready(paths, huc_number)) return(NULL)
+  if (!huc_sources_ready(paths, huc_number)) {
+    return(NULL)
+  }
 
   # Stream minmax per source raster as-read (no align/resample/stack -- min/max
   # is grid-invariant, so resampling everything onto the DEM grid is pure waste
   # and is what OOMs build_huc_stack_full under parallel workers).
   tryCatch(huc_minmax(paths, skip = skip_bands), error = function(e) {
-    message("minmax failed for HUC ", huc_number, ": ", conditionMessage(e)); NULL
+    message("minmax failed for HUC ", huc_number, ": ", conditionMessage(e))
+    NULL
   })
 }
 
 # --- Parallel map ------------------------------------------------------------
 slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
-corenum <- if (nzchar(slurm_cpus)) as.integer(slurm_cpus) else min(future::availableCores(), 4)
+corenum <- if (nzchar(slurm_cpus)) {
+  as.integer(slurm_cpus)
+} else {
+  min(future::availableCores(), 2)
+}
 cat("Workers:", corenum, "\n")
-options(future.globals.maxSize = 32.0 * 1e9)
+options(future.globals.maxSize = 48.0 * 1e9)
 plan(future.callr::callr, workers = corenum)
 
 results <- future_lapply(
-  huc_numbers, per_huc_minmax,
+  huc_numbers,
+  per_huc_minmax,
   future.seed = TRUE,
   future.packages = c("terra", "stringr", "tidyterra")
 )
@@ -102,7 +124,7 @@ if (length(results) == 0) {
 
 # --- Reduce: global min/max per band -----------------------------------------
 target_bands <- names(results[[1]]$min)
-global_mins <- setNames(rep(Inf,  length(target_bands)), target_bands)
+global_mins <- setNames(rep(Inf, length(target_bands)), target_bands)
 global_maxs <- setNames(rep(-Inf, length(target_bands)), target_bands)
 
 for (res in results) {
@@ -110,14 +132,21 @@ for (res in results) {
   global_maxs <- pmax(global_maxs, res$max[target_bands], na.rm = TRUE)
 }
 
-cat("\nComputed stats over", length(results), "HUCs for bands:\n  ",
-    paste(target_bands, collapse = ", "), "\n")
+cat(
+  "\nComputed stats over",
+  length(results),
+  "HUCs for bands:\n  ",
+  paste(target_bands, collapse = ", "),
+  "\n"
+)
 
 # --- Build output list -------------------------------------------------------
 stats_list <- lapply(target_bands, \(band) {
-  list(band = band,
-       min  = unname(global_mins[band]),
-       max  = unname(global_maxs[band]))
+  list(
+    band = band,
+    min = unname(global_mins[band]),
+    max = unname(global_maxs[band])
+  )
 })
 names(stats_list) <- target_bands
 
@@ -127,7 +156,10 @@ write_json(stats_list, output_json, pretty = TRUE, auto_unbox = TRUE)
 
 cat("\nGlobal band statistics written to:", output_json, "\n\nSummary:\n")
 for (band in target_bands) {
-  cat(sprintf("  %-15s  min: %12.4f  max: %12.4f\n",
-              band, global_mins[band], global_maxs[band]))
+  cat(sprintf(
+    "  %-15s  min: %12.4f  max: %12.4f\n",
+    band,
+    global_mins[band],
+    global_maxs[band]
+  ))
 }
-
