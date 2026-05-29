@@ -24,7 +24,7 @@ library(future.apply)
 
 source("R_Code_Analysis/huc_stack.R")
 
-args <- c("250",
+args <- c("225",
           "Data/HUC_Raster_Stacks/HUC_DL_Stacks_Extracted_Values.json")
 
 args <- commandArgs(trailingOnly = TRUE)
@@ -67,7 +67,7 @@ cat("Found", length(huc_numbers), "HUCs in cluster", clusterSubset, "\n\n")
 per_huc_minmax <- function(huc_number) {
   source("R_Code_Analysis/huc_stack.R") # ensure recipe is available in callr workers
   setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
-  terraOptions(memfrac = 0.4, memmax = 64, tempdir = "Data/tmp")
+  terraOptions(memfrac = 0.4, memmax = 96, tempdir = "Data/tmp")
 
   paths <- huc_source_paths(huc_number, clusterSubset)
   if (!huc_sources_ready(paths, huc_number)) return(NULL)
@@ -85,9 +85,9 @@ per_huc_minmax <- function(huc_number) {
 
 # --- Parallel map ------------------------------------------------------------
 slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
-corenum <- if (nzchar(slurm_cpus)) as.integer(slurm_cpus) else min(future::availableCores(), 4)
+corenum <- if (nzchar(slurm_cpus)) as.integer(slurm_cpus) else min(future::availableCores(), 2)
 cat("Workers:", corenum, "\n")
-options(future.globals.maxSize = 32.0 * 1e9)
+options(future.globals.maxSize = 48.0 * 1e9)
 plan(future.callr::callr, workers = corenum)
 
 results <- future_lapply(
