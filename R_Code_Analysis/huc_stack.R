@@ -122,6 +122,31 @@ build_huc_stack_full <- function(paths) {
   rast(unname(aligned))
 }
 
+## --- Per-band min/max (for normalization statistics) -------------------------
+## Streams minmax() over each source raster *as read from disk* -- NO alignment
+## and NO resampling. Min/max is invariant to the grid the pixels sit on, so
+## there is no reason to resample every layer onto the DEM grid and hold those
+## interpolated grids in memory (that is what OOMs build_huc_stack_full under
+## parallel callr workers). Each source is streamed block-by-block, so memory
+## stays bounded by terraOptions(memmax).
+##   skip : band names to exclude (analytic/one-hot/label bands)
+## Returns list(min = named-vec, max = named-vec) over all kept bands, in the
+## same band order huc_layers() defines (the stack contract).
+huc_minmax <- function(paths, skip = character()) {
+  lyrs <- huc_layers(paths)
+  mins <- list(); maxs <- list()
+  for (r in lyrs) {
+    keep <- setdiff(names(r), skip)
+    if (length(keep) == 0) next
+    mm <- minmax(r[[keep]], compute = TRUE) # streams this source block-by-block
+    for (b in keep) {
+      mins[[b]] <- mm["min", b]
+      maxs[[b]] <- mm["max", b]
+    }
+  }
+  list(min = unlist(mins), max = unlist(maxs))
+}
+
 ## --- Patch stack (for chips and point extraction) ----------------------------
 ## Crop-then-resample: crop each source to the patch window (+ buffer for
 ## bilinear edges), then resample that small window to the DEM patch grid.

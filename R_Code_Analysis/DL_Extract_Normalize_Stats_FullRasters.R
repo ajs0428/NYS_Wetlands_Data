@@ -67,20 +67,19 @@ cat("Found", length(huc_numbers), "HUCs in cluster", clusterSubset, "\n\n")
 per_huc_minmax <- function(huc_number) {
   source("R_Code_Analysis/huc_stack.R") # ensure recipe is available in callr workers
   setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
-  terraOptions(memfrac = 0.4, memmax = 64, tempdir = "Data/tmp")
+  # 4 callr workers share the per-task cgroup (mem-per-cpu * cpus-per-task);
+  # cap each well under its ~1/4 share. minmax streams, so this is plenty.
+  terraOptions(memfrac = 0.4, memmax = 16, tempdir = "Data/tmp")
 
   paths <- huc_source_paths(huc_number, clusterSubset)
   if (!huc_sources_ready(paths, huc_number)) return(NULL)
 
-  stk <- tryCatch(build_huc_stack_full(paths), error = function(e) {
-    message("Build failed for HUC ", huc_number, ": ", conditionMessage(e)); NULL
+  # Stream minmax per source raster as-read (no align/resample/stack -- min/max
+  # is grid-invariant, so resampling everything onto the DEM grid is pure waste
+  # and is what OOMs build_huc_stack_full under parallel workers).
+  tryCatch(huc_minmax(paths, skip = skip_bands), error = function(e) {
+    message("minmax failed for HUC ", huc_number, ": ", conditionMessage(e)); NULL
   })
-  if (is.null(stk)) return(NULL)
-
-  keep <- setdiff(names(stk), skip_bands)
-  # minmax(compute = TRUE) streams the (lazily resampled) stack block-by-block.
-  mm <- minmax(stk[[keep]], compute = TRUE)
-  list(min = mm["min", ], max = mm["max", ])
 }
 
 # --- Parallel map ------------------------------------------------------------
