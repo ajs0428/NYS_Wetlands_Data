@@ -15,20 +15,17 @@ Outputs should include:
 
 ### Data 
 
-As of 5/11/2026 input data include: 
+As of 6/10/2026 Metrics needed for wetland mapping model: 
 
-- DEM
-- Slope
-- Geomorphons
-- Flow Accumulation
-- TWI
-- CHM
-- NAIP (RGBN)
-- Lidar (% below 1m, % 1-5m, % above 5m)
+- Terrain: Elevation - 'DEM', Slope/Gradient - 'slope_local', Geomorphons categories - 'Geomorph_local', 
+- Hydrology: Flow accumulation - 'flowacc', Topographic wetness index - 'twi', 
+- Vegetation: Beier et al,. Canopy Height - 'CHM'
+- Lidar Vegetation: % below 1m - 'pct_below_1m',  % above 1m but below 5m - 'pct_1m_to_5m',  % above 5m - 'pct_above_5m'
+- NAIP Imagery (leaf on): raw bands - 'r', 'g', 'b', 'nir', 
+- NYS Ortho Imagery (leaf off): raw bands - 'r_lo', 'g_lo', 'b_lo', 'nir_lo'
 
-All are 1m resolution
 
-### Checklist
+## Checklist
 
 1. Make sure HUC12 watershed file is appropriate 
 2. Extract DEMs for target HUC12 watersheds
