@@ -19,7 +19,7 @@ set.seed(11)
 args <- c(
     "Data/Training_Data/R_Patches_Vector_Reviewed/", #Path to GIS reviewed wetland vector patches
     128, # patch size 1/2
-    250 # cluster subset options include number or NULL for any
+    225 # cluster subset options include number or NULL for any
 )
 
 args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
@@ -92,6 +92,11 @@ rast_chip_patch_create <- function(wetland_file){
             ### object that can be used to crop the rasters
     tw <- st_read(l_wet_cluster[grepl(huc_num, l_wet_cluster) & grepl(sourceWetlands, l_wet_cluster)], quiet = TRUE)
     tw_valid <- tw[st_is_valid(tw), ]
+    tw_valid$MOD_CLASS[tw_valid$MOD_CLASS == "OWW"] <- "UPL"
+    if(any(grepl(pattern = "OWW", unique(tw_valid$MOD_CLASS)))){
+      message("OWW Detected, exiting")
+      return(invisible(NULL))
+      }
     tw_union <- tw_valid |>
         st_union() |>
         st_cast("POLYGON") |>
@@ -112,46 +117,40 @@ rast_chip_patch_create <- function(wetland_file){
         tw_vect <- vect(tw_grouped_list[[i]])
 
         tryCatch({
+          fn <- paste0("Data/Training_Data/R_Patches/", sourceWetlands,"_cluster_", cluster_num, "_huc_", huc_num, "_patch_", i, "_", patchsize*2, "m.tif" )
+          
+          if(!file.exists(fn)){
+          # Build the predictor stack for just this patch window, in memory.
+          stack <- build_huc_stack_patch(paths, tw_vect)
+          dem_crop <- stack[["DEM"]]
 
-            # Build the predictor stack for just this patch window, in memory.
-            stack <- build_huc_stack_patch(paths, tw_vect)
-            dem_crop <- stack[["DEM"]]
+          tw_rast <- tw_vect  |>
+              terra::rasterize(y = dem_crop, field = "MOD_CLASS", touches = TRUE)
+          tw_rast_lc <- levels(tw_rast)[[1]][[2]] #character vector of levels present
+          tw_rast_ln <- levels(tw_rast)[[1]][[1]] #numbers/integers of levels present
+          fct_n <- fct_df[fct_df$MOD_CLASS %in% tw_rast_lc, ][,1] # subset the levels present from the full factor dataframe
+          tw_rast_sub <- subst(tw_rast, from = tw_rast_ln, to = fct_n, raw = TRUE)
+          levels(tw_rast_sub) <- fct_df
 
-            tw_rast <- tw_vect  |>
-                terra::rasterize(y = dem_crop, field = "MOD_CLASS", touches = TRUE)
-            tw_rast_lc <- levels(tw_rast)[[1]][[2]] #character vector of levels present
-            tw_rast_ln <- levels(tw_rast)[[1]][[1]] #numbers/integers of levels present
-            fct_n <- fct_df[fct_df$MOD_CLASS %in% tw_rast_lc, ][,1] # subset the levels present from the full factor dataframe
-            tw_rast_sub <- subst(tw_rast, from = tw_rast_ln, to = fct_n, raw = TRUE)
-            levels(tw_rast_sub) <- fct_df
+          # fn_labels <- paste0("Data/Training_Data/R_Patches_Labels/", "labels_only_", sourceWetlands, "_cluster_", cluster_num, "_huc_", huc_num, "_patch_", i, "_", patchsize*2, "m.tif" )
 
-            fn <- paste0("Data/Training_Data/R_Patches/", sourceWetlands,"_cluster_", cluster_num, "_huc_", huc_num, "_patch_", i, "_", patchsize*2, "m.tif" )
-            
-            # fn_labels <- paste0("Data/Training_Data/R_Patches_Labels/", "labels_only_", sourceWetlands, "_cluster_", cluster_num, "_huc_", huc_num, "_patch_", i, "_", patchsize*2, "m.tif" )
-
-            # Regular Patches with all predictors
-            #if(!file.exists(fn)){
-                tryCatch({
-                    cropped_stack_labeled <- c(stack, tw_rast_sub)
-                    writeRaster(cropped_stack_labeled, filename = fn, overwrite = TRUE)
-                }, error = function(e) { message("Cropping Stack")
-                                                 skip_to_next <<- TRUE}
-                )
-                if(skip_to_next) { next }
-            # } else {
-            #     message("Already file ", fn)
-            # }
-
-            # #Labels only patches NO predictors
-            # if(!file.exists(fn_labels)){
-            #     writeRaster(tw_rast_sub, filename = fn_labels, overwrite = TRUE)
-            #     } else {
-            #         message("Already file ", fn_labels)
-            #         }
+          # Regular Patches with all predictors
+          
+              tryCatch({
+                  cropped_stack_labeled <- c(stack, tw_rast_sub)
+                  writeRaster(cropped_stack_labeled, filename = fn, overwrite = TRUE)
+              }, error = function(e) { message("Cropping Stack")
+                                               skip_to_next <<- TRUE}
+              )
+              if(skip_to_next) { next }
+          } else {
+                message("Already file ", fn)
+                return(invisible(NULL))
+              }
             },
         error = function(e) {
             message("Error: ", conditionMessage(e))
-            return(NA)
+            return(invisible(NULL))
         })
     }
 
@@ -180,7 +179,7 @@ if (nzchar(slurm_cpus)) {
 }
 
 print(corenum)
-options(future.globals.maxSize= 32.0 * 1e9)
+options(future.globals.maxSize= 48.0 * 1e9)
 # plan(multisession, workers = corenum)
 plan(future.callr::callr, workers = corenum)
 
