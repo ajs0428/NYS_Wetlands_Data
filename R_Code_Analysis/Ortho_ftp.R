@@ -22,22 +22,28 @@ normalize_tile_name <- function(filename) {
     tools::file_path_sans_ext(tolower(as.character(filename)))
 }
 
-### Resolve which index layers to query for a given year + band type.
+### Resolve ALL index layers for a band type, with their imagery year.
 # Fetches the MapServer root JSON, parses the `layers` array, and filters to
-# layers named like ind{YY}{zone}_{res}_{bands} for the requested year/bands.
-# Returns a tibble of layer_id + layer_name (one per matching zone/resolution).
-get_ortho_layer_ids <- function(year, bands = "4bd") {
-    yy <- sprintf("%02d", as.integer(year) %% 100)
+# layers named like ind{YY}{zone}_{res}_{bands}. Returns a tibble of
+# layer_id + layer_name + year (one row per matching year/zone/resolution).
+# Years are resolved here (not passed in) so the caller can fall back to the
+# nearest available year when the preferred one lacks coverage.
+get_ortho_layer_index <- function(bands = "4bd") {
     meta <- fromJSON(paste0(ortho_mapserver, "?f=json"))
     layers <- meta$layers  # data.frame with id + name
 
-    # Match "ind20...._4bd" but require the band suffix to be the trailing token
-    pat <- paste0("^ind", yy, "[a-z]+_.*", bands, "($|_)")
+    # Match "ind{YY}...._4bd" but require the band suffix to be the trailing token
+    pat <- paste0("^ind(\\d{2})[a-z]+_.*", bands, "($|_)")
     keep <- str_detect(layers$name, pat)
-    out <- tibble(layer_id = layers$id[keep], layer_name = layers$name[keep])
+    yy <- as.integer(str_match(layers$name[keep], "^ind(\\d{2})")[, 2])
+    out <- tibble(
+        layer_id   = layers$id[keep],
+        layer_name = layers$name[keep],
+        year       = ifelse(yy > 50, 1900L + yy, 2000L + yy)
+    )
 
     if (nrow(out) == 0) {
-        warning("No index layers matched year ", year, " bands '", bands, "'")
+        warning("No index layers matched bands '", bands, "'")
     }
     out
 }
@@ -94,32 +100,21 @@ query_ortho_index <- function(layer_id, bbox_4326, bands_outfields =
     do.call(rbind, pages)
 }
 
-### Find all ortho tiles overlapping a cluster's HUC12 polygons.
-# Mirrors get_overlapping_tiles() in Lidar_ftp.R, but pulls the index from the
-# REST service across all zones for the year, then refines bbox hits to true
-# polygon intersection.
-get_overlapping_ortho_tiles <- function(huc12_sf, year, bands = "4bd") {
-
-    # Bounding box of the cluster in EPSG:4326 for the spatial query
-    huc_4326 <- st_transform(huc12_sf, 4326)
-    bb <- st_bbox(huc_4326)
-    bbox_4326 <- c(bb["xmin"], bb["ymin"], bb["xmax"], bb["ymax"])
-
-    layers <- get_ortho_layer_ids(year, bands)
-    if (nrow(layers) == 0) return(NULL)
+### Query all index layers of ONE year for tiles intersecting a bbox.
+# Returns an sf object (or NULL). Logs a note when the year's layers span
+# multiple native resolutions (harmless: everything is resampled to 1 m).
+query_ortho_year <- function(yr_layers, bbox_4326) {
     message("  Matching index layers: ",
-            paste(layers$layer_name, collapse = ", "))
+            paste(yr_layers$layer_name, collapse = ", "))
 
-    # Warn if matched layers span multiple native resolutions (e.g. east half_ft
-    # + central one_ft). Harmless since we resample to 1 m, but worth logging.
-    res_tokens <- str_extract(layers$layer_name, "half_ft|one_ft|two_ft|one_m")
+    res_tokens <- str_extract(yr_layers$layer_name, "half_ft|one_ft|two_ft|one_m")
     if (length(unique(na.omit(res_tokens))) > 1) {
         message("  NOTE: source tiles span multiple native resolutions (",
                 paste(unique(na.omit(res_tokens)), collapse = ", "),
                 "); all will be resampled to 1 m.")
     }
 
-    parts <- lapply(layers$layer_id, function(id) {
+    parts <- lapply(yr_layers$layer_id, function(id) {
         res <- tryCatch(query_ortho_index(id, bbox_4326),
                         error = function(e) {
                             warning("Query failed for layer ", id, ": ", e$message)
@@ -129,24 +124,86 @@ get_overlapping_ortho_tiles <- function(huc12_sf, year, bands = "4bd") {
         res
     })
     parts <- parts[!sapply(parts, is.null)]
-    if (length(parts) == 0) {
-        warning("No tiles returned for year ", year, " bands '", bands, "'")
-        return(NULL)
+    if (length(parts) == 0) return(NULL)
+    do.call(rbind, parts)
+}
+
+### Find all ortho tiles needed to cover a cluster's HUC12 polygons.
+# Mirrors get_overlapping_tiles() in Lidar_ftp.R, but pulls the index from the
+# REST service and is YEAR-AWARE: the preferred year's tiles are taken first;
+# if they leave more than gap_tol of the cluster uncovered (no coverage at all,
+# or a collection boundary crossing the cluster), the nearest other year(s)
+# (newer breaks ties) fill only the remaining gap. This guarantees the tiles
+# that Ortho_HUC_Processing.R's own preferred-year + nearest-year gap-fill
+# needs are actually on disk.
+get_overlapping_ortho_tiles <- function(huc12_sf, year, bands = "4bd",
+                                        gap_tol = 0.001) {
+
+    # Bounding box of the cluster in EPSG:4326 for the spatial query
+    huc_4326 <- st_transform(huc12_sf, 4326)
+    bb <- st_bbox(huc_4326)
+    bbox_4326 <- c(bb["xmin"], bb["ymin"], bb["xmax"], bb["ymax"])
+
+    layers <- get_ortho_layer_index(bands)
+    if (nrow(layers) == 0) return(NULL)
+    years_available <- sort(unique(layers$year))
+    message("  Index years available for '", bands, "': ",
+            paste(years_available, collapse = ", "))
+
+    preferred <- as.integer(year)
+    if (!preferred %in% years_available) {
+        message("  Preferred year ", preferred,
+                " has no index layers; falling back to nearest available year.")
+    }
+    others <- setdiff(years_available, preferred)
+    others <- others[order(abs(others - preferred), -others)]
+    year_order <- c(intersect(preferred, years_available), others)
+
+    selected     <- NULL  # accumulated sf of chosen tiles (tile CRS)
+    covered      <- NULL  # union of chosen tile footprints
+    cluster_geom <- NULL  # cluster outline in the tile CRS (built lazily)
+    cluster_area <- NA_real_
+
+    for (yr in year_order) {
+        # Remaining uncovered part of the cluster
+        if (!is.null(cluster_geom)) {
+            gap <- if (is.null(covered)) cluster_geom
+                   else st_make_valid(st_difference(cluster_geom, covered))
+            gap_area <- if (length(gap) == 0) 0 else sum(as.numeric(st_area(gap)))
+            if (gap_area / cluster_area < gap_tol) break  # effectively covered
+        }
+
+        message("  Querying year ", yr, " ...")
+        tiles_yr <- query_ortho_year(layers[layers$year == yr, ], bbox_4326)
+        if (is.null(tiles_yr) || nrow(tiles_yr) == 0) next
+
+        # Cluster geometry in the tile CRS (same for every year: fixed outSR)
+        if (is.null(cluster_geom)) {
+            cluster_geom <- st_make_valid(
+                st_union(st_geometry(st_transform(huc12_sf, st_crs(tiles_yr)))))
+            cluster_area <- as.numeric(st_area(cluster_geom))
+            gap <- cluster_geom
+        }
+
+        # Refine bbox hits to tiles actually touching the remaining gap (for
+        # the preferred year the gap IS the cluster, mirroring the old refine).
+        tiles_yr <- tiles_yr[lengths(st_intersects(tiles_yr, gap)) > 0, ]
+        if (nrow(tiles_yr) == 0) next
+        message("  Year ", yr, ": ", nrow(tiles_yr), " tiles selected")
+
+        tiles_yr$tile_year <- yr
+        selected <- if (is.null(selected)) tiles_yr else rbind(selected, tiles_yr)
+        yr_union <- st_union(st_geometry(tiles_yr))
+        covered  <- if (is.null(covered)) yr_union else st_union(covered, yr_union)
     }
 
-    tiles <- do.call(rbind, parts)
-
-    # Refine: bbox is a coarse filter; keep only tiles actually intersecting a
-    # HUC12 polygon (transform HUCs to the tile CRS, mirror of LiDAR approach).
-    huc_match <- st_transform(huc12_sf, st_crs(tiles))
-    inter <- st_intersects(tiles, huc_match, sparse = FALSE)
-    tiles <- tiles[apply(inter, 1, any), ]
-    if (nrow(tiles) == 0) {
-        warning("No tiles intersect the cluster HUC12 polygons")
+    if (is.null(selected) || nrow(selected) == 0) {
+        warning("No tiles intersect the cluster HUC12 polygons (any year)")
         return(NULL)
     }
+    message("  Years selected: ", paste(unique(selected$tile_year), collapse = ", "))
 
-    tiles |>
+    selected |>
         mutate(
             tile_name = normalize_tile_name(FILENAME),
             # Prefer the authoritative DIRECT_DL HTTPS url; FTP fallback derived

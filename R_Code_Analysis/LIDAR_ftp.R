@@ -36,11 +36,15 @@ download_ftp_file <- function(ftp_url, dest_dir = tempdir()) {
 }
 
 ### Find tiles overlapping a set of HUC12 boundaries
-# index_path: path to a local tile index GPKG (from download_lidar_indexes.R)
+# index_path: a per-collection index GPKG (from download_lidar_indexes.R) OR
+#             the combined all-collections index (from build_lidar_index.R)
 # huc12_sf: sf object with one or more HUC12 polygons
 get_overlapping_tiles <- function(index_path, huc12_sf) {
 
     tile_index <- st_read(index_path, quiet = TRUE)
+
+    # The combined index can carry empty geometries from the merge; drop them.
+    tile_index <- tile_index[!st_is_empty(tile_index), ]
 
     # Transform HUC12s to match tile index CRS
     huc12_transformed <- st_transform(huc12_sf, st_crs(tile_index))
@@ -54,6 +58,11 @@ get_overlapping_tiles <- function(index_path, huc12_sf) {
         warning("No overlapping tiles found in: ", index_path)
         return(NULL)
     }
+
+    # Tile footprint area, computed from geometry: the per-collection indexes
+    # carry a SHAPE.AREA column but the combined index does not, and computing
+    # it makes the partial-tile filter work for both.
+    overlapping$tile_area <- as.numeric(st_area(overlapping))
 
     # Build tile_name and ftp_url from DIRECT_DL
     # DIRECT_DL contains full HTTPS path including subdirectories
@@ -186,11 +195,16 @@ process_tile <- function(tile_name, tile_url, out_dir) {
 # Command-line execution
 # Args: gpkg_path, cluster_number, index_path, output_dir
 #
-# Example:
-  # Rscript R_Code_Analysis/Lidar_ftp.R \
+# index_path is normally the COMBINED index (all collections, built by
+# build_lidar_index.R) so every tile overlapping the cluster is processed in
+# one run; pass a single collection's gpkg from Data/Lidar/Indexes/ instead
+# for a targeted re-run.
+#
+# Example (combined index, used by step_lidar_ftp.sh):
+  # Rscript R_Code_Analysis/LIDAR_ftp.R \
   #   "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg" \
   #   208 \
-  #   "Data/Lidar/Indexes/NYS_Central_Finger_Lakes_2020.gpkg" \
+  #   "Data/Lidar/NYS_Lidar_All_Indexes.gpkg" \
   #   "Data/Lidar/Metrics"
 ###############################################################################
 args <- c("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
@@ -234,12 +248,13 @@ if (is.null(tile_index_info) || nrow(tile_index_info) == 0) {
     stop("No overlapping tiles found for cluster ", cluster_num)
 }
 
-# Deduplicate tiles and filter out partial/small tiles
+# Deduplicate tiles and filter out partial/small tiles. The same FILENAME can
+# appear in several collections of the combined index; distinct() keeps one.
 min_tile_area <- 500000  # most tiles are 2250000 m^2 but size varies by collection
 unique_tiles <- tile_index_info |>
     as.data.frame() |>
     distinct(tile_name, .keep_all = TRUE) |>
-    filter(SHAPE.AREA >= min_tile_area)
+    filter(tile_area >= min_tile_area)
 message("Unique full-size tiles to process: ", nrow(unique_tiles))
 
 # Create output directory

@@ -10,16 +10,17 @@
 #SBATCH --output=Shell_Scripts/SLURM/slurm-ortho-%j.out
 
 # =============================================================================
-# ORTHO DOWNLOAD -- argument-driven version (clusters passed on the command line)
+# ORTHO DOWNLOAD -- clusters passed on the command line.
 #
 #   Usage:  sbatch step_ortho.sh "<comma-sep clusters>" [year] [bands]
 #   Single cluster:   sbatch step_ortho.sh "208" 2023 4bd
 #   Several clusters: sbatch step_ortho.sh "208,225,11" 2023 4bd
-#   year/bands are optional and default to 2020 / 4bd, so step_combined_master.sh
-#   can call this with just the cluster list.
+#   year/bands default to ORTHO_YEAR / ORTHO_BANDS from batch_config.sh, so
+#   step_combined_master.sh can call this with just the cluster list.
 #
-# For the full standing set of 14 clusters with the year hardcoded inside the
-# file (no arguments), use ortho_loop.sh instead.
+#   `year` is the PREFERRED year: Ortho_ftp.R takes that year's tiles first
+#   and, where the cluster is not covered (no coverage for the year, or a
+#   collection boundary), fills the gap with the nearest other year(s).
 #
 # NO `conda activate` is needed: the ORTHO_GDALWARP wrapper activates the conda
 # 'ortho' env inside its own subprocess for the JP2 decode/reproject only. This
@@ -31,14 +32,15 @@ cd /ibstorage/anthony/NYS_Wetlands_Data/
 export TMPDIR=/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp/
 module load R/4.4.3
 
+source Shell_Scripts/batch_config.sh   # GPKG, ORTHO_YEAR, ORTHO_BANDS
+
 # JP2-capable gdalwarp wrapper (activates conda 'ortho' only for the subprocess,
 # keeping conda's GDAL_DATA/PROJ_LIB out of R's terra/sf).
 export ORTHO_GDALWARP="$PWD/Shell_Scripts/ortho_gdalwarp.sh"
 
 IFS=',' read -ra include <<< "$1"
-YEAR="${2:-2020}"
-BANDS="${3:-4bd}"
-GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg"
+YEAR="${2:-$ORTHO_YEAR}"
+BANDS="${3:-$ORTHO_BANDS}"
 OUTDIR="Data/Ortho/Tiles"
 DATE=$(date +%Y%m%d)
 

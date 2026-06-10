@@ -13,33 +13,33 @@
 # ORTHO -> HUC12  (mosaic overlapping ortho tiles, crop/mask to each HUC12,
 # resample onto that HUC12's DEM so the ortho aligns with the terrain stack).
 #
-# PREREQUISITES (run once after the ortho DOWNLOAD batch finishes):
-#   1. Ortho_ftp.R has written tiles to Data/Ortho/Tiles/ (see step_ortho.sh).
-#   2. The HUC DEMs exist at Data/TerrainProcessed/HUC_DEMs/cluster_*_huc_*.tif
-#      (from DEM_Extract_singleVect_CMD.R / step_dem.sh).
-#   3. Rebuild the tile footprint index:  bash Shell_Scripts/gdaltindex_ortho.sh
+#   Usage:  sbatch step_ortho_huc.sh "<comma-sep clusters>" [year]
+#   Single cluster:   sbatch step_ortho_huc.sh "208" 2024
+#   Several clusters: sbatch step_ortho_huc.sh "208,225,11" 2024
+#   `year` defaults to ORTHO_YEAR from batch_config.sh. It is the PREFERRED
+#   year: each HUC12 uses that year where it has coverage and only fills gaps
+#   with the nearest other year(s), so HUCs stay single-year where possible
+#   (years used are logged + written to the GeoTIFF metadata).
 #
-#   Usage:  sbatch step_ortho_huc.sh [year]
-#   Clusters come from Shell_Scripts/batch_config.sh -- edit the `include=` line
-#   below to the batch you want to run (batch1..batch18), the same pattern as
-#   the other *_loop.sh scripts. Example: sbatch step_ortho_huc.sh 2024
-#   `year` (default 2024) is the PREFERRED year: each HUC12 uses that year where
-#   it has coverage and only fills gaps with the nearest other year(s), so HUCs
-#   stay single-year where possible (years used are logged + written to the
-#   GeoTIFF metadata). To process ONE HUC12 of one cluster, call the R script
-#   directly with a 7th arg (the huc12 code) instead of using this loop.
+# PREREQUISITES (enforced by step_combined_master.sh's dependency chain):
+#   1. Ortho_ftp.R has written tiles to Data/Ortho/Tiles/ (see step_ortho.sh).
+#   2. The tile footprint index is current (step_ortho_index.sh /
+#      gdaltindex_ortho.sh) -- it must be rebuilt after every download batch.
+#   3. The HUC DEMs exist at Data/TerrainProcessed/HUC_DEMs/cluster_*_huc_*.tif
+#      (from DEM_Extract_singleVect_CMD.R / step_dem.sh).
+#
+# To process ONE HUC12 of one cluster, call the R script directly with a 7th
+# arg (the huc12 code) instead of using this loop.
 # =============================================================================
 
 cd /ibstorage/anthony/NYS_Wetlands_Data/
 export TMPDIR=/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp/
 module load R/4.4.3
 
-# Cluster batch: edit `include=` to the batch you want (batch1..batch18).
-source Shell_Scripts/batch_config.sh
-include=("${batch1[@]}")
+source Shell_Scripts/batch_config.sh   # GPKG, ORTHO_YEAR
 
-YEAR="${1:-2024}"   # preferred imagery year (optional CLI arg)
-GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg"
+IFS=',' read -ra include <<< "$1"
+YEAR="${2:-$ORTHO_YEAR}"
 ORTHO_INDEX="Data/Ortho/ortho_tiles.gpkg"
 DEM_DIR="Data/TerrainProcessed/HUC_DEMs"
 OUTDIR="Data/Ortho/HUC_Ortho/"

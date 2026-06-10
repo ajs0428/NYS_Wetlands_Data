@@ -1,5 +1,28 @@
-# Batches for cluster processing 
- # read into other shell scripts
+# Shared pipeline configuration + cluster batches
+# Sourced by step_combined_master.sh and the step_*.sh scripts.
+
+# ── Shared variables ─────────────────────────────────────────────────────────
+PROJ_ROOT="/ibstorage/anthony/NYS_Wetlands_Data"
+GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg"
+LOGDIR="Shell_Scripts/logs"
+
+# Ortho imagery: preferred year. Where a cluster/HUC has no coverage for this
+# year, both the download (Ortho_ftp.R) and the HUC compositing
+# (Ortho_HUC_Processing.R) fall back to the nearest available year
+# (newer wins ties), so HUCs stay single-year wherever possible.
+ORTHO_YEAR=2024
+ORTHO_BANDS=4bd
+
+# Combined lidar tile index (all collections merged). Rebuild with
+# R_Code_Analysis/build_lidar_index.R after download_lidar_indexes.R pulls
+# any new collection index.
+LIDAR_INDEX="Data/Lidar/NYS_Lidar_All_Indexes.gpkg"
+
+# ── Batches for cluster processing ───────────────────────────────────────────
+# NOTE: batch1-3 are the original pilot/priority sets; batch4-18 sweep all
+# clusters 1-250 and therefore OVERLAP batch1-3 (e.g. 46 is in batch1 AND
+# batch7). The per-step skip-if-exists checks make re-runs cheap, but don't
+# run overlapping batches concurrently.
 batch1=(11 22 46 50 64 67 82 95 123 168 208 218 225 250)
 batch2=(12 51 53 56 60 84 86 90 92 102 105 116 120 136)
 batch3=(138 152 153 176 183 187 189 192 193 198 240)
