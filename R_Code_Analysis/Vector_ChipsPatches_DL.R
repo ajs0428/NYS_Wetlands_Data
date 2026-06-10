@@ -16,7 +16,7 @@ set.seed(11)
 ########################################################################################
 
 args <- c(
-    123,# Cluster
+    12,# Cluster
     "Data/Training_Data/HUC_NWI_Processed/", #Path to wetland polygons
     128 # Patch size radius
 )
@@ -66,7 +66,7 @@ vect_chip_patch_create <- function(wetland_file){
     message(sourceWetlands)
     huc_num <- str_extract(wetland_file, "(?<=huc_)\\d+")
     huc_poly <- sf::st_read("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", quiet = TRUE,
-                                  query = paste0("SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE huc12 = '", huc_num, "'"))
+                                  query = paste0("SELECT * FROM NY_Cluster_Zones_250_CROP_NAomit_6347 WHERE huc12 = '", huc_num, "'"))
     huc_poly_ls <- st_cast(huc_poly, "MULTILINESTRING")
     target_wetlands <- st_read(wetland_file, quiet = TRUE) |> # target wetlands
         filter(MOD_CLASS != "OWW")
@@ -226,7 +226,7 @@ future_lapply(l_wet_cluster, vect_chip_patch_create,
               future.globals = TRUE)
 
 ### Non-parallel
-# system.time({t <- lapply(l_wet_cluster[1], vect_chip_patch_create)})
+# system.time({t <- lapply(l_wet_cluster, vect_chip_patch_create)})
 
 
 #### Checks

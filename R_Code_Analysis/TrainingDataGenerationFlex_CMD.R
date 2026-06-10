@@ -1,10 +1,8 @@
 #!/usr/bin/env Rscript
 
 args <- c(
-    # "Data/NYS_NHP_Wetland_DelineatonData/NYNHP_NatComm_data/NYSWetlands_NYNHP_NatComm_data_combined.gpkg",
     "Data/NWI/NY_NWI_6347.gpkg", 
-    "Data/NY_HUCS/NY_Cluster_Zones_250_NAomit.gpkg", # 
-    # "cowardin", # 
+    "Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg", # 
     "WETLAND_TY",
     "cluster" # 
 )

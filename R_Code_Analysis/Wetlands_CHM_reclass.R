@@ -14,9 +14,9 @@ set.seed(11)
 ########################################################################################
 
 args <- c(
-    123, #Target Cluster
+    12, #Target Cluster
     "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", #Clusters and HUCs
-    "Data/ADK/RegWetlandAreasParkPromulgated_UTM83.shp", # Wetlands
+    "Data/NWI/NY_NWI_6347.gpkg", # Wetlands
     "ATTRIBUTE" # Field for filtering and matching
     )
 
@@ -43,11 +43,11 @@ l_chm_cluster_nums <- str_extract(l_chm, "(?<=cluster_)\\d+(?=_)") |> unique() #
 ########################################################################################
 # all the HUCs in the entire CHM dataset
 ny_hucs <- sf::st_read(clusterHUCs, quiet = TRUE,
-                       query = paste0("SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE cluster IN (", 
+                       query = paste0("SELECT * FROM NY_Cluster_Zones_250_CROP_NAomit_6347 WHERE cluster IN (", 
                                       paste(l_chm_cluster_nums, collapse = ","), ")")) 
 # The HUCs in the cluster from targetCluster
 huc_cluster <- sf::st_read(clusterHUCs, quiet = TRUE,
-                       query = paste0("SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE cluster IN (", targetCluster, ")"))
+                       query = paste0("SELECT * FROM NY_Cluster_Zones_250_CROP_NAomit_6347 WHERE cluster IN (", targetCluster, ")"))
 huc_nums_cluster <- huc_cluster$huc12
 hucs_bbox_wkt <- st_as_text(st_as_sfc(st_bbox(huc_cluster)))
 

@@ -8,20 +8,24 @@
 #SBATCH --ntasks=2
 #SBATCH --output=Shell_Scripts/SLURM/slurm-train-%j.out
 
-cd /ibstorage/anthony/NYS_Wetlands_GHG
+cd /ibstorage/anthony/NYS_Wetlands_Data
 
 export TMPDIR=/ibstorage/anthony/tmp
 
 module load R/4.4.3
 
+#Batch import
+source Shell_Scripts/batch_config.sh
+include=("${batch2[@]}")
 
-Rscript R_Code_Analysis/TrainingDataGenerationFlex_CMD.R \
-    "Data/NYS_NHP_Wetland_DelineatonData/NYNHP_NatComm_data/NYSWetlands_NYNHP_NatComm_data_combined.gpkg" \
-	"Data/NY_HUCS/NY_Cluster_Zones_250_NAomit.gpkg" \
-	"cowardin" \
-	"cluster" > "Shell_Scripts/logs/training_data_gen_$(date +%Y%m%d).log" 2>&1
-
-
+for number in "${include[@]}"; do
+    echo "Running Rscript with argument: $number"
+    Rscript R_Code_Analysis/TrainingDataGenerationFlex_CMD.R \
+    "Data/NWI/NY_NWI_6347.gpkg" \
+	  "$GPKG" \
+	  "WETLAND_TY" \
+	  "$number" >> "Shell_Scripts/logs/training_data_gen_$(date +%Y%m%d).log" 2>&1
+done
 
 
 

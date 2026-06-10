@@ -44,6 +44,8 @@
 
 cd /ibstorage/anthony/NYS_Wetlands_Data/ 2>/dev/null || true
 
+module load R/4.4.3
+
 source Shell_Scripts/batch_config.sh
 SCRIPTDIR="Shell_Scripts"
 
