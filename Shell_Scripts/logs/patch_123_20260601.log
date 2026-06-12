@@ -1,0 +1,288 @@
+srun: Job 742004 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 742004
+terra 1.9.1
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:terra’:
+
+    intersect, union
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘tidyr’
+
+The following object is masked from ‘package:terra’:
+
+    extract
+
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+1) path the reviewed training data :Data/Training_Data/R_Patches_Vector_Reviewed/
+2) patch size :128
+3) cluster number :123
+
+[1] "Data/Training_Data/R_Patches_Vector_Reviewed//ADK_WCT_AJS_cluster_123_huc_043001010102_256m.gpkg"
+[2] "Data/Training_Data/R_Patches_Vector_Reviewed//ADK_WCT_AJS_cluster_123_huc_043001010103_256m.gpkg"
+[3] "Data/Training_Data/R_Patches_Vector_Reviewed//ADK_WCT_AJS_cluster_123_huc_043001010105_256m.gpkg"
+[4] "Data/Training_Data/R_Patches_Vector_Reviewed//NWI_AJS_cluster_123_huc_043001010103_256m.gpkg"    
+[5] "Data/Training_Data/R_Patches_Vector_Reviewed//NWI_AJS_cluster_123_huc_043001010104_256m.gpkg"    
+[6] "Data/Training_Data/R_Patches_Vector_Reviewed//NWI_AJS_cluster_123_huc_043001010105_256m.gpkg"    
+[1] 2
+|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          terra 1.9.1
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+HUC num: 043001010102
+HUC num: 043001010103
+HUC num: 043001010105
+|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          terra 1.9.1
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+HUC num: 043001010103
+HUC num: 043001010104
+HUC num: 043001010105
+|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          [[1]]
+NULL
+
+[[2]]
+NULL
+
+[[3]]
+NULL
+
+[[4]]
+NULL
+
+[[5]]
+NULL
+
+[[6]]
+NULL
+
+Warning messages:
+1: In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/ADK_WCT_AJS_cluster_123_huc_043001010102_256m.gpkg' may only be partially supported
+2: In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/ADK_WCT_AJS_cluster_123_huc_043001010103_256m.gpkg' may only be partially supported
+3: In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/ADK_WCT_AJS_cluster_123_huc_043001010105_256m.gpkg' may only be partially supported
+4: In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/NWI_AJS_cluster_123_huc_043001010103_256m.gpkg' may only be partially supported
+5: In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/NWI_AJS_cluster_123_huc_043001010104_256m.gpkg' may only be partially supported
+6: In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/NWI_AJS_cluster_123_huc_043001010105_256m.gpkg' may only be partially supported
+srun: Job 767191 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 767191 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 767191 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 767191
+terra 1.9.1
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:terra’:
+
+    intersect, union
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘tidyr’
+
+The following object is masked from ‘package:terra’:
+
+    extract
+
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+1) path the reviewed training data :Data/Training_Data/R_Patches_Vector_Reviewed/
+2) patch size :128
+3) cluster number :123
+
+[1] "Data/Training_Data/R_Patches_Vector_Reviewed//ADK_WCT_AJS_cluster_123_huc_043001010102_256m.gpkg"
+[2] "Data/Training_Data/R_Patches_Vector_Reviewed//ADK_WCT_AJS_cluster_123_huc_043001010103_256m.gpkg"
+[3] "Data/Training_Data/R_Patches_Vector_Reviewed//ADK_WCT_AJS_cluster_123_huc_043001010105_256m.gpkg"
+[4] "Data/Training_Data/R_Patches_Vector_Reviewed//NWI_AJS_cluster_123_huc_043001010103_256m.gpkg"    
+[5] "Data/Training_Data/R_Patches_Vector_Reviewed//NWI_AJS_cluster_123_huc_043001010104_256m.gpkg"    
+[6] "Data/Training_Data/R_Patches_Vector_Reviewed//NWI_AJS_cluster_123_huc_043001010105_256m.gpkg"    
+[1] 2
+|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          terra 1.9.1
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+HUC num: 043001010102
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010102_patch_1_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010102_patch_2_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010102_patch_3_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010102_patch_4_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010102_patch_5_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010102_patch_6_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010102_patch_7_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010102_patch_8_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010102_patch_9_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010102_patch_10_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010102_patch_11_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010102_patch_12_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010102_patch_13_256m.tif
+HUC num: 043001010103
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010103_patch_1_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010103_patch_2_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010103_patch_3_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010103_patch_4_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010103_patch_5_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010103_patch_6_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010103_patch_7_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010103_patch_8_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010103_patch_9_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010103_patch_10_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010103_patch_11_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010103_patch_12_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010103_patch_13_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010103_patch_14_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010103_patch_15_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010103_patch_16_256m.tif
+HUC num: 043001010105
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010105_patch_1_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010105_patch_2_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010105_patch_3_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010105_patch_4_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010105_patch_5_256m.tif
+Already file Data/Training_Data/R_Patches/ADK_cluster_123_huc_043001010105_patch_6_256m.tif
+|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          terra 1.9.1
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+HUC num: 043001010103
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010103_patch_1_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010103_patch_2_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010103_patch_3_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010103_patch_4_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010103_patch_5_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010103_patch_6_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010103_patch_7_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010103_patch_8_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010103_patch_9_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010103_patch_10_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010103_patch_11_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010103_patch_12_256m.tif
+HUC num: 043001010104
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_1_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_2_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_3_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_4_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_5_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_6_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_7_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_8_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_9_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_10_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_11_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_12_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_13_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_14_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_15_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_16_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_17_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_18_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_19_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_20_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_21_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_22_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010104_patch_23_256m.tif
+HUC num: 043001010105
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_1_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_2_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_3_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_4_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_5_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_6_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_7_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_8_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_9_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_10_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_11_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_12_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_13_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_14_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_15_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_16_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_17_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_18_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_19_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_20_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_21_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_22_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_23_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_24_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_25_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_26_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_27_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_28_256m.tif
+Already file Data/Training_Data/R_Patches/NWI_cluster_123_huc_043001010105_patch_29_256m.tif
+|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          [[1]]
+NULL
+
+[[2]]
+NULL
+
+[[3]]
+NULL
+
+[[4]]
+NULL
+
+[[5]]
+NULL
+
+[[6]]
+NULL
+
+Warning messages:
+1: In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/ADK_WCT_AJS_cluster_123_huc_043001010102_256m.gpkg' may only be partially supported
+2: In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/ADK_WCT_AJS_cluster_123_huc_043001010103_256m.gpkg' may only be partially supported
+3: In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/ADK_WCT_AJS_cluster_123_huc_043001010105_256m.gpkg' may only be partially supported
+4: In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/NWI_AJS_cluster_123_huc_043001010103_256m.gpkg' may only be partially supported
+5: In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/NWI_AJS_cluster_123_huc_043001010104_256m.gpkg' may only be partially supported
+6: In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/NWI_AJS_cluster_123_huc_043001010105_256m.gpkg' may only be partially supported

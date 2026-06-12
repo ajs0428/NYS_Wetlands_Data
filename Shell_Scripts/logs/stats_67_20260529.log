@@ -1,0 +1,43 @@
+srun: Job 741999 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 741999 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741999 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741999 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741999 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741999 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741999 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 741999
+terra 1.9.1
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+Cluster: 67 
+Output : Data/HUC_Raster_Stacks/Stats_Partials/cluster_67.json 
+
+Found 7 HUCs in cluster 67 
+
+Workers: 4 
+terra 1.9.1
+terra 1.9.1
+terra 1.9.1
+terra 1.9.1
+|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          
+Computed stats over 7 HUCs for bands:
+   DEM, slope_local, flowacc, twi, CHM, r, g, b, nir, r_lo, g_lo, b_lo, nir_lo, pct_below_1m, pct_1m_to_5m, pct_above_5m 
+
+Global band statistics written to: Data/HUC_Raster_Stacks/Stats_Partials/cluster_67.json 
+
+Summary:
+  DEM              min:      13.9177  max:     498.7645
+  slope_local      min:       0.0000  max:      85.8562
+  flowacc          min:       0.0000  max:      18.6210
+  twi              min:      -2.4629  max:      43.6780
+  CHM              min:       0.0000  max:      48.4620
+  r                min:       4.0000  max:     255.0000
+  g                min:      27.0000  max:     255.0000
+  b                min:      54.0000  max:     255.0000
+  nir              min:       3.0000  max:     255.0000
+  r_lo             min:       3.0000  max:     255.0000
+  g_lo             min:      12.0000  max:     255.0000
+  b_lo             min:       6.0000  max:     255.0000
+  nir_lo           min:       1.0000  max:     255.0000
+  pct_below_1m     min:       0.0000  max:       1.0000
+  pct_1m_to_5m     min:       0.0000  max:       1.0000
+  pct_above_5m     min:       0.0000  max:       1.0000

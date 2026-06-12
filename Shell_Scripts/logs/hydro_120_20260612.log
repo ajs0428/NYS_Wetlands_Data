@@ -1,0 +1,64 @@
+these are the arguments: 
+ - Path to a file vector study area Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ - Cluster number (integer 1-200ish): 120 
+ - Path to the DEMs in TerrainProcessed folder Data/TerrainProcessed/HUC_DEMs/ 
+ - Path to save folder: Data/TerrainProcessed/HUC_Hydro/ 
+terra 1.9.27
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:terra’:
+
+    intersect, union
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘tidyr’
+
+The following object is masked from ‘package:terra’:
+
+    extract
+
+[1] "/ibstorage/anthony/NYS_Wetlands_GHG/tmp//RtmpOJM0lq"
+[1] "Data/TerrainProcessed/HUC_DEMs//cluster_120_huc_020200060407.tif"
+[2] "Data/TerrainProcessed/HUC_DEMs//cluster_120_huc_020200060502.tif"
+[3] "Data/TerrainProcessed/HUC_DEMs//cluster_120_huc_020200060506.tif"
+[4] "Data/TerrainProcessed/HUC_DEMs//cluster_120_huc_020200060609.tif"
+[5] "Data/TerrainProcessed/HUC_DEMs//cluster_120_huc_020200061101.tif"
+[1] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_120_huc_020200060407_wbt.tif"
+[2] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_120_huc_020200060502_wbt.tif"
+[3] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_120_huc_020200060506_wbt.tif"
+[4] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_120_huc_020200060609_wbt.tif"
+[5] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_120_huc_020200061101_wbt.tif"
+character(0)
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_120_huc_020200060407_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_120_huc_020200060502_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_120_huc_020200060506_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_120_huc_020200060609_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_120_huc_020200061101_wbt_TWI_Facc.tif
+[[1]]
+NULL
+
+[[2]]
+NULL
+
+[[3]]
+NULL
+
+[[4]]
+NULL
+
+[[5]]
+NULL
+
+          used (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 1501940 80.3    2796800 149.4  2155011 115.1
+Vcells 1990560 15.2    8388608  64.0  2829935  21.6

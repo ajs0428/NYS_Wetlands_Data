@@ -1,0 +1,88 @@
+these are the arguments: 
+ - Path to the DEM indexes folder Data/NYS_DEM_Indexes 
+ - Path to a file vector study area Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ - Cluster number (integer 1-75): 60 
+ - Path to DEM folder: Data/DEMs/ 
+ - Path to Save folder: Data/TerrainProcessed/HUC_DEMs/ 
+terra 1.9.27
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:terra’:
+
+    intersect, union
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘tidyr’
+
+The following object is masked from ‘package:terra’:
+
+    extract
+
+[1] "The number of DEM indices: 85680"
+[1] "this is the total list of DEM raster files: 85048"
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030504.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030303.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030304.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030402.tif
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030502.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030503.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900020102.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030302.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030501.tif
+[[1]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3528272 188.5    6127840 327.3  6127840 327.3
+Vcells 10235668  78.1   17543678 133.9 13522536 103.2
+
+[[2]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3528745 188.5    6127840 327.3  6127840 327.3
+Vcells 10237129  78.2   17543678 133.9 13522536 103.2
+
+[[3]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3528759 188.5    6127840 327.3  6127840 327.3
+Vcells 10237086  78.2   17543678 133.9 13522536 103.2
+
+[[4]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3528814 188.5    6127840 327.3  6127840 327.3
+Vcells 10237338  78.2   17543678 133.9 13522536 103.2
+
+[[5]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3528268 188.5    6127828 327.3  6127828 327.3
+Vcells 10235657  78.1   17543656 133.9 13520610 103.2
+
+[[6]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3528765 188.5    6127828 327.3  6127828 327.3
+Vcells 10237264  78.2   17543656 133.9 13520610 103.2
+
+[[7]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3528771 188.5    6127828 327.3  6127828 327.3
+Vcells 10237168  78.2   17543656 133.9 13520610 103.2
+
+[[8]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3528839 188.5    6127828 327.3  6127828 327.3
+Vcells 10237837  78.2   17543656 133.9 13520610 103.2
+
+[[9]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3528803 188.5    6127828 327.3  6127828 327.3
+Vcells 10237328  78.2   17543656 133.9 13520610 103.2
+

@@ -1,0 +1,99 @@
+terra 1.9.1
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+Cluster: 95 
+Output : Data/HUC_Raster_Stacks/Stats_Partials/cluster_95.json 
+
+Found 8 HUCs in cluster 95 
+
+Workers: 4 
+slurmstepd: error: *** STEP 741751.3 ON cbsuxu09 CANCELLED AT 2026-05-28T11:24:39 ***
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: Job 741752 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 741752 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741752 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741752 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 741752
+terra 1.9.1
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+Cluster: 95 
+Output : Data/HUC_Raster_Stacks/Stats_Partials/cluster_95.json 
+
+Found 8 HUCs in cluster 95 
+
+Workers: 4 
+Warning: Caught FutureInterruptError. Canceling all iterations ...
+terra 1.9.1
+Error: Future (‘future_lapply-4’) of class CallrFuture failed for unknown reason while running, while running on localhost (pid 1779768; exit code -9). CallrFuture (‘future_lapply-4’) failed. The reason reported was ‘! callr subprocess failed: could not start R, exited with non-zero status, has crashed or was killed’. Post-mortem diagnostic: The parallel worker (PID 1779768) started at 2026-05-28T15:33:27+0000 finished with exit code -9. The total size of the 13 globals exported is 7.92 KiB The three largest globals are ‘huc_layers’ (2.22 KiB of class ‘function’), ‘huc_source_paths’ (1.73 KiB of class ‘function’) and ‘...future.FUN’ (1.56 KiB of class ‘function’)
+Execution halted
+slurmstepd: error: Detected 1 oom-kill event(s) in StepId=741752.49. Some of your processes may have been killed by the cgroup out-of-memory handler.
+srun: error: cbsuxu09: task 0: Out Of Memory
+srun: Job 741993 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 741993 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741993 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741993 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741993 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741993 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741993 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741993 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741993 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741993 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741993 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 741993
+terra 1.9.1
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+Cluster: 95 
+Output : Data/HUC_Raster_Stacks/Stats_Partials/cluster_95.json 
+
+Found 8 HUCs in cluster 95 
+
+Workers: 4 
+Warning: Caught FutureInterruptError. Canceling all iterations ...
+terra 1.9.1
+terra 1.9.1
+terra 1.9.1
+Error: Future (‘future_lapply-2’) of class CallrFuture failed for unknown reason while running, while running on localhost (pid 1830210; exit code -9). CallrFuture (‘future_lapply-2’) failed. The reason reported was ‘! callr subprocess failed: could not start R, exited with non-zero status, has crashed or was killed’. Post-mortem diagnostic: The parallel worker (PID 1830210) started at 2026-05-28T19:23:40+0000 finished with exit code -9. The total size of the 13 globals exported is 7.92 KiB The three largest globals are ‘huc_layers’ (2.22 KiB of class ‘function’), ‘huc_source_paths’ (1.73 KiB of class ‘function’) and ‘...future.FUN’ (1.56 KiB of class ‘function’)
+Execution halted
+slurmstepd: error: Detected 1 oom-kill event(s) in StepId=741993.88. Some of your processes may have been killed by the cgroup out-of-memory handler.
+srun: error: cbsuxu09: task 0: Out Of Memory
+srun: Job 741994 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 741994 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741994 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741994 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741994 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741994 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 741994
+terra 1.9.1
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+Cluster: 95 
+Output : Data/HUC_Raster_Stacks/Stats_Partials/cluster_95.json 
+
+Found 8 HUCs in cluster 95 
+
+Workers: 4 
+terra 1.9.1
+terra 1.9.1
+terra 1.9.1
+terra 1.9.1
+
+Computed stats over 8 HUCs for bands:
+   DEM, slope_local, flowacc, twi, CHM, r, g, b, nir, r_lo, g_lo, b_lo, nir_lo, pct_below_1m, pct_1m_to_5m, pct_above_5m 
+
+Global band statistics written to: Data/HUC_Raster_Stacks/Stats_Partials/cluster_95.json 
+
+Summary:
+  DEM              min:     125.1960  max:     506.7893
+  slope_local      min:       0.0000  max:      85.7361
+  flowacc          min:       0.0000  max:      18.4859
+  twi              min:      -2.5028  max:      32.1897
+  CHM              min:       0.0000  max:      49.9762
+  r                min:       0.0000  max:     255.0000
+  g                min:       2.0000  max:     255.0000
+  b                min:      34.0000  max:     255.0000
+  nir              min:       0.0000  max:     255.0000
+  r_lo             min:       4.0000  max:     255.0000
+  g_lo             min:       7.0000  max:     255.0000
+  b_lo             min:       3.0000  max:     255.0000
+  nir_lo           min:       0.0000  max:     255.0000
+  pct_below_1m     min:       0.0000  max:       1.0000
+  pct_1m_to_5m     min:       0.0000  max:       1.0000
+  pct_above_5m     min:       0.0000  max:       1.0000

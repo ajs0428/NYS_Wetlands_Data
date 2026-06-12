@@ -1,0 +1,65 @@
+terra 1.9.1
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+Cluster: 50 
+Output : Data/HUC_Raster_Stacks/Stats_Partials/cluster_50.json 
+
+slurmstepd: error: *** STEP 741751.5 ON cbsuxu06 CANCELLED AT 2026-05-28T11:24:39 ***
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: Job 741752 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 741752 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741752 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741752 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741752 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741752 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741752 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741752 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741752 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741752 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741752 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741752 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741752 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 741752
+terra 1.9.1
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+Cluster: 50 
+Output : Data/HUC_Raster_Stacks/Stats_Partials/cluster_50.json 
+
+Found 7 HUCs in cluster 50 
+
+Workers: 4 
+Warning: Caught FutureInterruptError. Canceling all iterations ...
+Error: Future (‘future_lapply-1’) of class CallrFuture failed for unknown reason while running, while running on localhost (pid 1781947; exit code -9). CallrFuture (‘future_lapply-1’) failed. The reason reported was ‘! callr subprocess failed: could not start R, exited with non-zero status, has crashed or was killed’. Post-mortem diagnostic: The parallel worker (PID 1781947) started at 2026-05-28T15:53:00+0000 finished with exit code -9. The total size of the 13 globals exported is 7.92 KiB The three largest globals are ‘huc_layers’ (2.22 KiB of class ‘function’), ‘huc_source_paths’ (1.73 KiB of class ‘function’) and ‘...future.FUN’ (1.56 KiB of class ‘function’)
+Execution halted
+slurmstepd: error: Detected 1 oom-kill event(s) in StepId=741752.101. Some of your processes may have been killed by the cgroup out-of-memory handler.
+srun: error: cbsuxu09: task 0: Out Of Memory
+srun: Job 741993 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 741993 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 741993 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 741993
+terra 1.9.1
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+Cluster: 50 
+Output : Data/HUC_Raster_Stacks/Stats_Partials/cluster_50.json 
+
+Found 7 HUCs in cluster 50 
+
+Workers: 4 
+Warning: Caught FutureInterruptError. Canceling all iterations ...
+Error: Future (‘future_lapply-1’) of class CallrFuture failed for unknown reason while running, while running on localhost (pid 1827482; exit code -9). CallrFuture (‘future_lapply-1’) failed. The reason reported was ‘! callr subprocess failed: could not start R, exited with non-zero status, has crashed or was killed’. Post-mortem diagnostic: The parallel worker (PID 1827482) started at 2026-05-28T19:06:23+0000 finished with exit code -9. The total size of the 13 globals exported is 7.92 KiB The three largest globals are ‘huc_layers’ (2.22 KiB of class ‘function’), ‘huc_source_paths’ (1.73 KiB of class ‘function’) and ‘...future.FUN’ (1.56 KiB of class ‘function’)
+Execution halted
+slurmstepd: error: Detected 1 oom-kill event(s) in StepId=741993.42. Some of your processes may have been killed by the cgroup out-of-memory handler.
+srun: error: cbsuxu09: task 0: Out Of Memory
+terra 1.9.1
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+Cluster: 50 
+Output : Data/HUC_Raster_Stacks/Stats_Partials/cluster_50.json 
+
+Found 7 HUCs in cluster 50 
+
+Workers: 4 
+terra 1.9.1
+Warning: Caught FutureInterruptError. Canceling all iterations ...
+Error: Future (‘future_lapply-4’) of class CallrFuture failed for unknown reason while running, while running on localhost (pid 1836446; exit code -9). CallrFuture (‘future_lapply-4’) failed. The reason reported was ‘! callr subprocess failed: could not start R, exited with non-zero status, has crashed or was killed’. Post-mortem diagnostic: The parallel worker (PID 1836446) started at 2026-05-28T20:09:12+0000 finished with exit code -9. The total size of the 13 globals exported is 7.92 KiB The three largest globals are ‘huc_layers’ (2.22 KiB of class ‘function’), ‘huc_source_paths’ (1.73 KiB of class ‘function’) and ‘...future.FUN’ (1.56 KiB of class ‘function’)
+Execution halted
+slurmstepd: error: Detected 1 oom-kill event(s) in StepId=741994.1. Some of your processes may have been killed by the cgroup out-of-memory handler.
+srun: error: cbsuxu09: task 0: Out Of Memory

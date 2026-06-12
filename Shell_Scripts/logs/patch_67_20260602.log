@@ -1,0 +1,47 @@
+terra 1.9.1
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:terra’:
+
+    intersect, union
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘tidyr’
+
+The following object is masked from ‘package:terra’:
+
+    extract
+
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+1) path the reviewed training data :Data/Training_Data/R_Patches_Vector_Reviewed/
+2) patch size :128
+3) cluster number :67
+
+[1] "Data/Training_Data/R_Patches_Vector_Reviewed//ADK_WCT_AJS_cluster_67_huc_020200030403_256m.gpkg"
+[1] 2
+|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          terra 1.9.1
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+HUC num: 020200030403
+|---------|---------|---------|---------|=========================================                                          [[1]]
+NULL
+
+Warning message:
+In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/ADK_WCT_AJS_cluster_67_huc_020200030403_256m.gpkg' may only be partially supported

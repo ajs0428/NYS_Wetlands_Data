@@ -2,7 +2,7 @@
 #SBATCH --nodelist=cbsuxu06,cbsuxu07,cbsuxu08,cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
-#SBATCH --mem-per-cpu=16G
+#SBATCH --mem-per-cpu=64G
 #SBATCH --job-name=ortho
 #SBATCH --cpus-per-task=1
 #SBATCH --ntasks=5

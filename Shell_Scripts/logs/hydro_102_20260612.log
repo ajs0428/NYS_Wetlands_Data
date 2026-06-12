@@ -1,0 +1,103 @@
+srun: Job 784989 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 784989 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 784989 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 784989 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 784989
+these are the arguments: 
+ - Path to a file vector study area Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ - Cluster number (integer 1-200ish): 102 
+ - Path to the DEMs in TerrainProcessed folder Data/TerrainProcessed/HUC_DEMs/ 
+ - Path to save folder: Data/TerrainProcessed/HUC_Hydro/ 
+terra 1.9.27
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:terra’:
+
+    intersect, union
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘tidyr’
+
+The following object is masked from ‘package:terra’:
+
+    extract
+
+[1] "/ibstorage/anthony/NYS_Wetlands_GHG/tmp//Rtmp3eTbMr"
+[1] "Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040103.tif"
+[2] "Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040104.tif"
+[3] "Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040105.tif"
+[4] "Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040301.tif"
+[5] "Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040303.tif"
+[6] "Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040305.tif"
+[7] "Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040306.tif"
+[8] "Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040506.tif"
+[1] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_102_huc_020200040103_wbt.tif"
+[2] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_102_huc_020200040104_wbt.tif"
+[3] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_102_huc_020200040105_wbt.tif"
+[4] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_102_huc_020200040303_wbt.tif"
+[5] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_102_huc_020200040305_wbt.tif"
+[6] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_102_huc_020200040306_wbt.tif"
+[7] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_102_huc_020200040506_wbt.tif"
+[1] "Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040301.tif"
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_102_huc_020200040103_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_102_huc_020200040104_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_102_huc_020200040105_wbt_TWI_Facc.tif
+Hydro-Conditioning for /ibstorage/anthony/NYS_Wetlands_Data/Data/TerrainProcessed/HUC_DEM_Hydro/cluster_102_huc_020200040301_wbt.tif
+thread 'main' panicked at whitebox-tools-app/src/tools/hydro_analysis/fill_depressions.rs:368:23:
+Error unwrapping 'output'
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+Error running WhiteboxTools (FillDepressions)
+  whitebox.exe_path: '/home/ajs544/.local/share/R/whitebox/WBT/whitebox_tools'; File exists? TRUE
+  Arguments: --run=FillDepressions  --dem='/ibstorage/anthony/NYS_Wetlands_Data/Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040301.tif' --output='/ibstorage/anthony/NYS_Wetlands_Data/Data/TerrainProcessed/HUC_DEM_Hydro/cluster_102_huc_020200040301_wbt.tif' --fix_flats -v
+
+System command had status 101
+******************************
+* Welcome to FillDepressions *
+* Powered by WhiteboxTools   *
+* www.whiteboxgeo.com        *
+******************************
+Reading data...
+Finding pit cells: 100%
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_102_huc_020200040301_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_102_huc_020200040303_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_102_huc_020200040305_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_102_huc_020200040306_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_102_huc_020200040506_wbt_TWI_Facc.tif
+[[1]]
+NULL
+
+[[2]]
+NULL
+
+[[3]]
+NULL
+
+[[4]]
+NULL
+
+[[5]]
+NULL
+
+[[6]]
+NULL
+
+[[7]]
+NULL
+
+[[8]]
+NULL
+
+          used (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 1507410 80.6    2812428 150.2  2155011 115.1
+Vcells 2029293 15.5    8388608  64.0  2829919  21.6

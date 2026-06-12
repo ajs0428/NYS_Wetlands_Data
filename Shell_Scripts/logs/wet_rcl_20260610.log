@@ -1,0 +1,2357 @@
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 12 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+Error: Query execution failed, cannot open layer.
+In addition: Warning message:
+In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Error 1: In ExecuteSQL(): sqlite3_prepare_v2(SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE cluster IN (1,11,12,123,168,2,208,218,22,225,250,3,4,46,5,50,6,64,67,7,8,82,95)):
+  no such table: NY_Cluster_Zones_250_NAomit_6347
+Execution halted
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 51 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+Error: Query execution failed, cannot open layer.
+In addition: Warning message:
+In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Error 1: In ExecuteSQL(): sqlite3_prepare_v2(SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE cluster IN (1,11,12,123,168,2,208,218,22,225,250,3,4,46,5,50,6,64,67,7,8,82,95)):
+  no such table: NY_Cluster_Zones_250_NAomit_6347
+Execution halted
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 53 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+Error: Query execution failed, cannot open layer.
+In addition: Warning message:
+In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Error 1: In ExecuteSQL(): sqlite3_prepare_v2(SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE cluster IN (1,11,12,123,168,2,208,218,22,225,250,3,4,46,5,50,6,64,67,7,8,82,95)):
+  no such table: NY_Cluster_Zones_250_NAomit_6347
+Execution halted
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 56 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+Error: Query execution failed, cannot open layer.
+In addition: Warning message:
+In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Error 1: In ExecuteSQL(): sqlite3_prepare_v2(SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE cluster IN (1,11,12,123,168,2,208,218,22,225,250,3,4,46,5,50,6,64,67,7,8,82,95)):
+  no such table: NY_Cluster_Zones_250_NAomit_6347
+Execution halted
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 60 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+Error: Query execution failed, cannot open layer.
+In addition: Warning message:
+In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Error 1: In ExecuteSQL(): sqlite3_prepare_v2(SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE cluster IN (1,11,12,123,168,2,208,218,22,225,250,3,4,46,5,50,6,64,67,7,8,82,95)):
+  no such table: NY_Cluster_Zones_250_NAomit_6347
+Execution halted
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 84 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+Error: Query execution failed, cannot open layer.
+In addition: Warning message:
+In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Error 1: In ExecuteSQL(): sqlite3_prepare_v2(SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE cluster IN (1,11,12,123,168,2,208,218,22,225,250,3,4,46,5,50,6,64,67,7,8,82,95)):
+  no such table: NY_Cluster_Zones_250_NAomit_6347
+Execution halted
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 86 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+Error: Query execution failed, cannot open layer.
+In addition: Warning message:
+In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Error 1: In ExecuteSQL(): sqlite3_prepare_v2(SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE cluster IN (1,11,12,123,168,2,208,218,22,225,250,3,4,46,5,50,6,64,67,7,8,82,95)):
+  no such table: NY_Cluster_Zones_250_NAomit_6347
+Execution halted
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 90 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+Error: Query execution failed, cannot open layer.
+In addition: Warning message:
+In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Error 1: In ExecuteSQL(): sqlite3_prepare_v2(SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE cluster IN (1,11,12,123,168,2,208,218,22,225,250,3,4,46,5,50,6,64,67,7,8,82,95)):
+  no such table: NY_Cluster_Zones_250_NAomit_6347
+Execution halted
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 92 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+Error: Query execution failed, cannot open layer.
+In addition: Warning message:
+In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Error 1: In ExecuteSQL(): sqlite3_prepare_v2(SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE cluster IN (1,11,12,123,168,2,208,218,22,225,250,3,4,46,5,50,6,64,67,7,8,82,95)):
+  no such table: NY_Cluster_Zones_250_NAomit_6347
+Execution halted
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 102 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+Error: Query execution failed, cannot open layer.
+In addition: Warning message:
+In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Error 1: In ExecuteSQL(): sqlite3_prepare_v2(SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE cluster IN (1,11,12,123,168,2,208,218,22,225,250,3,4,46,5,50,6,64,67,7,8,82,95)):
+  no such table: NY_Cluster_Zones_250_NAomit_6347
+Execution halted
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 105 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+Error: Query execution failed, cannot open layer.
+In addition: Warning message:
+In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Error 1: In ExecuteSQL(): sqlite3_prepare_v2(SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE cluster IN (1,11,12,123,168,2,208,218,22,225,250,3,4,46,5,50,6,64,67,7,8,82,95)):
+  no such table: NY_Cluster_Zones_250_NAomit_6347
+Execution halted
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 116 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+Error: Query execution failed, cannot open layer.
+In addition: Warning message:
+In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Error 1: In ExecuteSQL(): sqlite3_prepare_v2(SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE cluster IN (1,11,12,123,168,2,208,218,22,225,250,3,4,46,5,50,6,64,67,7,8,82,95)):
+  no such table: NY_Cluster_Zones_250_NAomit_6347
+Execution halted
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 120 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+Error: Query execution failed, cannot open layer.
+In addition: Warning message:
+In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Error 1: In ExecuteSQL(): sqlite3_prepare_v2(SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE cluster IN (1,11,12,123,168,2,208,218,22,225,250,3,4,46,5,50,6,64,67,7,8,82,95)):
+  no such table: NY_Cluster_Zones_250_NAomit_6347
+Execution halted
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 136 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+Error: Query execution failed, cannot open layer.
+In addition: Warning message:
+In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
+  GDAL Error 1: In ExecuteSQL(): sqlite3_prepare_v2(SELECT * FROM NY_Cluster_Zones_250_NAomit_6347 WHERE cluster IN (1,11,12,123,168,2,208,218,22,225,250,3,4,46,5,50,6,64,67,7,8,82,95)):
+  no such table: NY_Cluster_Zones_250_NAomit_6347
+Execution halted
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 12 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+ [1] "043001040302" "043001081302" "043001081602" "043001060504" "043001081401"
+ [6] "043001081402" "043001060503" "043001081602" "043001081402" "043001081402"
+[11] "043001081402"
+Simple feature collection with 11 features and 4 fields (with 1 geometry empty)
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 593905 ymin: 4917090 xmax: 629852.6 ymax: 4973665
+Projected CRS: NAD83(2011) / UTM zone 18N
+First 10 features:
+                          name        huc12 cluster
+1                Ausable River 043001040302      12
+2  Outlet Little Ausable River 043001081302      12
+3                   Dead Creek 043001081602      12
+4                Saranac River 043001060504      12
+5      Headwaters Salmon River 043001081401      12
+6          Outlet Salmon River 043001081402      12
+7    Kelly Brook-Saranac River 043001060503      12
+8                   Dead Creek 043001081602      12
+9          Outlet Salmon River 043001081402      12
+10         Outlet Salmon River 043001081402      12
+                                    tnmid                           geom
+1  {893C32E5-B94B-4AA7-B55B-2EFC6787B581} MULTIPOLYGON (((624856.4 49...
+2  {E0C90310-099D-4B18-BB2C-6B92BF98D96A} MULTIPOLYGON (((609877.4 49...
+3  {2C4507A0-E6BE-436B-A6DD-80E0AF587F1F} MULTIPOLYGON (((624153.7 49...
+4  {0B6D7884-0E19-43B7-9FBE-EFE345CA1CFA} MULTIPOLYGON (((609464 4949...
+5  {37F363EE-E3A9-48B2-905F-B9AD02CA2356} MULTIPOLYGON (((604400 4931...
+6  {E4221902-E219-4E5E-A028-78FA6ACE71F8} MULTIPOLYGON (((623184.2 49...
+7  {2883B563-2217-4724-8B45-E6DA4E42839D} MULTIPOLYGON (((604964.1 49...
+8  {2C4507A0-E6BE-436B-A6DD-80E0AF587F1F}             MULTIPOLYGON EMPTY
+9  {E4221902-E219-4E5E-A028-78FA6ACE71F8} MULTIPOLYGON (((622901.8 49...
+10 {E4221902-E219-4E5E-A028-78FA6ACE71F8} MULTIPOLYGON (((623218.7 49...
+Reading layer `NY_NWI_6347' from data source 
+  `/ibstorage/anthony/NYS_Wetlands_Data/Data/NWI/NY_NWI_6347.gpkg' 
+  using driver `GPKG'
+Simple feature collection with 14856 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 590048.4 ymin: 4820541 xmax: 639346.6 ymax: 4985460
+Projected CRS: NAD83(2011) / UTM zone 18N
+[1] "No reprojection to EPSG:6347"
+Warning message:
+attribute variables are assumed to be spatially constant throughout all geometries 
+|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          [1] "REVIEW" "FSW"    "SSW"    "EMW"   
+Writing layer `NWI_cluster_12_huc_043001040302' to data source 
+  `Data/Training_Data/HUC_NWI_Processed/NWI_cluster_12_huc_043001040302.gpkg' using driver `GPKG'
+Writing 799 features with 1 fields and geometry type Unknown (any).
+|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          [1] "FSW"    "EMW"    "REVIEW" "SSW"   
+Writing layer `NWI_cluster_12_huc_043001081302' to data source 
+  `Data/Training_Data/HUC_NWI_Processed/NWI_cluster_12_huc_043001081302.gpkg' using driver `GPKG'
+Writing 472 features with 1 fields and geometry type Unknown (any).
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errorsCreating New Wetlands Reclass File: Data/Training_Data/HUC_NWI_Processed/NWI_cluster_12_huc_043001040302.gpkg
+Creating New Wetlands Reclass File: Data/Training_Data/HUC_NWI_Processed/NWI_cluster_12_huc_043001081302.gpkg
+NWI Reclass File Aleady Exists: Data/Training_Data/HUC_NWI_Processed/NWI_cluster_12_huc_043001081602.gpkg
+[1] "FSW"    "SSW"    "EMW"    "REVIEW"
+Writing layer `NWI_cluster_12_huc_043001060504' to data source 
+  `Data/Training_Data/HUC_NWI_Processed/NWI_cluster_12_huc_043001060504.gpkg' using driver `GPKG'
+Writing 283 features with 1 fields and geometry type Polygon.
+|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          [1] "FSW"    "EMW"    "REVIEW" "SSW"   
+Writing layer `NWI_cluster_12_huc_043001081401' to data source 
+  `Data/Training_Data/HUC_NWI_Processed/NWI_cluster_12_huc_043001081401.gpkg' using driver `GPKG'
+Writing 403 features with 1 fields and geometry type Polygon.
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errorsCreating New Wetlands Reclass File: Data/Training_Data/HUC_NWI_Processed/NWI_cluster_12_huc_043001060504.gpkg
+Creating New Wetlands Reclass File: Data/Training_Data/HUC_NWI_Processed/NWI_cluster_12_huc_043001081401.gpkg
+NWI Reclass File Aleady Exists: Data/Training_Data/HUC_NWI_Processed/NWI_cluster_12_huc_043001081402.gpkg
+[1] "REVIEW" "FSW"    "SSW"    "EMW"   
+Writing layer `NWI_cluster_12_huc_043001060503' to data source 
+  `Data/Training_Data/HUC_NWI_Processed/NWI_cluster_12_huc_043001060503.gpkg' using driver `GPKG'
+Writing 300 features with 1 fields and geometry type Unknown (any).
+|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          [1] "FSW"    "REVIEW" "SSW"    "EMW"   
+Writing layer `NWI_cluster_12_huc_043001081602' to data source 
+  `Data/Training_Data/HUC_NWI_Processed/NWI_cluster_12_huc_043001081602.gpkg' using driver `GPKG'
+Writing 808 features with 1 fields and geometry type Unknown (any).
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errorsCreating New Wetlands Reclass File: Data/Training_Data/HUC_NWI_Processed/NWI_cluster_12_huc_043001060503.gpkg
+Creating New Wetlands Reclass File: Data/Training_Data/HUC_NWI_Processed/NWI_cluster_12_huc_043001081602.gpkg
+[1] "REVIEW" "FSW"    "SSW"    "EMW"   
+Writing layer `NWI_cluster_12_huc_043001081402' to data source 
+  `Data/Training_Data/HUC_NWI_Processed/NWI_cluster_12_huc_043001081402.gpkg' using driver `GPKG'
+Writing 284 features with 1 fields and geometry type Polygon.
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errorsCreating New Wetlands Reclass File: Data/Training_Data/HUC_NWI_Processed/NWI_cluster_12_huc_043001081402.gpkg
+NWI Reclass File Aleady Exists: Data/Training_Data/HUC_NWI_Processed/NWI_cluster_12_huc_043001081402.gpkg
+NWI Reclass File Aleady Exists: Data/Training_Data/HUC_NWI_Processed/NWI_cluster_12_huc_043001081402.gpkg
+    user   system  elapsed 
+2731.157 1486.359 1735.071 
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 51 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+[1] "042900060102" "042900070103" "042900070102" "042900070101" "043001060302"
+[6] "043001060303" "042900060101" "042900060301" "043001060301"
+Simple feature collection with 9 features and 4 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 547892.9 ymin: 4919636 xmax: 585588.1 ymax: 4960020
+Projected CRS: NAD83(2011) / UTM zone 18N
+                               name        huc12 cluster
+1                      Osgood River 042900060102      51
+2                      Duane Stream 042900070103      51
+3      Ingraham Stream-Salmon River 042900070102      51
+4                       Hatch Brook 042900070101      51
+5                       Alder Brook 043001060302      51
+6 Middle North Branch Saranac River 043001060303      51
+7                        Hays Brook 042900060101      51
+8             Mile Brook-Deer River 042900060301      51
+9  Upper North Branch Saranac River 043001060301      51
+                                   tnmid                           geom
+1 {76EB1EFE-8C5C-469D-8910-B01AB4F9828A} POLYGON ((559085 4921527, 5...
+2 {81DEC854-3F76-4EBC-BB2F-AEA301D52D1B} POLYGON ((560978.4 4952505,...
+3 {C7F98998-8EAA-4063-BA15-E0CB34AD8ED5} POLYGON ((573939.2 4936878,...
+4 {49E1301B-74FD-4DD7-B48D-D52C0E35E729} POLYGON ((563710.1 4947015,...
+5 {C056425F-F93F-48F9-B90D-CCB0FA7C2121} POLYGON ((578506.3 4932019,...
+6 {78ECF613-E753-4F5F-8721-050580906FE7} POLYGON ((569946.7 4931542,...
+7 {90B6C63F-567C-4694-A051-1A18675C2432} POLYGON ((559511.9 4934960,...
+8 {BBCDE270-5F20-4D84-8FC5-34801A093F35} POLYGON ((553859.1 4942590,...
+9 {A9C65ABF-FD29-487D-AC5F-F3050528AAB0} POLYGON ((562372.2 4932248,...
+Reading layer `NY_NWI_6347' from data source 
+  `/ibstorage/anthony/NYS_Wetlands_Data/Data/NWI/NY_NWI_6347.gpkg' 
+  using driver `GPKG'
+Simple feature collection with 9112 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 545268.6 ymin: 4908254 xmax: 592250.1 ymax: 4965763
+Projected CRS: NAD83(2011) / UTM zone 18N
+[1] "No reprojection to EPSG:6347"
+Warning message:
+attribute variables are assumed to be spatially constant throughout all geometries 
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+   user  system elapsed 
+ 13.940   0.663   7.291 
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 53 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+[1] "020501020303" "020501020508" "020501020507" "020501020509" "020501020301"
+[6] "020501020604"
+Simple feature collection with 6 features and 4 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 428331.7 ymin: 4712936 xmax: 458486.9 ymax: 4744878
+Projected CRS: NAD83(2011) / UTM zone 18N
+                                   name        huc12 cluster
+1                   Upper Otselic River 020501020303      53
+2          Crooked Brook-Pleasant Brook 020501020508      53
+3 South Lebanon Brook-Cold Spring Brook 020501020507      53
+4       Stone Mill Brook-Chenango River 020501020509      53
+5              Headwaters Otselic River 020501020301      53
+6         East Branch Canasawacta Creek 020501020604      53
+                                   tnmid                           geom
+1 {C4492E0D-5E27-4832-A76A-9E46A77B49CC} POLYGON ((429487.6 4721461,...
+2 {BBF669D0-41B2-4B7B-9218-AB905A16DC49} POLYGON ((443633.3 4728179,...
+3 {21D98636-1F3E-4F3F-B809-BD62EE908D42} POLYGON ((441516.5 4735010,...
+4 {FC3449A1-286E-4FBC-B421-B4C521AACA16} POLYGON ((452943.5 4731961,...
+5 {7543D69F-5B8B-4090-A86E-863610405D3F} POLYGON ((435142.6 4738692,...
+6 {79252B6A-AD03-435D-90BE-5A3468103810} POLYGON ((440824.6 4724432,...
+Reading layer `NY_NWI_6347' from data source 
+  `/ibstorage/anthony/NYS_Wetlands_Data/Data/NWI/NY_NWI_6347.gpkg' 
+  using driver `GPKG'
+Simple feature collection with 5316 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 334688.9 ymin: 4637009 xmax: 462172.9 ymax: 4750799
+Projected CRS: NAD83(2011) / UTM zone 18N
+[1] "No reprojection to EPSG:6347"
+Warning message:
+attribute variables are assumed to be spatially constant throughout all geometries 
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+   user  system elapsed 
+ 14.308   0.587   6.515 
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 56 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+[1] "020301010401" "020301010402" "020301010403" "020301020101" "020301010306"
+Simple feature collection with 5 features and 4 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 589331.3 ymin: 4530908 xmax: 609762 ymax: 4566134
+Projected CRS: NAD83(2011) / UTM zone 18N
+                       name        huc12 cluster
+1 Sparta Brook-Hudson River 020301010401      56
+2           Pocantico River 020301010402      56
+3            Saw Mill River 020301010403      56
+4         Kensico Reservoir 020301020101      56
+5               Kisco River 020301010306      56
+                                   tnmid                           geom
+1 {B005D098-F36E-4D6E-9BBA-A7A6E3042D43} POLYGON ((590479.6 4556942,...
+2 {0DF0BF57-24D3-4BEE-BDC0-CA8064A0CCA0} POLYGON ((597735.8 4557916,...
+3 {E97C59EB-092B-4FAB-A709-580473E02375} POLYGON ((592879.6 4531144,...
+4 {5CB208EB-3643-4DE7-9FED-F19C9EBAED17} POLYGON ((606976.6 4550678,...
+5 {80013DE4-BD6C-4EAF-B0AC-4FE8B352A97D} POLYGON ((604697.1 4556680,...
+Reading layer `NY_NWI_6347' from data source 
+  `/ibstorage/anthony/NYS_Wetlands_Data/Data/NWI/NY_NWI_6347.gpkg' 
+  using driver `GPKG'
+Simple feature collection with 4429 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 553001.2 ymin: 4474195 xmax: 769722.3 ymax: 4617364
+Projected CRS: NAD83(2011) / UTM zone 18N
+[1] "No reprojection to EPSG:6347"
+Warning message:
+attribute variables are assumed to be spatially constant throughout all geometries 
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+   user  system elapsed 
+ 14.155   0.535   6.531 
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 60 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+[1] "042900030504" "042900030303" "042900030304" "042900030402" "042900030502"
+[6] "042900030503" "042900020102" "042900030302" "042900030501"
+Simple feature collection with 9 features and 4 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 460854.1 ymin: 4867909 xmax: 499392.7 ymax: 4905373
+Projected CRS: NAD83(2011) / UTM zone 18N
+                                           name        huc12 cluster
+1                 West Branch Oswegatchie River 042900030504      60
+2                                    Fish Creek 042900030303      60
+3  Browns Creek-Middle Branch Oswegatchie River 042900030304      60
+4 Blanchard Creek-West Branch Oswegatchie River 042900030402      60
+5                                     Big Creek 042900030502      60
+6    Meadow Brook-West Branch Oswegatchie River 042900030503      60
+7                               Bonaparte Creek 042900020102      60
+8    Wolf Creek-Middle Branch Oswegatchie River 042900030302      60
+9                                   Jenny Creek 042900030501      60
+                                   tnmid                           geom
+1 {8CFA39C2-982D-4AFB-8716-4832CC1FABFB} POLYGON ((477170.5 4899591,...
+2 {46EE354C-D33E-4699-9373-14AE943F9652} POLYGON ((480439.9 4881084,...
+3 {9BE91AA6-2563-473D-BC30-A4A11EAC73D0} POLYGON ((478955.1 4881580,...
+4 {81747FE3-B24B-4DDD-8829-F2FE5E6377B0} POLYGON ((473512.3 4879291,...
+5 {58C6DBCD-CB6A-41AD-85A3-A7ED73034689} POLYGON ((490555 4892569, 4...
+6 {D3FBDA91-9F98-4F84-809C-D365E04F7600} POLYGON ((482015.6 4882802,...
+7 {9A019169-9FE1-44E5-B804-2741DF95112E} POLYGON ((471509.6 4886042,...
+8 {EC903E16-3A63-41D0-BA9E-BEA696EC0CDE} POLYGON ((498981.2 4875654,...
+9 {6EB403E9-1CF0-4211-99AD-BFC9298F7F46} POLYGON ((489884.5 4890055,...
+Reading layer `NY_NWI_6347' from data source 
+  `/ibstorage/anthony/NYS_Wetlands_Data/Data/NWI/NY_NWI_6347.gpkg' 
+  using driver `GPKG'
+Simple feature collection with 12417 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 449856.7 ymin: 4852258 xmax: 500033 ymax: 4939496
+Projected CRS: NAD83(2011) / UTM zone 18N
+[1] "No reprojection to EPSG:6347"
+Warning message:
+attribute variables are assumed to be spatially constant throughout all geometries 
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+   user  system elapsed 
+ 14.478   0.622   7.104 
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 84 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+ [1] "041402010602" "041402010603" "041402010601" "020501050305" "020501050403"
+ [6] "020501050402" "020501050306" "020501050401" "020501050308" "020501050404"
+Simple feature collection with 10 features and 4 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 321803.7 ymin: 4654206 xmax: 358105.2 ymax: 4698144
+Projected CRS: NAD83(2011) / UTM zone 18N
+                            name        huc12 cluster
+1  Sleeper Creek-Catherine Creek 041402010602      84
+2              Seneca Lake Inlet 041402010603      84
+3     Headwaters Catherine Creek 041402010601      84
+4                        Dry Run 020501050305      84
+5                Sing Sing Creek 020501050403      84
+6     Cutler Creek-Chemung River 020501050402      84
+7                    Meads Creek 020501050306      84
+8                     Post Creek 020501050401      84
+9  Hodgmans Creek-Cohocton River 020501050308      84
+10    Whisky Creek-Chemung River 020501050404      84
+                                    tnmid                           geom
+1  {509D6E2F-57BC-4143-AEC6-48F431650DB9} POLYGON ((339279.3 4688172,...
+2  {0AA69E2A-7396-4D8C-9F40-5AE11B8E53D9} POLYGON ((343847.8 4689140,...
+3  {2DFAE9EE-5E70-4CC4-ACCF-2A8F27C00897} POLYGON ((348964.1 4684482,...
+4  {AEFDCA3F-C583-4CD2-8699-F8794F0E12F3} POLYGON ((325936.6 4676564,...
+5  {06B163F7-F2A4-49DD-851D-080CB81FAB35} POLYGON ((342309.2 4680816,...
+6  {584FB223-2A6F-4E17-9469-8078ED7422C3} POLYGON ((329619.8 4671127,...
+7  {3B531FC4-3B93-4545-970D-3019EDF5CABD} POLYGON ((335712.7 4683872,...
+8  {9CDEF862-C09D-4E2D-B43A-B3878EA7C50C} POLYGON ((335620.6 4672899,...
+9  {4F9C0894-876E-4E5A-92FF-7B38AA9431C5} POLYGON ((327918.3 4677326,...
+10 {393C0C5A-5EDE-486B-B7E9-30CBE23713AD} POLYGON ((327890 4663565, 3...
+Reading layer `NY_NWI_6347' from data source 
+  `/ibstorage/anthony/NYS_Wetlands_Data/Data/NWI/NY_NWI_6347.gpkg' 
+  using driver `GPKG'
+Simple feature collection with 6061 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 304960.5 ymin: 4637009 xmax: 462172.9 ymax: 4740025
+Projected CRS: NAD83(2011) / UTM zone 18N
+[1] "No reprojection to EPSG:6347"
+Warning message:
+attribute variables are assumed to be spatially constant throughout all geometries 
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+   user  system elapsed 
+ 13.799   0.549   6.325 
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 86 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+[1] "020301010102" "020301010305" "020301010307" "020301010101" "020301010105"
+[6] "020200080505"
+Simple feature collection with 6 features and 4 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 581284.8 ymin: 4556993 xmax: 609177.9 ymax: 4592450
+Projected CRS: NAD83(2011) / UTM zone 18N
+                        name        huc12 cluster
+1            Annsville Creek 020301010102      86
+2              Muscoot River 020301010305      86
+3  Bailey Brook-Croton River 020301010307      86
+4     Peekskill Hollow Creek 020301010101      86
+5 Furnace Brook-Hudson River 020301010105      86
+6 Foundry Brook-Hudson River 020200080505      86
+                                   tnmid                           geom
+1 {2B4C8F87-6CE0-44A8-9851-F34C5A1E3619} POLYGON ((593476.3 4585350,...
+2 {7ED1D263-6AC5-47EE-B67A-A75D67882581} POLYGON ((601282.8 4574709,...
+3 {C8533DE9-FECE-4590-BD8A-07E6B85A30C2} POLYGON ((606431.1 4565610,...
+4 {25435E65-03DD-45A9-8965-F6B3BA1C1ACF} POLYGON ((591019.3 4574453,...
+5 {900B17DC-99B4-4D56-A870-C2EDA3DE8174} POLYGON ((587130.2 4559850,...
+6 {762BB55E-5206-4F68-922A-1C9BFB7ADC8E} POLYGON ((582829.5 4580600,...
+Reading layer `NY_NWI_6347' from data source 
+  `/ibstorage/anthony/NYS_Wetlands_Data/Data/NWI/NY_NWI_6347.gpkg' 
+  using driver `GPKG'
+Simple feature collection with 7861 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 553001.2 ymin: 4474195 xmax: 769722.3 ymax: 4617364
+Projected CRS: NAD83(2011) / UTM zone 18N
+[1] "No reprojection to EPSG:6347"
+Warning message:
+attribute variables are assumed to be spatially constant throughout all geometries 
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+   user  system elapsed 
+ 14.384   0.613   7.096 
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 90 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+[1] "041402011007" "041402011105" "041402010801" "041402010804" "041402010803"
+[6] "041402011104" "041402011106" "041402011107"
+Simple feature collection with 8 features and 4 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 335395 ymin: 4691025 xmax: 373425.7 ymax: 4726497
+Projected CRS: NAD83(2011) / UTM zone 18N
+                             name        huc12 cluster
+1                   Enfield Creek 041402011007      90
+2  Bolter Creek-Taughannock Creek 041402011105      90
+3  Hector Falls Creek-Seneca Lake 041402010801      90
+4     Breakneck Creek-Seneca Lake 041402010804      90
+5         Rock Stream-Seneca Lake 041402010803      90
+6 Hencoop Creek-Taughannock Creek 041402011104      90
+7      Boardman Creek-Cayuga Lake 041402011106      90
+8          Lively Run-Cayuga Lake 041402011107      90
+                                   tnmid                           geom
+1 {80EA54F6-5022-464B-AAF4-811BE56F031A} POLYGON ((364869.1 4702826,...
+2 {2F19D784-2D78-474F-916C-878556598F7C} POLYGON ((354392.3 4709541,...
+3 {37BFD7AB-8C58-4124-9B1C-6C4FB49780FB} POLYGON ((344506.3 4697670,...
+4 {D21FFFB2-4535-412D-9ABC-B9B81BF1691A} POLYGON ((350881.9 4711714,...
+5 {05CFA78D-F959-4E5F-82DB-7A029EF76415} POLYGON ((337015.3 4701271,...
+6 {21CB2F17-C4AD-4DE7-A934-F819689A22E5} POLYGON ((354044 4703533, 3...
+7 {4955D1EF-D4CC-4C13-AC18-2A9F3D020E83} POLYGON ((356957.8 4712520,...
+8 {ED09D075-7D36-4E7C-A72C-0231CFF2E094} POLYGON ((370915.6 4720363,...
+Reading layer `NY_NWI_6347' from data source 
+  `/ibstorage/anthony/NYS_Wetlands_Data/Data/NWI/NY_NWI_6347.gpkg' 
+  using driver `GPKG'
+Simple feature collection with 5434 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 331079.4 ymin: 4637009 xmax: 462172.9 ymax: 4756449
+Projected CRS: NAD83(2011) / UTM zone 18N
+[1] "No reprojection to EPSG:6347"
+Warning message:
+attribute variables are assumed to be spatially constant throughout all geometries 
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+   user  system elapsed 
+ 14.415   0.569   6.557 
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 92 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+[1] "020200080305" "020200080501" "020200080306" "020200080502" "020200080406"
+[6] "020200080503"
+Simple feature collection with 6 features and 4 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 571033.6 ymin: 4581822 xmax: 599346.1 ymax: 4614766
+Projected CRS: NAD83(2011) / UTM zone 18N
+                           name        huc12 cluster
+1                   Clove Creek 020200080305      92
+2              Lattintown Creek 020200080501      92
+3 Wiccopee Creek-Fishkill Creek 020200080306      92
+4                Quassaic Creek 020200080502      92
+5    Silver Stream-Moodna Creek 020200080406      92
+6  Breakneck Brook-Hudson River 020200080503      92
+                                   tnmid                           geom
+1 {9FFA968B-44EB-4AFC-A7A4-049FBA0AED75} POLYGON ((594797.5 4598409,...
+2 {6F4CBB9F-B920-4655-BDC5-3B6C17926E58} POLYGON ((581310.4 4611231,...
+3 {59DFF16E-5DEB-4F19-8890-F6FB0965226A} POLYGON ((590683 4595462, 5...
+4 {B1C7D193-D14D-4CD3-B760-6C0862F24F96} POLYGON ((573416.1 4598659,...
+5 {EB294D5A-FC83-43FA-8D4B-7BCCB717BD7E} POLYGON ((572226.3 4585210,...
+6 {C7DD1739-82A9-43A7-AF65-4D840BAABF57} POLYGON ((582121.9 4586294,...
+Reading layer `NY_NWI_6347' from data source 
+  `/ibstorage/anthony/NYS_Wetlands_Data/Data/NWI/NY_NWI_6347.gpkg' 
+  using driver `GPKG'
+Simple feature collection with 8184 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 550754.3 ymin: 4474195 xmax: 761636.4 ymax: 4637675
+Projected CRS: NAD83(2011) / UTM zone 18N
+[1] "No reprojection to EPSG:6347"
+Warning message:
+attribute variables are assumed to be spatially constant throughout all geometries 
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+   user  system elapsed 
+ 14.147   0.617   7.177 
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 102 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+[1] "020200040306" "020200040305" "020200040105" "020200040303" "020200040103"
+[6] "020200040506" "020200040104" "020200040301"
+Simple feature collection with 8 features and 4 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 460143.5 ymin: 4779462 xmax: 489668.9 ymax: 4808216
+Projected CRS: NAD83(2011) / UTM zone 18N
+                             name        huc12 cluster
+1            Lower Ninemile Creek 020200040306     102
+2           Middle Ninemile Creek 020200040305     102
+3    Delta Reservoir-Mohawk River 020200040105     102
+4                   Sixmile Creek 020200040303     102
+5     Stringer Brook-Mohawk River 020200040103     102
+6                Cincinnati Creek 020200040506     102
+7                     Wells Creek 020200040104     102
+8 Hurlbut Glen Brook-Mohawk River 020200040301     102
+                                   tnmid                           geom
+1 {6CF15AAB-7352-4DC4-8000-0FE3A62ABCA2} POLYGON ((475555.6 4780409,...
+2 {3F39CC96-76F4-4E1C-998E-52879C5EB64A} POLYGON ((482424.2 4782565,...
+3 {C4E6D178-C5EF-4CE4-9427-BB31ACD83F07} POLYGON ((460836.6 4798399,...
+4 {185229EC-8B7A-4331-9EFB-0B56A2135D8D} POLYGON ((470747.4 4791539,...
+5 {5B1F6B28-A633-4CC9-A41F-050210D430AE} POLYGON ((473786.2 4805260,...
+6 {5DAD6EAE-4C8A-4507-8367-6C4D3E80E16C} POLYGON ((488532.8 4795629,...
+7 {CC41E891-41E6-4D4E-8041-B2F04CE7D513} POLYGON ((475803.4 4792180,...
+8 {3AAC0401-B7A5-4490-A570-9C04D1585242} POLYGON ((464227.7 4788237,...
+Reading layer `NY_NWI_6347' from data source 
+  `/ibstorage/anthony/NYS_Wetlands_Data/Data/NWI/NY_NWI_6347.gpkg' 
+  using driver `GPKG'
+Re-reading with feature count reset from 5728 to 5727
+Simple feature collection with 5727 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 436901.7 ymin: 4776043 xmax: 499374.8 ymax: 4816946
+Projected CRS: NAD83(2011) / UTM zone 18N
+[1] "No reprojection to EPSG:6347"
+Warning message:
+attribute variables are assumed to be spatially constant throughout all geometries 
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+   user  system elapsed 
+ 15.249   0.596   6.822 
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 105 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+[1] "020501020506" "020501020503" "020501020505" "020501020502" "020501020601"
+[6] "020501020602" "020501020501"
+Simple feature collection with 7 features and 4 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 438752.2 ymin: 4726007 xmax: 473902 ymax: 4752868
+Projected CRS: NAD83(2011) / UTM zone 18N
+                        name        huc12 cluster
+1 Eaton Brook-Chenango River 020501020506     105
+2    Lower Sangerfield River 020501020503     105
+3                Payne Brook 020501020505     105
+4   Middle Sangerfield River 020501020502     105
+5             Pleasant Brook 020501020601     105
+6             Handsome Brook 020501020602     105
+7    Upper Sangerfield River 020501020501     105
+                                   tnmid                           geom
+1 {5DD12312-2CDA-477E-8AAF-F2BF16E07A61} POLYGON ((449119.3 4737541,...
+2 {66356388-D4A1-40DA-A0DA-853CF77104AA} POLYGON ((460706.9 4736601,...
+3 {1C2E40DC-6DA8-49A5-AA0F-59E1A5E42251} POLYGON ((450371.7 4747659,...
+4 {CAC17330-F88F-4EE7-BC12-03B8F60B3D36} POLYGON ((463838.3 4744085,...
+5 {437798A6-1448-48CF-BC73-2C27C8C7C7B3} POLYGON ((468779.2 4740142,...
+6 {BD11DC2F-1BEC-4910-9DB2-500773457BB2} POLYGON ((464044.8 4734635,...
+7 {0D43F310-FA4C-4644-A8CF-7A9D73046BC8} POLYGON ((463743.3 4742024,...
+Reading layer `NY_NWI_6347' from data source 
+  `/ibstorage/anthony/NYS_Wetlands_Data/Data/NWI/NY_NWI_6347.gpkg' 
+  using driver `GPKG'
+Re-reading with feature count reset from 6292 to 6291
+Simple feature collection with 6291 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 334688.9 ymin: 4637009 xmax: 476235.9 ymax: 4778963
+Projected CRS: NAD83(2011) / UTM zone 18N
+[1] "No reprojection to EPSG:6347"
+Warning message:
+attribute variables are assumed to be spatially constant throughout all geometries 
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+   user  system elapsed 
+ 14.671   0.573   7.586 
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 116 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+[1] "020200080106" "020200080205" "020200070406" "020200070407" "020200080102"
+[6] "020200080104" "020200080105"
+Simple feature collection with 7 features and 4 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 568580.9 ymin: 4606373 xmax: 603386.3 ymax: 4642248
+Projected CRS: NAD83(2011) / UTM zone 18N
+                                name        huc12 cluster
+1     Twaalfskill Creek-Hudson River 020200080106     116
+2 Great Spring Creek-Wappinger Creek 020200080205     116
+3         Kleine Kill-Wallkill River 020200070406     116
+4         Swarte Kill-Wallkill River 020200070407     116
+5                        Black Creek 020200080102     116
+6       Fallsburg Creek-Hudson River 020200080104     116
+7                          Fall Kill 020200080105     116
+                                   tnmid                           geom
+1 {01613290-57CC-46D1-9AE1-3C24B25FC841} POLYGON ((591548.4 4610983,...
+2 {35A368B8-CF9B-45D6-9404-C4BBA048F589} POLYGON ((602290.2 4619187,...
+3 {BF6F7D0A-B6B3-49CE-BE11-025868E31A24} POLYGON ((574689.3 4609262,...
+4 {601E1881-9507-4EB8-AAB1-AE6793FE77AB} POLYGON ((581454.7 4622744,...
+5 {079E35ED-EBC6-4017-A64B-2FE799DBEFC2} POLYGON ((576905.6 4612858,...
+6 {6EA4A085-AE42-4FB1-9346-CD710FA7DFB7} POLYGON ((589653.3 4629366,...
+7 {855E6FF9-59C1-45AC-A5FB-37DBE7D66D1E} POLYGON ((592446.1 4628585,...
+Reading layer `NY_NWI_6347' from data source 
+  `/ibstorage/anthony/NYS_Wetlands_Data/Data/NWI/NY_NWI_6347.gpkg' 
+  using driver `GPKG'
+Simple feature collection with 15803 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 550754.3 ymin: 4543991 xmax: 608423.9 ymax: 4733841
+Projected CRS: NAD83(2011) / UTM zone 18N
+[1] "No reprojection to EPSG:6347"
+Warning message:
+attribute variables are assumed to be spatially constant throughout all geometries 
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+   user  system elapsed 
+ 14.617   0.688   6.987 
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 120 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+[1] "020200060407" "020200060609" "020200060506" "020200061101" "020200060502"
+Simple feature collection with 5 features and 4 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 593471.9 ymin: 4669376 xmax: 618600.9 ymax: 4700154
+Projected CRS: NAD83(2011) / UTM zone 18N
+                              name        huc12 cluster
+1          Mill Creek-Hudson River 020200060407     120
+2 Stockport Creek-Kinderhook Creek 020200060609     120
+3        Mud Creek-Claverack Creek 020200060506     120
+4     Murderers Creek-Hudson River 020200061101     120
+5                      North Creek 020200060502     120
+                                   tnmid                           geom
+1 {84F8240D-25FE-47C2-9C21-FC1736601C86} POLYGON ((599139.6 4694340,...
+2 {7F172921-67DC-41BD-B1F6-7F153F693694} POLYGON ((608694.6 4696595,...
+3 {EEEC8160-94E3-4ACA-8A41-3C5FDD927B41} POLYGON ((608963.1 4692651,...
+4 {4AEAB7D4-E2A5-401B-A408-A324B219D8EE} POLYGON ((596666 4687447, 5...
+5 {C836FBEE-BC4E-42EB-BE46-C7DD5A66F971} POLYGON ((616065.3 4687555,...
+Reading layer `NY_NWI_6347' from data source 
+  `/ibstorage/anthony/NYS_Wetlands_Data/Data/NWI/NY_NWI_6347.gpkg' 
+  using driver `GPKG'
+Re-reading with feature count reset from 7744 to 7743
+Simple feature collection with 7743 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 582923.9 ymin: 4617273 xmax: 623703.9 ymax: 4733841
+Projected CRS: NAD83(2011) / UTM zone 18N
+[1] "No reprojection to EPSG:6347"
+Warning message:
+attribute variables are assumed to be spatially constant throughout all geometries 
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+   user  system elapsed 
+ 14.471   0.602   6.956 
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+Attaching package: ‘tidyterra’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+these are the arguments: 
+ 1) Cluster number for HUC groups: 136 
+ 2) path to the overall zones or study areas : Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ 3) Path to the wetlands: Data/NWI/NY_NWI_6347.gpkg 
+ 4) Field in polygons for filtering and extracting wetland type:  ATTRIBUTE 
+[1] "020200060402" "020200041110" "020200041109" "020200060206" "020200060205"
+[6] "020200060401" "020200060302"
+Simple feature collection with 7 features and 4 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 579209.3 ymin: 4702431 xmax: 609302.4 ymax: 4747099
+Projected CRS: NAD83(2011) / UTM zone 18N
+                          name        huc12 cluster
+1            Onesquethaw Creek 020200060402     136
+2   Shakers Creek-Mohawk River 020200041110     136
+3     Stony Creek-Mohawk River 020200041109     136
+4       Vly Creek-Normans Kill 020200060206     136
+5     Hunger Kill-Normans Kill 020200060205     136
+6                  Vloman Kill 020200060401     136
+7 Rensselaer Lake-Hudson River 020200060302     136
+                                   tnmid                           geom
+1 {690D54A2-E1CC-4CE2-8C7F-986B52F1F3E2} POLYGON ((590842.5 4706771,...
+2 {2B4F5FDC-0CE3-4E96-B9EF-37DD72576A98} POLYGON ((602265.1 4734380,...
+3 {22D029CF-1146-403D-967C-C7F5BD01A64C} POLYGON ((595113.3 4735986,...
+4 {1E270A50-2774-4FE6-96CD-8FB9425BD073} POLYGON ((582062 4721369, 5...
+5 {A2324299-18F3-4780-8321-E21BC361E56B} POLYGON ((586340.3 4727280,...
+6 {4980371F-4D0B-4DDD-AB6F-60986B54CFA3} POLYGON ((594089.8 4719867,...
+7 {E06EB76A-0EDA-4E6E-8DC0-25578DA08100} POLYGON ((594611 4727935, 5...
+Reading layer `NY_NWI_6347' from data source 
+  `/ibstorage/anthony/NYS_Wetlands_Data/Data/NWI/NY_NWI_6347.gpkg' 
+  using driver `GPKG'
+Simple feature collection with 9275 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 498263.8 ymin: 4617273 xmax: 626498.4 ymax: 4787562
+Projected CRS: NAD83(2011) / UTM zone 18N
+[1] "No reprojection to EPSG:6347"
+Warning message:
+attribute variables are assumed to be spatially constant throughout all geometries 
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ forcats   1.0.0     ✔ readr     2.1.5
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ tidyr::extract() masks terra::extract()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors[rast] filename is empty. Provide a valid filename
+[rast] filename is empty. Provide a valid filename
+   user  system elapsed 
+ 14.322   0.600   6.738 

@@ -1,0 +1,54 @@
+these are the arguments: 
+ - Cluster number (integer 1-200ish): 116 
+ - Path to the DEMs in TerrainProcessed folder Data/TerrainProcessed/HUC_DEMs 
+ - Metric (slp, dmv, curv): slp 
+ - Path to the Save folder Data/TerrainProcessed/HUC_TerrainMetrics/ 
+terra 1.9.27
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+Warning messages:
+1: In rgl.init(initValue, onlyNULL) : RGL: unable to open X11 display
+2: 'rgl.init' failed, will use the null device.
+See '?rgl.useNULL' for ways to avoid this warning. 
+Found 7 DEMs to process
+
+=== Processing: cluster_116_huc_020200070406 ===
+Creating slp local for: Data/TerrainProcessed/HUC_TerrainMetrics/cluster_116_huc_020200070406_terrain_slp_local.tif
+
+=== Processing: cluster_116_huc_020200070407 ===
+Creating slp local for: Data/TerrainProcessed/HUC_TerrainMetrics/cluster_116_huc_020200070407_terrain_slp_local.tif
+
+=== Processing: cluster_116_huc_020200080102 ===
+Creating slp local for: Data/TerrainProcessed/HUC_TerrainMetrics/cluster_116_huc_020200080102_terrain_slp_local.tif
+
+=== Processing: cluster_116_huc_020200080104 ===
+Creating slp local for: Data/TerrainProcessed/HUC_TerrainMetrics/cluster_116_huc_020200080104_terrain_slp_local.tif
+
+=== Processing: cluster_116_huc_020200080105 ===
+Creating slp local for: Data/TerrainProcessed/HUC_TerrainMetrics/cluster_116_huc_020200080105_terrain_slp_local.tif
+
+=== Processing: cluster_116_huc_020200080106 ===
+Creating slp local for: Data/TerrainProcessed/HUC_TerrainMetrics/cluster_116_huc_020200080106_terrain_slp_local.tif
+
+=== Processing: cluster_116_huc_020200080205 ===
+Creating slp local for: Data/TerrainProcessed/HUC_TerrainMetrics/cluster_116_huc_020200080205_terrain_slp_local.tif
+[[1]]
+NULL
+
+[[2]]
+NULL
+
+[[3]]
+NULL
+
+[[4]]
+NULL
+
+[[5]]
+NULL
+
+[[6]]
+NULL
+
+[[7]]
+NULL
+

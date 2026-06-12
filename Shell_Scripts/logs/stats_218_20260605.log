@@ -1,0 +1,35 @@
+terra 1.9.1
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+Cluster: 218 
+Output : Data/HUC_Raster_Stacks/Stats_Partials/cluster_218.json 
+
+Found 6 HUCs in cluster 218 
+
+Workers: 4 
+terra 1.9.1
+terra 1.9.1
+terra 1.9.1
+terra 1.9.1
+|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          
+Computed stats over 6 HUCs for bands:
+   DEM, slope_local, flowacc, twi, CHM, r, g, b, nir, r_lo, g_lo, b_lo, nir_lo, pct_below_1m, pct_1m_to_5m, pct_above_5m 
+
+Global band statistics written to: Data/HUC_Raster_Stacks/Stats_Partials/cluster_218.json 
+
+Summary:
+  DEM              min:     121.9695  max:     460.2799
+  slope_local      min:       0.0000  max:      81.3525
+  flowacc          min:       0.0000  max:      18.3155
+  twi              min:      -1.7776  max:      32.2298
+  CHM              min:       0.0000  max:      49.9422
+  r                min:       0.0000  max:     255.0000
+  g                min:      16.2607  max:     255.0000
+  b                min:      53.0000  max:     255.0000
+  nir              min:       8.0000  max:     255.0000
+  r_lo             min:       2.0000  max:     255.0000
+  g_lo             min:      23.0000  max:     255.0000
+  b_lo             min:      15.0000  max:     255.0000
+  nir_lo           min:      10.0000  max:     255.0000
+  pct_below_1m     min:       0.0000  max:       1.0000
+  pct_1m_to_5m     min:       0.0000  max:       1.0000
+  pct_above_5m     min:       0.0000  max:       1.0000
