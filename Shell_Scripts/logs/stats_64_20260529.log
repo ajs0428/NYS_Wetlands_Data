@@ -1,43 +1,0 @@
-srun: Job 741999 step creation temporarily disabled, retrying (Requested nodes are busy)
-srun: Job 741999 step creation still disabled, retrying (Requested nodes are busy)
-srun: Job 741999 step creation still disabled, retrying (Requested nodes are busy)
-srun: Job 741999 step creation still disabled, retrying (Requested nodes are busy)
-srun: Job 741999 step creation still disabled, retrying (Requested nodes are busy)
-srun: Job 741999 step creation still disabled, retrying (Requested nodes are busy)
-srun: Job 741999 step creation still disabled, retrying (Requested nodes are busy)
-srun: Step created for job 741999
-terra 1.9.1
-Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
-Cluster: 64 
-Output : Data/HUC_Raster_Stacks/Stats_Partials/cluster_64.json 
-
-Found 8 HUCs in cluster 64 
-
-Workers: 4 
-terra 1.9.1
-terra 1.9.1
-terra 1.9.1
-terra 1.9.1
-|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          
-Computed stats over 8 HUCs for bands:
-   DEM, slope_local, flowacc, twi, CHM, r, g, b, nir, r_lo, g_lo, b_lo, nir_lo, pct_below_1m, pct_1m_to_5m, pct_above_5m 
-
-Global band statistics written to: Data/HUC_Raster_Stacks/Stats_Partials/cluster_64.json 
-
-Summary:
-  DEM              min:     209.4267  max:     694.9609
-  slope_local      min:       0.0000  max:      78.8612
-  flowacc          min:       0.0000  max:      18.5633
-  twi              min:      -1.4973  max:      33.2711
-  CHM              min:       0.0000  max:      49.9704
-  r                min:       0.0000  max:     255.0000
-  g                min:      11.0000  max:     255.0000
-  b                min:      20.0000  max:     255.0000
-  nir              min:       3.0000  max:     255.0000
-  r_lo             min:       0.0000  max:     255.0000
-  g_lo             min:      14.0000  max:     255.0000
-  b_lo             min:      14.0000  max:     255.0000
-  nir_lo           min:       0.0000  max:     255.0000
-  pct_below_1m     min:       0.0000  max:       1.0000
-  pct_1m_to_5m     min:       0.0000  max:       1.0000
-  pct_above_5m     min:       0.0000  max:       1.0000

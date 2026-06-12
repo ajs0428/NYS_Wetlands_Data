@@ -1,134 +1,0 @@
-srun: Job 742004 step creation temporarily disabled, retrying (Requested nodes are busy)
-srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
-srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
-srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
-srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
-srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
-srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
-srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
-srun: Job 742004 step creation still disabled, retrying (Requested nodes are busy)
-srun: Step created for job 742004
-terra 1.9.1
-Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
-
-Attaching package: ‘dplyr’
-
-The following objects are masked from ‘package:terra’:
-
-    intersect, union
-
-The following objects are masked from ‘package:stats’:
-
-    filter, lag
-
-The following objects are masked from ‘package:base’:
-
-    intersect, setdiff, setequal, union
-
-
-Attaching package: ‘tidyr’
-
-The following object is masked from ‘package:terra’:
-
-    extract
-
-
-Attaching package: ‘tidyterra’
-
-The following object is masked from ‘package:stats’:
-
-    filter
-
-these are the arguments: 
-1) path the reviewed training data :Data/Training_Data/R_Patches_Vector_Reviewed/
-2) patch size :128
-3) cluster number :64
-
-[1] "Data/Training_Data/R_Patches_Vector_Reviewed//NHP_AJS_cluster_64_huc_041402010202_256m.gpkg"
-[1] 2
-|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          terra 1.9.1
-Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
-HUC num: 041402010202
-|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          [[1]]
-NULL
-
-Warning message:
-In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
-  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/NHP_AJS_cluster_64_huc_041402010202_256m.gpkg' may only be partially supported
-srun: Job 767191 step creation temporarily disabled, retrying (Requested nodes are busy)
-srun: Job 767191 step creation still disabled, retrying (Requested nodes are busy)
-srun: Step created for job 767191
-terra 1.9.1
-Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
-
-Attaching package: ‘dplyr’
-
-The following objects are masked from ‘package:terra’:
-
-    intersect, union
-
-The following objects are masked from ‘package:stats’:
-
-    filter, lag
-
-The following objects are masked from ‘package:base’:
-
-    intersect, setdiff, setequal, union
-
-
-Attaching package: ‘tidyr’
-
-The following object is masked from ‘package:terra’:
-
-    extract
-
-
-Attaching package: ‘tidyterra’
-
-The following object is masked from ‘package:stats’:
-
-    filter
-
-these are the arguments: 
-1) path the reviewed training data :Data/Training_Data/R_Patches_Vector_Reviewed/
-2) patch size :128
-3) cluster number :64
-
-[1] "Data/Training_Data/R_Patches_Vector_Reviewed//NHP_AJS_cluster_64_huc_041402010202_256m.gpkg"
-[1] 2
-|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          terra 1.9.1
-Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
-HUC num: 041402010202
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_1_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_2_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_3_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_4_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_5_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_6_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_7_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_8_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_9_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_10_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_11_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_12_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_13_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_14_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_15_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_16_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_17_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_18_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_19_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_20_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_21_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_22_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_23_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_24_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_25_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_26_256m.tif
-Already file Data/Training_Data/R_Patches/NHP_cluster_64_huc_041402010202_patch_27_256m.tif
-|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          [[1]]
-NULL
-
-Warning message:
-In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
-  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/NHP_AJS_cluster_64_huc_041402010202_256m.gpkg' may only be partially supported

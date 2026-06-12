@@ -1,106 +1,0 @@
-terra 1.9.1
-Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
-
-Attaching package: ‘dplyr’
-
-The following objects are masked from ‘package:terra’:
-
-    intersect, union
-
-The following objects are masked from ‘package:stats’:
-
-    filter, lag
-
-The following objects are masked from ‘package:base’:
-
-    intersect, setdiff, setequal, union
-
-
-Attaching package: ‘tidyr’
-
-The following object is masked from ‘package:terra’:
-
-    extract
-
-
-Attaching package: ‘tidyterra’
-
-The following object is masked from ‘package:stats’:
-
-    filter
-
-these are the arguments: 
-1) path the reviewed training data :Data/Training_Data/R_Patches_Vector_Reviewed/
-2) patch size :128
-3) cluster number :225
-
-[1] "Data/Training_Data/R_Patches_Vector_Reviewed//ADK_WCT_AJS_cluster_225_huc_042900050201_256m.gpkg"
-[2] "Data/Training_Data/R_Patches_Vector_Reviewed//FLD_AJS_cluster_225_huc_043001060104_256m.gpkg"    
-[3] "Data/Training_Data/R_Patches_Vector_Reviewed//FLD_cluster_225_huc_043001060202_256m.gpkg"        
-[4] "Data/Training_Data/R_Patches_Vector_Reviewed//gps_jc_cluster_225_huc_043001060201_256m.gpkg"     
-[5] "Data/Training_Data/R_Patches_Vector_Reviewed//gps_jc_cluster_225_huc_043001060202_256m.gpkg"     
-[6] "Data/Training_Data/R_Patches_Vector_Reviewed//gps_jc_cluster_225_huc_043001060203_256m.gpkg"     
-[7] "Data/Training_Data/R_Patches_Vector_Reviewed//gps_jc_cluster_225_huc_04300106021_256m.gpkg"      
-[8] "Data/Training_Data/R_Patches_Vector_Reviewed//NEW_AJS_cluster_225_huc_043001060202_256m.gpkg"    
-[9] "Data/Training_Data/R_Patches_Vector_Reviewed//NWI_AJS_cluster_225_huc_042900050201_256m.gpkg"    
-[1] 2
-terra 1.9.1
-Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
-HUC num: 042900050201
-Already file Data/Training_Data/R_Patches/ADK_cluster_225_huc_042900050201_patch_1_256m.tif
-HUC num: 043001060104
-Already file Data/Training_Data/R_Patches/FLD_cluster_225_huc_043001060104_patch_1_256m.tif
-HUC num: 043001060202
-Already file Data/Training_Data/R_Patches/FLD_cluster_225_huc_043001060202_patch_1_256m.tif
-HUC num: 043001060201
-terra 1.9.1
-Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
-HUC num: 043001060202
-HUC num: 043001060203
-HUC num: 04300106021
-HUC 04300106021 missing source(s): dem, terr, hydro, chm, naip, ortho, lidar
-Skipping HUC 04300106021: one or more source datasets missing
-HUC num: 043001060202
-Already file Data/Training_Data/R_Patches/NEW_cluster_225_huc_043001060202_patch_1_256m.tif
-HUC num: 042900050201
-Already file Data/Training_Data/R_Patches/NWI_cluster_225_huc_042900050201_patch_1_256m.tif
-|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          [[1]]
-NULL
-
-[[2]]
-NULL
-
-[[3]]
-NULL
-
-[[4]]
-NULL
-
-[[5]]
-NULL
-
-[[6]]
-NULL
-
-[[7]]
-NULL
-
-[[8]]
-NULL
-
-[[9]]
-NULL
-
-Warning messages:
-1: In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
-  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/FLD_AJS_cluster_225_huc_043001060104_256m.gpkg' may only be partially supported
-2: In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
-  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/FLD_cluster_225_huc_043001060202_256m.gpkg' may only be partially supported
-3: In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
-  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/gps_jc_cluster_225_huc_043001060201_256m.gpkg' may only be partially supported
-4: In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
-  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/gps_jc_cluster_225_huc_043001060202_256m.gpkg' may only be partially supported
-5: In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
-  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/gps_jc_cluster_225_huc_043001060203_256m.gpkg' may only be partially supported
-6: In CPL_read_ogr(dsn, layer, query, as.character(options), quiet,  :
-  GDAL Message 1: This version of GeoPackage user_version=0x000028A0 (10400, v1.4.0) on '/ibstorage/anthony/NYS_Wetlands_Data/Data/Training_Data/R_Patches_Vector_Reviewed/NEW_AJS_cluster_225_huc_043001060202_256m.gpkg' may only be partially supported

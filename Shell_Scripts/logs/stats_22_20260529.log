@@ -1,39 +1,0 @@
-srun: Job 741999 step creation temporarily disabled, retrying (Requested nodes are busy)
-srun: Job 741999 step creation still disabled, retrying (Requested nodes are busy)
-srun: Job 741999 step creation still disabled, retrying (Requested nodes are busy)
-srun: Step created for job 741999
-terra 1.9.1
-Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
-Cluster: 22 
-Output : Data/HUC_Raster_Stacks/Stats_Partials/cluster_22.json 
-
-Found 8 HUCs in cluster 22 
-
-Workers: 4 
-terra 1.9.1
-terra 1.9.1
-terra 1.9.1
-terra 1.9.1
-|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          
-Computed stats over 8 HUCs for bands:
-   DEM, slope_local, flowacc, twi, CHM, r, g, b, nir, r_lo, g_lo, b_lo, nir_lo, pct_below_1m, pct_1m_to_5m, pct_above_5m 
-
-Global band statistics written to: Data/HUC_Raster_Stacks/Stats_Partials/cluster_22.json 
-
-Summary:
-  DEM              min:      61.4563  max:     743.4826
-  slope_local      min:       0.0000  max:      85.9105
-  flowacc          min:       0.0000  max:      18.4058
-  twi              min:      -2.1058  max:      32.1999
-  CHM              min:       0.0000  max:      49.8988
-  r                min:       0.0000  max:     255.0000
-  g                min:      16.3710  max:     255.0000
-  b                min:      46.6974  max:     255.0000
-  nir              min:       1.7179  max:     255.0000
-  r_lo             min:       7.9735  max:     255.0000
-  g_lo             min:      21.3114  max:     255.0000
-  b_lo             min:      40.4211  max:     255.0000
-  nir_lo           min:      25.1761  max:     255.0000
-  pct_below_1m     min:       0.0000  max:       1.0000
-  pct_1m_to_5m     min:       0.0000  max:       1.0000
-  pct_above_5m     min:       0.0000  max:       1.0000
