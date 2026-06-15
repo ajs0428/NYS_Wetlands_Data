@@ -7,6 +7,7 @@
 #SBATCH --job-name=lidar_ftp
 #SBATCH --ntasks=5
 #SBATCH --ntasks-per-node=1
+#SBATCH --time=24:00:00
 #SBATCH --output=Shell_Scripts/SLURM/slurm-lidar-ftp-%j.out
 
 # =============================================================================

@@ -74,16 +74,28 @@ hydro_func <- function(huc_num){
     hc_fn_abs <- paste0("/ibstorage/anthony/NYS_Wetlands_Data/", hc_fn)
     
     if(!file.exists(hc_fn_abs)){
-        message("Hydro-Conditioning for ", hc_fn_abs)
+        message("Hydro-Conditioning (fill) for ", hc_fn_abs)
         wbt_fill_depressions(
-            dem = dem_fn_abs, 
-            output = hc_fn_abs, 
-            # dist = 500,
-            # min_dist = 100,
-            # max_cost = 500, 
-            # flat_increment = 0.5
+            dem = dem_fn_abs,
+            output = hc_fn_abs
         )
-    } 
+        # wbt_* returns a status code instead of an R error, so a FillDepressions
+        # crash (the Rust panic on degenerate / mostly-NoData DEMs) leaves no
+        # output. Fall back to least-cost breaching, which is far more robust on
+        # those DEMs. fill = TRUE still fills any depressions breaching can't
+        # carve out, so the result is depressionless either way. dist (max breach
+        # channel length, in 1 m cells) is tunable if a HUC needs longer carves.
+        if(!file.exists(hc_fn_abs)){
+            warning("FillDepressions produced no output for HUC ", huc_num,
+                    " — retrying with BreachDepressionsLeastCost")
+            wbt_breach_depressions_least_cost(
+                dem    = dem_fn_abs,
+                output = hc_fn_abs,
+                dist   = 100,
+                fill   = TRUE
+            )
+        }
+    }
     
     fa_twi_name <- paste0(hydroFolder, tools::file_path_sans_ext(basename(hc_fn)), "_TWI_Facc.tif")
 
@@ -102,12 +114,13 @@ hydro_func <- function(huc_num){
     } else if (file.exists(fa_twi_name)) {
         message("TWI and Flow Accum. already made: ", fa_twi_name)
     } else {
-        # hc_fn (hydro-conditioned DEM) is missing: wbt_fill_depressions
-        # returns a status code instead of an R error, so a crash (e.g. the
-        # FillDepressions Rust panic on degenerate/mostly-NoData DEMs) would
-        # otherwise fall through silently as "already made". Surface it.
+        # No conditioned DEM despite trying both fill and breach above. wbt_*
+        # returns a status code rather than an R error, so this is the only
+        # place the double failure surfaces (otherwise it falls through as a
+        # silent skip). Likely a degenerate / near-all-NoData (water) DEM that
+        # needs inspection (gdalinfo -stats) rather than another conditioner.
         warning("No hydro-conditioned DEM for HUC ", huc_num,
-                " (wbt_fill_depressions failed?) — TWI/Facc NOT written: ", hc_fn)
+                " (fill AND breach both failed) — TWI/Facc NOT written: ", hc_fn)
     }
 }
 

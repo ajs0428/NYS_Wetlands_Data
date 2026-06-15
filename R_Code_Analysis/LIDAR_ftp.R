@@ -27,12 +27,41 @@ list_ftp_dir <- function(ftp_url) {
     )
 }
 
-# Download file to temp or specified location
-download_ftp_file <- function(ftp_url, dest_dir = tempdir()) {
-    filename <- basename(ftp_url)
+# Download file to temp or specified location, with timeouts + retry so a
+# stalled FTP transfer aborts instead of hanging the whole job (the NYS FTP
+# server occasionally accepts the connection then stops sending data).
+#   connecttimeout  : cap the initial connect (s)
+#   low_speed_limit : bytes/sec floor ...
+#   low_speed_time  : ... that must be sustained this long before curl aborts.
+#     This catches true stalls without killing a large-but-progressing LAS
+#     download (tiles can be hundreds of MB), which a flat `timeout` would.
+#   timeout         : absolute per-tile backstop (s).
+# Errors propagate after max_tries; process_tile()'s tryCatch turns that into a
+# skipped tile + warning rather than a blocked job.
+download_ftp_file <- function(ftp_url, dest_dir = tempdir(), max_tries = 3) {
+    filename  <- basename(ftp_url)
     dest_path <- file.path(dest_dir, filename)
-    curl_download(ftp_url, dest_path, quiet = TRUE)
-    dest_path
+
+    for (attempt in seq_len(max_tries)) {
+        h <- new_handle(
+            connecttimeout  = 60,
+            low_speed_limit = 1024,
+            low_speed_time  = 120,
+            timeout         = 3600
+        )
+        ok <- tryCatch({
+            curl_download(ftp_url, dest_path, quiet = TRUE, handle = h)
+            file.exists(dest_path) && file.size(dest_path) > 0
+        }, error = function(e) {
+            message("  download attempt ", attempt, "/", max_tries,
+                    " failed for ", filename, ": ", conditionMessage(e))
+            FALSE
+        })
+        if (ok) return(dest_path)
+        unlink(dest_path)            # drop any partial file before retrying
+        Sys.sleep(2 * attempt)       # linear backoff
+    }
+    stop("download failed after ", max_tries, " attempts: ", filename)
 }
 
 ### Find tiles overlapping a set of HUC12 boundaries
