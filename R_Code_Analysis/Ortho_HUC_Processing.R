@@ -81,7 +81,10 @@ GAP_TOL <- 0.001  # 0.1% of HUC area
 # Cluster of HUCs
 cluster_target <- sf::st_read(clusterPath, quiet = TRUE) |>
     dplyr::filter(cluster == clusterSubset)
-cluster_hucs <- cluster_target[["huc12"]]
+# A huc12 can appear on more than one row in the gpkg (split MULTIPOLYGONs from
+# the watershed edits noted in the README); iterate the distinct codes so each
+# HUC is processed once and its rows get unioned in process_huc.
+cluster_hucs <- unique(cluster_target[["huc12"]])
 
 # Optional: restrict to a single target HUC12
 if (nzchar(targetHuc)) {
@@ -104,8 +107,13 @@ message("Ortho tiles overlapping cluster ", clusterSubset, ": ", nrow(ortho_int_
 # tile paths in mosaic order (preferred first, so fun="first" keeps the
 # preferred year wherever it exists) plus the ordered list of years used.
 select_tiles_for_huc <- function(tiles_huc, huc_geom, preferred_year, years_available) {
-    huc_geom <- sf::st_make_valid(huc_geom)
-    huc_area <- as.numeric(sf::st_area(huc_geom))
+    # huc_geom can be several rows when a huc12 is split across gpkg features;
+    # union to a single geometry so st_area()/st_difference() stay scalar (a
+    # vector huc_area makes the gap_area/huc_area test below error with
+    # "the condition has length > 1" and, under future_lapply, aborts the
+    # whole cluster).
+    huc_geom <- sf::st_union(sf::st_make_valid(huc_geom))
+    huc_area <- sum(as.numeric(sf::st_area(huc_geom)))
 
     # Year search order: preferred first, then nearest-in-time (newer breaks ties).
     others <- setdiff(years_available, preferred_year)

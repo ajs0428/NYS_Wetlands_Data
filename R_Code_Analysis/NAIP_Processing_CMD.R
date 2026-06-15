@@ -39,7 +39,9 @@ naip_index <- st_read("Data/NAIP/noaa_digital_coast_2017/tileindex_NY_NAIP_2017.
 cluster_target <- sf::st_read(clusterPath, quiet = TRUE) |> 
     dplyr::filter(cluster == clusterSubset) 
 cluster_crs <- st_crs(cluster_target)
-cluster_hucs <- cluster_target[["huc12"]]
+# unique(): a huc12 can occupy several gpkg rows (split MULTIPOLYGONs) — iterate
+# each HUC once (the per-HUC crop/mask still uses all of its rows).
+cluster_hucs <- unique(cluster_target[["huc12"]])
 
 #Filter for NAIP tiles in Cluster
 naip_int_cluster <- st_filter(naip_index, cluster_target, .predicate = st_intersects)

@@ -30,9 +30,12 @@ suppressPackageStartupMessages({
 source("R_Code_Analysis/huc_stack.R")   # huc_source_paths(), huc_source_dirs()
 
 clusters <- strsplit(clusters_csv, ",")[[1]] |> trimws()
+# distinct(): a huc12 can occupy several gpkg rows (split MULTIPOLYGONs), which
+# would otherwise report the same HUC two/three times.
 hucs_all <- st_read(gpkg_path, quiet = TRUE) |>
     st_drop_geometry() |>
-    filter(cluster %in% clusters)
+    filter(cluster %in% clusters) |>
+    distinct(cluster, huc12)
 
 message("=== Pipeline output check ===")
 message("Clusters: ", paste(clusters, collapse = ", "),

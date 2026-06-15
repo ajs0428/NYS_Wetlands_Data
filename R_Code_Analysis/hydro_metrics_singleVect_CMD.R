@@ -99,8 +99,15 @@ hydro_func <- function(huc_num){
         twi[is.infinite(twi)] <- NA
         writeRaster(c(fa, twi), fa_twi_name,
                     overwrite = TRUE, names = c("flowacc", "twi"))
-    } else {
+    } else if (file.exists(fa_twi_name)) {
         message("TWI and Flow Accum. already made: ", fa_twi_name)
+    } else {
+        # hc_fn (hydro-conditioned DEM) is missing: wbt_fill_depressions
+        # returns a status code instead of an R error, so a crash (e.g. the
+        # FillDepressions Rust panic on degenerate/mostly-NoData DEMs) would
+        # otherwise fall through silently as "already made". Surface it.
+        warning("No hydro-conditioned DEM for HUC ", huc_num,
+                " (wbt_fill_depressions failed?) — TWI/Facc NOT written: ", hc_fn)
     }
 }
 

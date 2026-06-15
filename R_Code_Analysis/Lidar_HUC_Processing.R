@@ -38,7 +38,9 @@ message("  Output:      ", out_dir)
 cluster_hucs <- st_read(gpkg_path, quiet = TRUE) |>
     filter(cluster == cluster_num)
 message(" HUC12s in cluster: ", nrow(cluster_hucs))
-huc_numbers<- cluster_hucs$huc12
+# unique(): a huc12 can occupy several gpkg rows (split MULTIPOLYGONs) — iterate
+# each HUC once (the per-HUC crop/mask still uses all of its rows).
+huc_numbers <- unique(cluster_hucs$huc12)
 
 current_lidar_metrics <- list.files("Data/Lidar/Metrics", full.names = TRUE)
 current_lidar_metrics_fn <- sub("_metrics.tif", "", basename(current_lidar_metrics) )

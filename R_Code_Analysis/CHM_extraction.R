@@ -111,7 +111,9 @@ final_crossing_features <- dplyr::bind_rows(all_crossing_features)
 ###############################################################################################
 
 #### Parallel setup for future_lapply or future_sapply
-target_hucs <- cluster_target$huc12
+# unique(): a huc12 can occupy several gpkg rows (split MULTIPOLYGONs) — iterate
+# each HUC once (the per-HUC crop/mask still uses all of its rows).
+target_hucs <- unique(cluster_target$huc12)
 
 process_huc <- function(cluster_huc_name) {
     # Per-worker terra cap: 2 SLURM cores × 32 GB ≈ 64 GB, fits in 72 GB allocation.
