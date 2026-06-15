@@ -1,0 +1,97 @@
+these are the arguments: 
+ - Path to the DEM indexes folder Data/NYS_DEM_Indexes 
+ - Path to a file vector study area Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ - Cluster number (integer 1-75): 102 
+ - Path to DEM folder: Data/DEMs/ 
+ - Path to Save folder: Data/TerrainProcessed/HUC_DEMs/ 
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:terra’:
+
+    intersect, union
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘tidyr’
+
+The following object is masked from ‘package:terra’:
+
+    extract
+
+[1] "The number of DEM indices: 85680"
+[1] "this is the total list of DEM raster files: 85048"
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040306.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040305.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040105.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040303.tif
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040103.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040506.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040104.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040301.tif
+[[1]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3525265 188.3    6216248 332.0  6216248 332.0
+Vcells 10129573  77.3   17543669 133.9 13592523 103.8
+
+[[2]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3525968 188.4    6216248 332.0  6216248 332.0
+Vcells 10131763  77.3   17543669 133.9 13592523 103.8
+
+[[3]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3526019 188.4    6216248 332.0  6216248 332.0
+Vcells 10132044  77.4   17543669 133.9 13592523 103.8
+
+[[4]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3526012 188.4    6216248 332.0  6216248 332.0
+Vcells 10131899  77.4   17543669 133.9 13592523 103.8
+
+[[5]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3525280 188.3    6216251 332.0  6216251 332.0
+Vcells 10129646  77.3   17543672 133.9 13594235 103.8
+
+[[6]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3526036 188.4    6216251 332.0  6216251 332.0
+Vcells 10132214  77.4   17543672 133.9 13594235 103.8
+
+[[7]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3526001 188.4    6216251 332.0  6216251 332.0
+Vcells 10131903  77.4   17543672 133.9 13594235 103.8
+
+[[8]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3526004 188.4    6216251 332.0  6216251 332.0
+Vcells 10131858  77.3   17543672 133.9 13594235 103.8
+

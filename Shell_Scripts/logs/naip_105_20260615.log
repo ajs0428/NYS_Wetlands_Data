@@ -1,0 +1,59 @@
+these are the arguments: 
+- Path to cluster:Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg
+- Cluster:105
+- Path to NAIP Processed:Data/NAIP/HUC_NAIP_Processed/
+
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+[1] "/ibstorage/anthony/NYS_Wetlands_GHG/tmp//RtmpX1uJbA"
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+NAIP already processed for: Data/NAIP/HUC_NAIP_Processed/cluster_105_huc_020501020506_NAIP_metrics.tif
+NAIP already processed for: Data/NAIP/HUC_NAIP_Processed/cluster_105_huc_020501020503_NAIP_metrics.tif
+NAIP already processed for: Data/NAIP/HUC_NAIP_Processed/cluster_105_huc_020501020505_NAIP_metrics.tif
+NAIP already processed for: Data/NAIP/HUC_NAIP_Processed/cluster_105_huc_020501020502_NAIP_metrics.tif
+NAIP already processed for: Data/NAIP/HUC_NAIP_Processed/cluster_105_huc_020501020601_NAIP_metrics.tif
+NAIP already processed for: Data/NAIP/HUC_NAIP_Processed/cluster_105_huc_020501020602_NAIP_metrics.tif
+NAIP already processed for: Data/NAIP/HUC_NAIP_Processed/cluster_105_huc_020501020501_NAIP_metrics.tif
+[[1]]
+NULL
+
+[[2]]
+NULL
+
+[[3]]
+NULL
+
+[[4]]
+NULL
+
+[[5]]
+NULL
+
+[[6]]
+NULL
+
+[[7]]
+NULL
+
+          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 1884496 100.7    3441291 183.8  2899363 154.9
+Vcells 2809848  21.5   12113679  92.5 12113645  92.5

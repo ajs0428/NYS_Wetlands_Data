@@ -1,0 +1,80 @@
+srun: Job 785044 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 785044 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 785044 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 785044 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 785044 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 785044 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 785044 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 785044 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 785044
+these are the arguments: 
+- Path to cluster:Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg
+- Cluster:84
+- Path to NAIP Processed:Data/NAIP/HUC_NAIP_Processed/
+
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+[1] "/ibstorage/anthony/NYS_Wetlands_GHG/tmp//RtmpondrAN"
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+NAIP already processed for: Data/NAIP/HUC_NAIP_Processed/cluster_84_huc_041402010602_NAIP_metrics.tif
+NAIP already processed for: Data/NAIP/HUC_NAIP_Processed/cluster_84_huc_041402010603_NAIP_metrics.tif
+NAIP already processed for: Data/NAIP/HUC_NAIP_Processed/cluster_84_huc_041402010601_NAIP_metrics.tif
+NAIP already processed for: Data/NAIP/HUC_NAIP_Processed/cluster_84_huc_020501050305_NAIP_metrics.tif
+NAIP already processed for: Data/NAIP/HUC_NAIP_Processed/cluster_84_huc_020501050403_NAIP_metrics.tif
+NAIP already processed for: Data/NAIP/HUC_NAIP_Processed/cluster_84_huc_020501050402_NAIP_metrics.tif
+NAIP already processed for: Data/NAIP/HUC_NAIP_Processed/cluster_84_huc_020501050306_NAIP_metrics.tif
+NAIP already processed for: Data/NAIP/HUC_NAIP_Processed/cluster_84_huc_020501050401_NAIP_metrics.tif
+NAIP already processed for: Data/NAIP/HUC_NAIP_Processed/cluster_84_huc_020501050308_NAIP_metrics.tif
+NAIP already processed for: Data/NAIP/HUC_NAIP_Processed/cluster_84_huc_020501050404_NAIP_metrics.tif
+[[1]]
+NULL
+
+[[2]]
+NULL
+
+[[3]]
+NULL
+
+[[4]]
+NULL
+
+[[5]]
+NULL
+
+[[6]]
+NULL
+
+[[7]]
+NULL
+
+[[8]]
+NULL
+
+[[9]]
+NULL
+
+[[10]]
+NULL
+
+          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 1884532 100.7    3441291 183.8  2897352 154.8
+Vcells 2814413  21.5   12113679  92.5 12113676  92.5

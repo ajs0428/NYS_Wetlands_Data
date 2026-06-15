@@ -1,0 +1,555 @@
+Using libcurl 7.76.1 with OpenSSL/3.2.2
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘lidR’
+
+The following object is masked from ‘package:sf’:
+
+    st_concave_hull
+
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+
+Attaching package: ‘terra’
+
+The following object is masked from ‘package:lidR’:
+
+    watershed
+
+=== Lidar Metrics Pipeline ===
+  GPKG:        Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg
+  Cluster:     12
+  Tile Index:  Data/Lidar/NYS_Lidar_All_Indexes.gpkg
+  Output:      Data/Lidar/Metrics
+  Workers:     2
+  HUC12s in cluster: 11
+
+Finding overlapping tiles...
+Unique full-size tiles to process: 494
+Using 2 parallel workers
+Using libcurl 7.76.1 with OpenSSL/3.2.2
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+[2085642] Skipping (exists): 18TWQ597939.las
+[2085642] Skipping (exists): 18TWQ598939.las
+[2085642] Skipping (exists): 18TXQ600954.las
+[2085642] Skipping (exists): 18TXQ600953.las
+[2085642] Skipping (exists): 18TXQ600951.las
+[2085642] Skipping (exists): 18TXQ600950.las
+[2085642] Skipping (exists): 18TXQ600948.las
+[2085642] Skipping (exists): 18TXQ600947.las
+[2085642] Skipping (exists): 18TXQ600939.las
+[2085642] Skipping (exists): 18TXQ601956.las
+[2085642] Skipping (exists): 18TXQ601954.las
+[2085642] Skipping (exists): 18TXQ601953.las
+[2085642] Skipping (exists): 18TXQ601951.las
+[2085642] Skipping (exists): 18TXQ601950.las
+[2085642] Skipping (exists): 18TXQ601948.las
+[2085642] Skipping (exists): 18TXQ601947.las
+[2085642] Skipping (exists): 18TXQ601945.las
+[2085642] Skipping (exists): 18TXQ601944.las
+[2085642] Skipping (exists): 18TXQ601941.las
+[2085642] Skipping (exists): 18TXQ601939.las
+[2085642] Skipping (exists): 18TXQ603956.las
+[2085642] Skipping (exists): 18TXQ603954.las
+[2085642] Skipping (exists): 18TXQ603953.las
+[2085642] Skipping (exists): 18TXQ603951.las
+[2085642] Skipping (exists): 18TXQ603950.las
+[2085642] Skipping (exists): 18TXQ603948.las
+[2085642] Skipping (exists): 18TXQ603947.las
+[2085642] Skipping (exists): 18TXQ603945.las
+[2085642] Skipping (exists): 18TXQ603944.las
+[2085642] Skipping (exists): 18TXQ603942.las
+[2085642] Skipping (exists): 18TXQ603941.las
+[2085642] Skipping (exists): 18TXQ603939.las
+[2085642] Skipping (exists): 18TXQ604957.las
+[2085642] Skipping (exists): 18TXQ604956.las
+[2085642] Skipping (exists): 18TXQ604954.las
+[2085642] Skipping (exists): 18TXQ604953.las
+[2085642] Skipping (exists): 18TXQ604951.las
+[2085642] Skipping (exists): 18TXQ604950.las
+[2085642] Skipping (exists): 18TXQ604948.las
+[2085642] Skipping (exists): 18TXQ604947.las
+[2085642] Skipping (exists): 18TXQ604945.las
+[2085642] Skipping (exists): 18TXQ604944.las
+[2085642] Skipping (exists): 18TXQ604942.las
+[2085642] Skipping (exists): 18TXQ604941.las
+[2085642] Skipping (exists): 18TXQ604939.las
+[2085642] Skipping (exists): 18TXQ606960.las
+[2085642] Skipping (exists): 18TXQ606959.las
+[2085642] Skipping (exists): 18TXQ606957.las
+[2085642] Skipping (exists): 18TXQ606956.las
+[2085642] Skipping (exists): 18TXQ606954.las
+[2085642] Skipping (exists): 18TXQ606953.las
+[2085642] Skipping (exists): 18TXQ606951.las
+[2085642] Skipping (exists): 18TXQ606950.las
+[2085642] Skipping (exists): 18TXQ606948.las
+[2085642] Skipping (exists): 18TXQ606947.las
+[2085642] Skipping (exists): 18TXQ606945.las
+[2085642] Skipping (exists): 18TXQ606944.las
+[2085642] Skipping (exists): 18TXQ606942.las
+[2085642] Skipping (exists): 18TXQ606941.las
+[2085642] Skipping (exists): 18TXQ606939.las
+[2085642] Skipping (exists): 18TXQ607960.las
+[2085642] Skipping (exists): 18TXQ607959.las
+[2085642] Skipping (exists): 18TXQ607957.las
+[2085642] Skipping (exists): 18TXQ607956.las
+[2085642] Skipping (exists): 18TXQ607954.las
+[2085642] Skipping (exists): 18TXQ607953.las
+[2085642] Skipping (exists): 18TXQ607951.las
+[2085642] Skipping (exists): 18TXQ607950.las
+[2085642] Skipping (exists): 18TXQ607948.las
+[2085642] Skipping (exists): 18TXQ607947.las
+[2085642] Skipping (exists): 18TXQ607945.las
+[2085642] Skipping (exists): 18TXQ607944.las
+[2085642] Skipping (exists): 18TXQ607942.las
+[2085642] Skipping (exists): 18TXQ607941.las
+[2085642] Skipping (exists): 18TXQ607939.las
+[2085642] Skipping (exists): 18TXQ609959.las
+[2085642] Skipping (exists): 18TXQ609957.las
+[2085642] Skipping (exists): 18TXQ609956.las
+[2085642] Skipping (exists): 18TXQ609954.las
+[2085642] Skipping (exists): 18TXQ609953.las
+[2085642] Skipping (exists): 18TXQ609951.las
+[2085642] Skipping (exists): 18TXQ609950.las
+[2085642] Skipping (exists): 18TXQ609948.las
+[2085642] Skipping (exists): 18TXQ609947.las
+[2085642] Skipping (exists): 18TXQ609945.las
+[2085642] Skipping (exists): 18TXQ609944.las
+[2085642] Skipping (exists): 18TXQ609942.las
+[2085642] Skipping (exists): 18TXQ609941.las
+[2085642] Skipping (exists): 18TXQ609939.las
+[2085642] Skipping (exists): 18TXQ610959.las
+[2085642] Skipping (exists): 18TXQ610957.las
+[2085642] Skipping (exists): 18TXQ610956.las
+[2085642] Skipping (exists): 18TXQ610954.las
+[2085642] Skipping (exists): 18TXQ610953.las
+[2085642] Skipping (exists): 18TXQ610951.las
+[2085642] Skipping (exists): 18TXQ610950.las
+[2085642] Skipping (exists): 18TXQ610948.las
+[2085642] Skipping (exists): 18TXQ610947.las
+[2085642] Skipping (exists): 18TXQ610945.las
+[2085642] Skipping (exists): 18TXQ610944.las
+[2085642] Skipping (exists): 18TXQ610942.las
+[2085642] Skipping (exists): 18TXQ610941.las
+[2085642] Skipping (exists): 18TXQ610939.las
+[2085642] Skipping (exists): 18TXQ612960.las
+[2085642] Skipping (exists): 18TXQ612959.las
+[2085642] Skipping (exists): 18TXQ612957.las
+[2085642] Skipping (exists): 18TXQ612956.las
+[2085642] Skipping (exists): 18TXQ612954.las
+[2085642] Skipping (exists): 18TXQ612953.las
+[2085642] Skipping (exists): 18TXQ612951.las
+[2085642] Skipping (exists): 18TXQ612950.las
+[2085642] Skipping (exists): 18TXQ612948.las
+[2085642] Skipping (exists): 18TXQ612947.las
+[2085642] Skipping (exists): 18TXQ612945.las
+[2085642] Skipping (exists): 18TXQ612944.las
+[2085642] Skipping (exists): 18TXQ612942.las
+[2085642] Skipping (exists): 18TXQ612941.las
+[2085642] Skipping (exists): 18TXQ612939.las
+[2085642] Skipping (exists): 18TXQ613960.las
+[2085642] Skipping (exists): 18TXQ613959.las
+[2085642] Skipping (exists): 18TXQ613957.las
+[2085642] Skipping (exists): 18TXQ613956.las
+[2085642] Skipping (exists): 18TXQ613954.las
+[2085642] Skipping (exists): 18TXQ613953.las
+[2085642] Skipping (exists): 18TXQ613951.las
+[2085642] Skipping (exists): 18TXQ613950.las
+[2085642] Skipping (exists): 18TXQ613948.las
+[2085642] Skipping (exists): 18TXQ613947.las
+[2085642] Skipping (exists): 18TXQ613945.las
+[2085642] Skipping (exists): 18TXQ613944.las
+[2085642] Skipping (exists): 18TXQ613942.las
+[2085642] Skipping (exists): 18TXQ613941.las
+[2085642] Skipping (exists): 18TXQ613939.las
+[2085642] Skipping (exists): 18TXQ615960.las
+[2085642] Skipping (exists): 18TXQ615959.las
+[2085642] Skipping (exists): 18TXQ615957.las
+[2085642] Skipping (exists): 18TXQ615956.las
+[2085642] Skipping (exists): 18TXQ615954.las
+[2085642] Skipping (exists): 18TXQ615953.las
+[2085642] Skipping (exists): 18TXQ615951.las
+[2085642] Skipping (exists): 18TXQ615950.las
+[2085642] Skipping (exists): 18TXQ615948.las
+[2085642] Skipping (exists): 18TXQ615947.las
+[2085642] Skipping (exists): 18TXQ615945.las
+[2085642] Skipping (exists): 18TXQ615944.las
+[2085642] Skipping (exists): 18TXQ615942.las
+[2085642] Skipping (exists): 18TXQ615941.las
+[2085642] Skipping (exists): 18TXQ615939.las
+[2085642] Skipping (exists): 18TXQ616962.las
+[2085642] Skipping (exists): 18TXQ616960.las
+[2085642] Skipping (exists): 18TXQ616959.las
+[2085642] Skipping (exists): 18TXQ616957.las
+[2085642] Skipping (exists): 18TXQ616956.las
+[2085642] Skipping (exists): 18TXQ616954.las
+[2085642] Skipping (exists): 18TXQ616953.las
+[2085642] Skipping (exists): 18TXQ616951.las
+[2085642] Skipping (exists): 18TXQ616950.las
+[2085642] Skipping (exists): 18TXQ616948.las
+[2085642] Skipping (exists): 18TXQ616947.las
+[2085642] Skipping (exists): 18TXQ616945.las
+[2085642] Skipping (exists): 18TXQ616944.las
+[2085642] Skipping (exists): 18TXQ616942.las
+[2085642] Skipping (exists): 18TXQ616941.las
+[2085642] Skipping (exists): 18TXQ616939.las
+[2085642] Skipping (exists): 18TXQ618963.las
+[2085642] Skipping (exists): 18TXQ618962.las
+[2085642] Skipping (exists): 18TXQ618960.las
+[2085642] Skipping (exists): 18TXQ618959.las
+[2085642] Skipping (exists): 18TXQ618957.las
+[2085642] Skipping (exists): 18TXQ618956.las
+[2085642] Skipping (exists): 18TXQ618954.las
+[2085642] Skipping (exists): 18TXQ618953.las
+[2085642] Skipping (exists): 18TXQ618951.las
+[2085642] Skipping (exists): 18TXQ618950.las
+[2085642] Skipping (exists): 18TXQ618948.las
+[2085642] Skipping (exists): 18TXQ618947.las
+[2085642] Skipping (exists): 18TXQ618945.las
+[2085642] Skipping (exists): 18TXQ618944.las
+[2085642] Skipping (exists): 18TXQ618942.las
+[2085642] Skipping (exists): 18TXQ618941.las
+[2085642] Skipping (exists): 18TXQ618939.las
+[2085642] Skipping (exists): 18TXQ619965.las
+[2085642] Skipping (exists): 18TXQ619963.las
+[2085642] Skipping (exists): 18TXQ619962.las
+[2085642] Skipping (exists): 18TXQ619960.las
+[2085642] Skipping (exists): 18TXQ619959.las
+[2085642] Skipping (exists): 18TXQ619957.las
+[2085642] Skipping (exists): 18TXQ619956.las
+[2085642] Skipping (exists): 18TXQ619954.las
+[2085642] Skipping (exists): 18TXQ619953.las
+[2085642] Skipping (exists): 18TXQ619951.las
+[2085642] Skipping (exists): 18TXQ619950.las
+[2085642] Skipping (exists): 18TXQ619948.las
+[2085642] Skipping (exists): 18TXQ619947.las
+[2085642] Skipping (exists): 18TXQ619945.las
+[2085642] Skipping (exists): 18TXQ619944.las
+[2085642] Skipping (exists): 18TXQ619942.las
+[2085642] Skipping (exists): 18TXQ619941.las
+[2085642] Skipping (exists): 18TXQ619939.las
+[2085642] Skipping (exists): 18TXQ621966.las
+[2085642] Skipping (exists): 18TXQ621965.las
+[2085642] Skipping (exists): 18TXQ621963.las
+[2085642] Skipping (exists): 18TXQ621962.las
+[2085642] Skipping (exists): 18TXQ621960.las
+[2085642] Skipping (exists): 18TXQ621959.las
+[2085642] Skipping (exists): 18TXQ621957.las
+[2085642] Skipping (exists): 18TXQ621956.las
+[2085642] Skipping (exists): 18TXQ621954.las
+[2085642] Skipping (exists): 18TXQ621953.las
+[2085642] Skipping (exists): 18TXQ621951.las
+[2085642] Skipping (exists): 18TXQ621950.las
+[2085642] Skipping (exists): 18TXQ621948.las
+[2085642] Skipping (exists): 18TXQ621947.las
+[2085642] Skipping (exists): 18TXQ621945.las
+[2085642] Skipping (exists): 18TXQ621944.las
+[2085642] Skipping (exists): 18TXQ621942.las
+[2085642] Skipping (exists): 18TXQ621941.las
+[2085642] Skipping (exists): 18TXQ621939.las
+[2085642] Skipping (exists): 18TXQ622968.las
+[2085642] Skipping (exists): 18TXQ622966.las
+[2085642] Skipping (exists): 18TXQ622965.las
+[2085642] Skipping (exists): 18TXQ622963.las
+[2085642] Skipping (exists): 18TXQ622962.las
+[2085642] Skipping (exists): 18TXQ622960.las
+[2085642] Skipping (exists): 18TXQ622959.las
+[2085642] Skipping (exists): 18TXQ622957.las
+[2085642] Skipping (exists): 18TXQ622956.las
+[2085642] Skipping (exists): 18TXQ622954.las
+[2085642] Skipping (exists): 18TXQ622953.las
+[2085642] Skipping (exists): 18TXQ622951.las
+[2085642] Skipping (exists): 18TXQ622950.las
+[2085642] Skipping (exists): 18TXQ622948.las
+[2085642] Skipping (exists): 18TXQ622947.las
+[2085642] Skipping (exists): 18TXQ622945.las
+[2085642] Skipping (exists): 18TXQ622944.las
+[2085642] Skipping (exists): 18TXQ622942.las
+[2085642] Skipping (exists): 18TXQ622941.las
+[2085642] Skipping (exists): 18TXQ622939.las
+[2085642] Skipping (exists): 18TXQ624969.las
+[2085642] Skipping (exists): 18TXQ624968.las
+[2085642] Skipping (exists): 18TXQ624966.las
+[2085642] Skipping (exists): 18TXQ624965.las
+[2085642] Skipping (exists): 18TXQ624963.las
+[2085642] Skipping (exists): 18TXQ624962.las
+[2085642] Skipping (exists): 18TXQ624960.las
+[2085642] Skipping (exists): 18TXQ624959.las
+[2085642] Skipping (exists): 18TXQ624957.las
+[2085642] Skipping (exists): 18TXQ624956.las
+[2085642] Skipping (exists): 18TXQ624954.las
+[2085642] Skipping (exists): 18TXQ624953.las
+[2085642] Skipping (exists): 18TXQ624951.las
+[2085642] Skipping (exists): 18TXQ624945.las
+[2085642] Skipping (exists): 18TXQ624944.las
+[2085642] Skipping (exists): 18TXQ624942.las
+[2085642] Skipping (exists): 18TXQ624941.las
+[2085642] Skipping (exists): 18TXQ624939.las
+[2085642] Skipping (exists): 18TXQ625972.las
+[2085642] Skipping (exists): 18TXQ625971.las
+[2085642] Skipping (exists): 18TXQ625969.las
+[2085642] Skipping (exists): 18TXQ625968.las
+[2085642] Skipping (exists): 18TXQ625966.las
+[2085642] Skipping (exists): 18TXQ625965.las
+[2085642] Skipping (exists): 18TXQ625963.las
+[2085642] Skipping (exists): 18TXQ625962.las
+[2085642] Skipping (exists): 18TXQ625960.las
+[2085642] Skipping (exists): 18TXQ625959.las
+[2085642] Skipping (exists): 18TXQ625957.las
+[2085642] Skipping (exists): 18TXQ625956.las
+[2085642] Skipping (exists): 18TXQ625954.las
+[2085642] Skipping (exists): 18TXQ625953.las
+[2085642] Skipping (exists): 18TXQ625951.las
+[2085642] Skipping (exists): 18TXQ625950.las
+[2085642] Skipping (exists): 18TXQ625944.las
+[2085642] Skipping (exists): 18TXQ625942.las
+[2085642] Skipping (exists): 18TXQ625941.las
+[2085642] Skipping (exists): 18TXQ625939.las
+[2085642] Skipping (exists): 18TXQ627972.las
+[2085642] Skipping (exists): 18TXQ627971.las
+[2085642] Skipping (exists): 18TXQ627969.las
+[2085642] Skipping (exists): 18TXQ627968.las
+[2085642] Skipping (exists): 18TXQ627966.las
+[2085642] Skipping (exists): 18TXQ627963.las
+[2085642] Skipping (exists): 18TXQ627962.las
+[2085642] Skipping (exists): 18TXQ627960.las
+[2085642] Skipping (exists): 18TXQ627959.las
+[2085642] Skipping (exists): 18TXQ627957.las
+[2085642] Skipping (exists): 18TXQ627954.las
+[2085642] Skipping (exists): 18TXQ627953.las
+[2085642] Skipping (exists): 18TXQ627951.las
+[2085642] Skipping (exists): 18TXQ627950.las
+[2085642] Skipping (exists): 18TXQ627948.las
+[2085642] Skipping (exists): 18TXQ627941.las
+[2085642] Skipping (exists): 18TXQ628963.las
+[2085642] Skipping (exists): 18TXQ628962.las
+[2085642] Skipping (exists): 18TXQ628960.las
+[2085642] Skipping (exists): 18TXQ628959.las
+[2085642] Skipping (exists): 18TXQ628957.las
+[2085642] Skipping (exists): 18TXQ628951.las
+[2085642] Skipping (exists): 18TXQ628950.las
+[2085642] Skipping (exists): 18TWQ592935.las
+[2085642] Skipping (exists): 18TWQ592933.las
+[2085642] Skipping (exists): 18TWQ594936.las
+[2085642] Skipping (exists): 18TWQ594935.las
+[2085642] Skipping (exists): 18TWQ594933.las
+[2085642] Skipping (exists): 18TWQ595938.las
+[2085642] Skipping (exists): 18TWQ595936.las
+[2085642] Skipping (exists): 18TWQ595935.las
+[2085642] Skipping (exists): 18TWQ595933.las
+[2085642] Skipping (exists): 18TWQ597938.las
+[2085642] Skipping (exists): 18TWQ597936.las
+[2085642] Skipping (exists): 18TWQ597935.las
+[2085642] Skipping (exists): 18TWQ597933.las
+[2085642] Skipping (exists): 18TWQ598938.las
+[2085642] Skipping (exists): 18TWQ598936.las
+[2085642] Skipping (exists): 18TWQ598935.las
+[2085642] Skipping (exists): 18TWQ598933.las
+[2085642] Skipping (exists): 18TXQ600938.las
+[2085642] Skipping (exists): 18TXQ600936.las
+[2085642] Skipping (exists): 18TXQ600935.las
+[2085642] Skipping (exists): 18TXQ600933.las
+[2085642] Skipping (exists): 18TXQ601938.las
+[2085642] Skipping (exists): 18TXQ601936.las
+[2085642] Skipping (exists): 18TXQ601935.las
+[2085642] Skipping (exists): 18TXQ601933.las
+[2085642] Skipping (exists): 18TXQ601932.las
+[2085642] Skipping (exists): 18TXQ603938.las
+[2085642] Skipping (exists): 18TXQ603936.las
+[2085642] Skipping (exists): 18TXQ603935.las
+[2085642] Skipping (exists): 18TXQ603933.las
+[2085642] Skipping (exists): 18TXQ603932.las
+[2085642] Skipping (exists): 18TXQ603930.las
+[2085642] Skipping (exists): 18TXQ604938.las
+[2085642] Skipping (exists): 18TXQ604936.las
+[2085642] Skipping (exists): 18TXQ604935.las
+[2085642] Skipping (exists): 18TXQ604933.las
+[2085642] Skipping (exists): 18TXQ604932.las
+[2085642] Skipping (exists): 18TXQ604930.las
+[2085642] Skipping (exists): 18TXQ606938.las
+[2085642] Skipping (exists): 18TXQ606936.las
+[2085642] Skipping (exists): 18TXQ606935.las
+[2085642] Skipping (exists): 18TXQ606933.las
+[2085642] Skipping (exists): 18TXQ606932.las
+[2085642] Skipping (exists): 18TXQ607938.las
+[2085642] Skipping (exists): 18TXQ607936.las
+[2085642] Skipping (exists): 18TXQ607935.las
+[2085642] Skipping (exists): 18TXQ607933.las
+[2085642] Skipping (exists): 18TXQ609938.las
+[2085642] Skipping (exists): 18TXQ609936.las
+[2085642] Skipping (exists): 18TXQ609935.las
+[2085642] Skipping (exists): 18TXQ609933.las
+[2085642] Skipping (exists): 18TXQ609932.las
+[2085642] Skipping (exists): 18TXQ610938.las
+[2085642] Skipping (exists): 18TXQ610936.las
+[2085642] Skipping (exists): 18TXQ610935.las
+[2085642] Skipping (exists): 18TXQ610933.las
+[2085642] Skipping (exists): 18TXQ610932.las
+[2085642] Skipping (exists): 18TXQ610930.las
+[2085642] Skipping (exists): 18TXQ612938.las
+[2085642] Skipping (exists): 18TXQ612936.las
+[2085642] Skipping (exists): 18TXQ612935.las
+[2085642] Skipping (exists): 18TXQ612933.las
+[2085642] Skipping (exists): 18TXQ612932.las
+[2085642] Skipping (exists): 18TXQ612930.las
+[2085642] Skipping (exists): 18TXQ612927.las
+[2085642] Skipping (exists): 18TXQ612926.las
+[2085642] Skipping (exists): 18TXQ612924.las
+[2085642] Skipping (exists): 18TXQ613938.las
+[2085642] Skipping (exists): 18TXQ613936.las
+[2085642] Skipping (exists): 18TXQ613935.las
+[2085642] Skipping (exists): 18TXQ613933.las
+[2085642] Skipping (exists): 18TXQ613932.las
+[2085642] Skipping (exists): 18TXQ613930.las
+[2085642] Skipping (exists): 18TXQ613929.las
+[2085642] Skipping (exists): 18TXQ613927.las
+[2085642] Skipping (exists): 18TXQ613926.las
+[2085642] Skipping (exists): 18TXQ613924.las
+[2085642] Skipping (exists): 18TXQ615938.las
+[2085642] Skipping (exists): 18TXQ615936.las
+[2085642] Skipping (exists): 18TXQ615935.las
+[2085642] Skipping (exists): 18TXQ615933.las
+[2085642] Skipping (exists): 18TXQ615932.las
+[2085642] Skipping (exists): 18TXQ615930.las
+[2085642] Skipping (exists): 18TXQ615929.las
+[2085642] Skipping (exists): 18TXQ615927.las
+[2085642] Skipping (exists): 18TXQ615926.las
+[2085642] Skipping (exists): 18TXQ615924.las
+[2085642] Skipping (exists): 18TXQ615923.las
+[2085642] Skipping (exists): 18TXQ615918.las
+[2085642] Skipping (exists): 18TXQ615917.las
+[2085642] Skipping (exists): 18TXQ616938.las
+[2085642] Skipping (exists): 18TXQ616936.las
+[2085642] Skipping (exists): 18TXQ616935.las
+[2085642] Skipping (exists): 18TXQ616933.las
+[2085642] Skipping (exists): 18TXQ616932.las
+[2085642] Skipping (exists): 18TXQ616930.las
+[2085642] Skipping (exists): 18TXQ616929.las
+[2085642] Skipping (exists): 18TXQ616927.las
+[2085642] Skipping (exists): 18TXQ616926.las
+[2085642] Skipping (exists): 18TXQ616924.las
+[2085642] Skipping (exists): 18TXQ616923.las
+[2085642] Skipping (exists): 18TXQ616921.las
+[2085642] Skipping (exists): 18TXQ616920.las
+[2085642] Skipping (exists): 18TXQ616918.las
+[2085642] Skipping (exists): 18TXQ616917.las
+[2085642] Skipping (exists): 18TXQ618938.las
+[2085642] Skipping (exists): 18TXQ618936.las
+[2085642] Skipping (exists): 18TXQ618935.las
+[2085642] Skipping (exists): 18TXQ618933.las
+[2085642] Skipping (exists): 18TXQ618932.las
+[2085642] Skipping (exists): 18TXQ618930.las
+[2085642] Skipping (exists): 18TXQ618929.las
+[2085642] Skipping (exists): 18TXQ618927.las
+[2085642] Skipping (exists): 18TXQ618926.las
+[2085642] Skipping (exists): 18TXQ618924.las
+[2085642] Skipping (exists): 18TXQ618923.las
+[2085642] Skipping (exists): 18TXQ618921.las
+[2085642] Skipping (exists): 18TXQ618920.las
+[2085642] Skipping (exists): 18TXQ618918.las
+[2085642] Skipping (exists): 18TXQ618917.las
+[2085642] Skipping (exists): 18TXQ619938.las
+[2085642] Skipping (exists): 18TXQ619936.las
+[2085642] Skipping (exists): 18TXQ619935.las
+[2085642] Skipping (exists): 18TXQ619933.las
+[2085642] Skipping (exists): 18TXQ619932.las
+[2085642] Skipping (exists): 18TXQ619930.las
+[2085642] Skipping (exists): 18TXQ619929.las
+[2085642] Skipping (exists): 18TXQ619927.las
+[2085642] Skipping (exists): 18TXQ619926.las
+[2085642] Skipping (exists): 18TXQ619924.las
+[2085642] Skipping (exists): 18TXQ619923.las
+[2085642] Skipping (exists): 18TXQ619921.las
+[2085642] Skipping (exists): 18TXQ619920.las
+[2085642] Skipping (exists): 18TXQ619918.las
+[2085642] Skipping (exists): 18TXQ619917.las
+[2085642] Skipping (exists): 18TXQ621938.las
+[2085642] Skipping (exists): 18TXQ621936.las
+[2085642] Skipping (exists): 18TXQ621935.las
+[2085642] Skipping (exists): 18TXQ621933.las
+[2085642] Skipping (exists): 18TXQ621932.las
+[2085642] Skipping (exists): 18TXQ621930.las
+[2085642] Skipping (exists): 18TXQ621929.las
+[2085642] Skipping (exists): 18TXQ621927.las
+[2085642] Skipping (exists): 18TXQ621926.las
+[2085642] Skipping (exists): 18TXQ621924.las
+[2085642] Skipping (exists): 18TXQ621923.las
+[2085642] Skipping (exists): 18TXQ621921.las
+[2085642] Skipping (exists): 18TXQ621920.las
+[2085642] Skipping (exists): 18TXQ621918.las
+[2085642] Skipping (exists): 18TXQ622938.las
+[2085642] Skipping (exists): 18TXQ622936.las
+[2085642] Skipping (exists): 18TXQ622935.las
+[2085642] Skipping (exists): 18TXQ622933.las
+[2085642] Skipping (exists): 18TXQ622932.las
+[2085642] Skipping (exists): 18TXQ622930.las
+[2085642] Skipping (exists): 18TXQ622929.las
+[2085642] Skipping (exists): 18TXQ622927.las
+[2085642] Skipping (exists): 18TXQ622926.las
+[2085642] Skipping (exists): 18TXQ622924.las
+[2085642] Skipping (exists): 18TXQ622923.las
+[2085642] Skipping (exists): 18TXQ622921.las
+[2085642] Skipping (exists): 18TXQ622920.las
+[2085642] Skipping (exists): 18TXQ624936.las
+[2085642] Skipping (exists): 18TXQ624935.las
+[2085642] Skipping (exists): 18TXQ624933.las
+[2085642] Skipping (exists): 18TXQ624932.las
+[2085642] Skipping (exists): 18TXQ624930.las
+[2085642] Skipping (exists): 18TXQ624929.las
+[2085642] Skipping (exists): 18TXQ624927.las
+[2085642] Skipping (exists): 18TXQ624926.las
+[2085642] Skipping (exists): 18TXQ624924.las
+[2085642] Skipping (exists): 18TXQ624923.las
+[2085642] Skipping (exists): 18TXQ624921.las
+[2085642] Skipping (exists): 18TXQ625933.las
+[2085642] Skipping (exists): 18TXQ625932.las
+[2085642] Skipping (exists): 18TXQ625930.las
+[2085642] Skipping (exists): 18TXQ625929.las
+[2085642] Skipping (exists): 18TXQ625927.las
+[2085642] Skipping (exists): 18TXQ625926.las
+[2085642] Skipping (exists): 18TXQ625924.las
+[2085642] Skipping (exists): 18TXQ625923.las
+[2085642] Skipping (exists): 18TXQ625921.las
+[2085642] Skipping (exists): 18TXQ627932.las
+[2085642] Skipping (exists): 18TXQ627930.las
+[2085642] Skipping (exists): 18TXQ627929.las
+[2085642] Skipping (exists): 18TXQ627927.las
+[2085642] Skipping (exists): 18TXQ627926.las
+[2085642] Skipping (exists): 18TXQ627924.las
+[2085642] Skipping (exists): 18TXQ627923.las
+[2085642] Skipping (exists): 18TXQ628930.las
+[2085642] Skipping (exists): 18TXQ628929.las
+[2085642] Skipping (exists): 18TXQ628927.las
+[2085642] Skipping (exists): 18TXQ628926.las
+[2085642] Skipping (exists): 18TXQ628924.las
+[2085642] Skipping (exists): 18TXQ628923.las
+
+=== Done. 494/494 tiles processed. Metrics written to: Data/Lidar/Metrics ===
+          used (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 1834911 98.0    6020386 321.6  6020386 321.6
+Vcells 2865579 21.9   14528414 110.9 15941388 121.7

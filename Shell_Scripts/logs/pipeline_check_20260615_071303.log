@@ -1,0 +1,22 @@
+=== Pipeline output check ===
+Clusters: 12, 51, 53, 56, 60, 84, 86, 90, 92, 102, 105, 116, 120, 136  (104 HUC12s)
+Source dirs checked: dem, terr, hydro, chm, naip, ortho, lidar
+
+Complete HUCs: 91 / 104
+
+HUCs with missing sources:
+  cluster 12  huc 043001081602  missing: ortho
+  cluster 12  huc 043001060504  missing: ortho
+  cluster 12  huc 043001081401  missing: ortho
+  cluster 12  huc 043001081402  missing: ortho
+  cluster 12  huc 043001060503  missing: ortho
+  cluster 105  huc 020501020503  missing: hydro
+  cluster 105  huc 020501020601  missing: hydro
+  cluster 84  huc 020501050308  missing: hydro
+  cluster 102  huc 020200040301  missing: hydro
+  cluster 12  huc 043001081602  missing: ortho
+  cluster 12  huc 043001081402  missing: ortho
+  cluster 12  huc 043001081402  missing: ortho
+  cluster 12  huc 043001081402  missing: ortho
+
+Report written to: Shell_Scripts/logs/pipeline_check_missing_20260615_071311.csv

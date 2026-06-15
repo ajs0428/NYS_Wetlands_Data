@@ -1,0 +1,478 @@
+srun: Job 785045 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for job 785045
+Using libcurl 7.76.1 with OpenSSL/3.2.2
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘lidR’
+
+The following object is masked from ‘package:sf’:
+
+    st_concave_hull
+
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+
+Attaching package: ‘terra’
+
+The following object is masked from ‘package:lidR’:
+
+    watershed
+
+=== Lidar Metrics Pipeline ===
+  GPKG:        Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg
+  Cluster:     60
+  Tile Index:  Data/Lidar/NYS_Lidar_All_Indexes.gpkg
+  Output:      Data/Lidar/Metrics
+  Workers:     2
+  HUC12s in cluster: 9
+
+Finding overlapping tiles...
+Unique full-size tiles to process: 415
+Using 2 parallel workers
+Using libcurl 7.76.1 with OpenSSL/3.2.2
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+[2083093] Skipping (exists): 18TVP860795.las
+[2083093] Skipping (exists): 18TVP785825.las
+[2083093] Skipping (exists): 18TVP725810.las
+[2083093] Skipping (exists): 18TVP680870.las
+[2083093] Skipping (exists): 18TVP725825.las
+[2083093] Skipping (exists): 18TVP680750.las
+[2083093] Skipping (exists): 18TVP650795.las
+[2083093] Skipping (exists): 18TVP725870.las
+[2083093] Skipping (exists): 18TVP785750.las
+[2083093] Skipping (exists): 18TVP770735.las
+[2083093] Skipping (exists): 18TVP800690.las
+[2083093] Skipping (exists): 18TVP740855.las
+[2083093] Skipping (exists): 18TVP680825.las
+[2083093] Skipping (exists): 18TVP665900.las
+[2083093] Skipping (exists): 18TVP785720.las
+[2083093] Skipping (exists): 18TVP740735.las
+[2083093] Skipping (exists): 18TVP605870.las
+[2083093] Skipping (exists): 18TVP830840.las
+[2083093] Skipping (exists): 18TVP815810.las
+[2083093] Skipping (exists): 18TVP830720.las
+[2083093] Skipping (exists): 18TVP815825.las
+[2083093] Skipping (exists): 18TVP695870.las
+[2083093] Skipping (exists): 18TVP695855.las
+[2083093] Skipping (exists): 18TVP785690.las
+[2083093] Skipping (exists): 18TVP740870.las
+[2083093] Skipping (exists): 18TVP695930.las
+[2083093] Skipping (exists): 18TVP740765.las
+[2083093] Skipping (exists): 18TVP635810.las
+[2083093] Skipping (exists): 18TVP800780.las
+[2083093] Skipping (exists): 18TVP770795.las
+[2083093] Skipping (exists): 18TVP800735.las
+[2083093] Skipping (exists): 18TVP800765.las
+[2083093] Skipping (exists): 18TVP740675.las
+[2083093] Skipping (exists): 18TVP770885.las
+[2083093] Skipping (exists): 18TVP695915.las
+[2083093] Skipping (exists): 18TVP785795.las
+[2083093] Skipping (exists): 18TVP665840.las
+[2083093] Skipping (exists): 18TVP785705.las
+[2083093] Skipping (exists): 18TVP770810.las
+[2083093] Skipping (exists): 18TVP830825.las
+[2083093] Skipping (exists): 18TVP815840.las
+[2083093] Skipping (exists): 18TVP680930.las
+[2083093] Skipping (exists): 18TVP830735.las
+[2083093] Skipping (exists): 18TVP740840.las
+[2083093] Skipping (exists): 18TVP740810.las
+[2083093] Skipping (exists): 18TVP815735.las
+[2083093] Skipping (exists): 18TVP845765.las
+[2083093] Skipping (exists): 18TVP710885.las
+[2083093] Skipping (exists): 18TVP815765.las
+[2083093] Skipping (exists): 18TVP695900.las
+[2083093] Skipping (exists): 18TVP845825.las
+[2083093] Skipping (exists): 18TVP710870.las
+[2083093] Skipping (exists): 18TVP815705.las
+[2083093] Skipping (exists): 18TVP785735.las
+[2083093] Skipping (exists): 18TVP785870.las
+[2083093] Skipping (exists): 18TVP770825.las
+[2083093] Skipping (exists): 18TVP800675.las
+[2083093] Skipping (exists): 18TVP680900.las
+[2083093] Skipping (exists): 18TVP710765.las
+[2083093] Skipping (exists): 18TVP755750.las
+[2083093] Skipping (exists): 18TVP695735.las
+[2083093] Skipping (exists): 18TVP725855.las
+[2083093] Skipping (exists): 18TVP620885.las
+[2083093] Skipping (exists): 18TVP830705.las
+[2083093] Skipping (exists): 18TVP755885.las
+[2083093] Skipping (exists): 18TVP860825.las
+[2083093] Skipping (exists): 18TVP635825.las
+[2083093] Skipping (exists): 18TVP740795.las
+[2083093] Skipping (exists): 18TVP830780.las
+[2083093] Skipping (exists): 18TVP725705.las
+[2083093] Skipping (exists): 18TVP710780.las
+[2083093] Skipping (exists): 18TVP845750.las
+[2083093] Skipping (exists): 18TVP710855.las
+[2083093] Skipping (exists): 18TVP830810.las
+[2083093] Skipping (exists): 18TVP770750.las
+[2083093] Skipping (exists): 18TVP650855.las
+[2083093] Skipping (exists): 18TVP695795.las
+[2083093] Skipping (exists): 18TVP650825.las
+[2083093] Skipping (exists): 18TVP710900.las
+[2083093] Skipping (exists): 18TVP635870.las
+[2083093] Skipping (exists): 18TVP785840.las
+[2083093] Skipping (exists): 18TVP800810.las
+[2083093] Skipping (exists): 18TVP755840.las
+[2083093] Skipping (exists): 18TVP725915.las
+[2083093] Skipping (exists): 18TVP725720.las
+[2083093] Skipping (exists): 18TVP800720.las
+[2083093] Skipping (exists): 18TVP665885.las
+[2083093] Skipping (exists): 18TVP875750.las
+[2083093] Skipping (exists): 18TVP740780.las
+[2083093] Skipping (exists): 18TVP665810.las
+[2083093] Skipping (exists): 18TVP845780.las
+[2083093] Skipping (exists): 18TVP710825.las
+[2083093] Skipping (exists): 18TVP830750.las
+[2083093] Skipping (exists): 18TVP680885.las
+[2083093] Skipping (exists): 18TVP755675.las
+[2083093] Skipping (exists): 18TVP845795.las
+[2083093] Skipping (exists): 18TVP860750.las
+[2083093] Skipping (exists): 18TVP800855.las
+[2083093] Skipping (exists): 18TVP755795.las
+[2083093] Skipping (exists): 18TVP635795.las
+[2083093] Skipping (exists): 18TVP800825.las
+[2083093] Skipping (exists): 18TVP710750.las
+[2083093] Skipping (exists): 18TVP770720.las
+[2083093] Skipping (exists): 18TVP635885.las
+[2083093] Skipping (exists): 18TVP815855.las
+[2083093] Skipping (exists): 18TVP845840.las
+[2083093] Skipping (exists): 18TVP755765.las
+[2083093] Skipping (exists): 18TVP680765.las
+[2083093] Skipping (exists): 18TVP800750.las
+[2083093] Skipping (exists): 18TVP770870.las
+[2083093] Skipping (exists): 18TVP860810.las
+[2083093] Skipping (exists): 18TVP695885.las
+[2083093] Skipping (exists): 18TVP665855.las
+[2083093] Skipping (exists): 18TVP770855.las
+[2083093] Skipping (exists): 18TVP815795.las
+[2083093] Skipping (exists): 18TVP815720.las
+[2083093] Skipping (exists): 18TVP635900.las
+[2083093] Skipping (exists): 18TVP725780.las
+[2083093] Skipping (exists): 18TVP830765.las
+[2083093] Skipping (exists): 18TVP755855.las
+[2083093] Skipping (exists): 18TVP860765.las
+[2083093] Skipping (exists): 18TVP710795.las
+[2083093] Skipping (exists): 18TVP695810.las
+[2083093] Skipping (exists): 18TVP710735.las
+[2083093] Skipping (exists): 18TVP770840.las
+[2083093] Skipping (exists): 18TVP770675.las
+[2083093] Skipping (exists): 18TVP770705.las
+[2083093] Skipping (exists): 18TVP695825.las
+[2083093] Skipping (exists): 18TVP800840.las
+[2083093] Skipping (exists): 18TVP860780.las
+[2083093] Skipping (exists): 18TVP665915.las
+[2083093] Skipping (exists): 18TVP725735.las
+[2083093] Skipping (exists): 18TVP845810.las
+[2083093] Skipping (exists): 18TVP620870.las
+[2083093] Skipping (exists): 18TVP740720.las
+[2083093] Skipping (exists): 18TVP605885.las
+[2083093] Skipping (exists): 18TVP665825.las
+[2083093] Skipping (exists): 18TVP650915.las
+[2083093] Skipping (exists): 18TVP770690.las
+[2083093] Skipping (exists): 18TVP695750.las
+[2083093] Skipping (exists): 18TVP680810.las
+[2083093] Skipping (exists): 18TVP785780.las
+[2083093] Skipping (exists): 18TVP710810.las
+[2083093] Skipping (exists): 18TVP755705.las
+[2083093] Skipping (exists): 18TVP620900.las
+[2083093] Skipping (exists): 18TVP725765.las
+[2083093] Skipping (exists): 18TVP650840.las
+[2083093] Skipping (exists): 18TVP665870.las
+[2083093] Skipping (exists): 18TVP860735.las
+[2083093] Skipping (exists): 18TVP725885.las
+[2083093] Skipping (exists): 18TVP815690.las
+[2083093] Skipping (exists): 18TVP725795.las
+[2083093] Skipping (exists): 18TVP725750.las
+[2083093] Skipping (exists): 18TVP815750.las
+[2083093] Skipping (exists): 18TVP815780.las
+[2083093] Skipping (exists): 18TVP740705.las
+[2083093] Skipping (exists): 18TVP830795.las
+[2083093] Skipping (exists): 18TVP785675.las
+[2083093] Skipping (exists): 18TVP650900.las
+[2083093] Skipping (exists): 18TVP785855.las
+[2083093] Skipping (exists): 18TVP830690.las
+[2083093] Skipping (exists): 18TVP770765.las
+[2083093] Skipping (exists): 18TVP650870.las
+[2083093] Skipping (exists): 18TVP680855.las
+[2083093] Skipping (exists): 18TVP755720.las
+[2083093] Skipping (exists): 18TVP695840.las
+[2083093] Skipping (exists): 18TVP725900.las
+[2083093] Skipping (exists): 18TVP680840.las
+[2083093] Skipping (exists): 18TVP740750.las
+[2083093] Skipping (exists): 18TVP710840.las
+[2083093] Skipping (exists): 18TVP755690.las
+[2083093] Skipping (exists): 18TVP815675.las
+[2083093] Skipping (exists): 18TVP800705.las
+[2083093] Skipping (exists): 18TVP785765.las
+[2083093] Skipping (exists): 18TVP740885.las
+[2083093] Skipping (exists): 18TVP755780.las
+[2083093] Skipping (exists): 18TVP650810.las
+[2083093] Skipping (exists): 18TVP755735.las
+[2083093] Skipping (exists): 18TVP800795.las
+[2083093] Skipping (exists): 18TVP740825.las
+[2083093] Skipping (exists): 18TVP755870.las
+[2083093] Skipping (exists): 18TVP725840.las
+[2083093] Skipping (exists): 18TVP680915.las
+[2083093] Skipping (exists): 18TVP830675.las
+[2083093] Skipping (exists): 18TVP695765.las
+[2083093] Skipping (exists): 18TVP755810.las
+[2083093] Skipping (exists): 18TVP695780.las
+[2083093] Skipping (exists): 18TVP650885.las
+[2083093] Skipping (exists): 18TVP740900.las
+[2083093] Skipping (exists): 18TVP710915.las
+[2083093] Skipping (exists): 18TVP845735.las
+[2083093] Skipping (exists): 18TVP740690.las
+[2083093] Skipping (exists): 18TVP770780.las
+[2083093] Skipping (exists): 18TVP785810.las
+[2083093] Skipping (exists): 18TVP755825.las
+[2083093] Skipping (exists): 3101_082608.las
+[2083093] Skipping (exists): 3101_080606.las
+[2083093] Skipping (exists): 3101_081606.las
+[2083093] Skipping (exists): 3101_082606.las
+[2083093] Skipping (exists): 3101_084606.las
+[2083093] Skipping (exists): 3101_086606.las
+[2083093] Skipping (exists): 3101_080604.las
+[2083093] Skipping (exists): 3101_081604.las
+[2083093] Skipping (exists): 3101_082604.las
+[2083093] Skipping (exists): 3101_084604.las
+[2083093] Skipping (exists): 3101_086604.las
+[2083093] Skipping (exists): 3101_080603.las
+[2083093] Skipping (exists): 3101_081603.las
+[2083093] Skipping (exists): 3101_082603.las
+[2083093] Skipping (exists): 3101_084603.las
+[2083093] Skipping (exists): 3101_086603.las
+[2083093] Skipping (exists): 3101_087603.las
+[2083093] Skipping (exists): 3101_090603.las
+[2083093] Skipping (exists): 3101_092603.las
+[2083093] Skipping (exists): 3101_080602.las
+[2083093] Skipping (exists): 3101_081602.las
+[2083093] Skipping (exists): 3101_082602.las
+[2083093] Skipping (exists): 3101_084602.las
+[2083093] Skipping (exists): 3101_086602.las
+[2083093] Skipping (exists): 3101_087602.las
+[2083093] Skipping (exists): 3101_090602.las
+[2083093] Skipping (exists): 3101_092602.las
+[2083093] Skipping (exists): 3101_093602.las
+[2083093] Skipping (exists): 3101_080600.las
+[2083093] Skipping (exists): 3101_081600.las
+[2083093] Skipping (exists): 3101_082600.las
+[2083093] Skipping (exists): 3101_084600.las
+[2083093] Skipping (exists): 3101_086600.las
+[2083093] Skipping (exists): 3101_087600.las
+[2083093] Skipping (exists): 3101_088600.las
+[2083093] Skipping (exists): 3101_090600.las
+[2083093] Skipping (exists): 3101_092600.las
+[2083093] Skipping (exists): 3101_093600.las
+[2083093] Skipping (exists): 3101_094600.las
+[2083093] Skipping (exists): 3101_096600.las
+[2083093] Skipping (exists): 3101_080598.las
+[2083093] Skipping (exists): 3101_081598.las
+[2083093] Skipping (exists): 3101_082598.las
+[2083093] Skipping (exists): 3101_084598.las
+[2083093] Skipping (exists): 3101_086598.las
+[2083093] Skipping (exists): 3101_087598.las
+[2083093] Skipping (exists): 3101_088598.las
+[2083093] Skipping (exists): 3101_090598.las
+[2083093] Skipping (exists): 3101_092598.las
+[2083093] Skipping (exists): 3101_093598.las
+[2083093] Skipping (exists): 3101_094598.las
+[2083093] Skipping (exists): 3101_096598.las
+[2083093] Skipping (exists): 3101_098598.las
+[2083093] Skipping (exists): 3101_099598.las
+[2083093] Skipping (exists): 3101_100598.las
+[2083093] Skipping (exists): 3101_080597.las
+[2083093] Skipping (exists): 3101_081597.las
+[2083093] Skipping (exists): 3101_082597.las
+[2083093] Skipping (exists): 3101_084597.las
+[2083093] Skipping (exists): 3101_086597.las
+[2083093] Skipping (exists): 3101_087597.las
+[2083093] Skipping (exists): 3101_088597.las
+[2083093] Skipping (exists): 3101_090597.las
+[2083093] Skipping (exists): 3101_092597.las
+[2083093] Skipping (exists): 3101_093597.las
+[2083093] Skipping (exists): 3101_094597.las
+[2083093] Skipping (exists): 3101_096597.las
+[2083093] Skipping (exists): 3101_098597.las
+[2083093] Skipping (exists): 3101_099597.las
+[2083093] Skipping (exists): 3101_100597.las
+[2083093] Skipping (exists): 3101_078596.las
+[2083093] Skipping (exists): 3101_080596.las
+[2083093] Skipping (exists): 3101_081596.las
+[2083093] Skipping (exists): 3101_082596.las
+[2083093] Skipping (exists): 3101_084596.las
+[2083093] Skipping (exists): 3101_086596.las
+[2083093] Skipping (exists): 3101_087596.las
+[2083093] Skipping (exists): 3101_088596.las
+[2083093] Skipping (exists): 3101_090596.las
+[2083093] Skipping (exists): 3101_092596.las
+[2083093] Skipping (exists): 3101_093596.las
+[2083093] Skipping (exists): 3101_094596.las
+[2083093] Skipping (exists): 3101_096596.las
+[2083093] Skipping (exists): 3101_098596.las
+[2083093] Skipping (exists): 3101_099596.las
+[2083093] Skipping (exists): 3101_100596.las
+[2083093] Skipping (exists): 3101_102596.las
+[2083093] Skipping (exists): 3101_078594.las
+[2083093] Skipping (exists): 3101_080594.las
+[2083093] Skipping (exists): 3101_081594.las
+[2083093] Skipping (exists): 3101_082594.las
+[2083093] Skipping (exists): 3101_084594.las
+[2083093] Skipping (exists): 3101_086594.las
+[2083093] Skipping (exists): 3101_087594.las
+[2083093] Skipping (exists): 3101_088594.las
+[2083093] Skipping (exists): 3101_090594.las
+[2083093] Skipping (exists): 3101_092594.las
+[2083093] Skipping (exists): 3101_093594.las
+[2083093] Skipping (exists): 3101_094594.las
+[2083093] Skipping (exists): 3101_096594.las
+[2083093] Skipping (exists): 3101_098594.las
+[2083093] Skipping (exists): 3101_099594.las
+[2083093] Skipping (exists): 3101_100594.las
+[2083093] Skipping (exists): 3101_102594.las
+[2083093] Skipping (exists): 3101_081592.las
+[2083093] Skipping (exists): 3101_082592.las
+[2083093] Skipping (exists): 3101_084592.las
+[2083093] Skipping (exists): 3101_086592.las
+[2083093] Skipping (exists): 3101_087592.las
+[2083093] Skipping (exists): 3101_088592.las
+[2083093] Skipping (exists): 3101_090592.las
+[2083093] Skipping (exists): 3101_092592.las
+[2083093] Skipping (exists): 3101_093592.las
+[2083093] Skipping (exists): 3101_094592.las
+[2083093] Skipping (exists): 3101_096592.las
+[2083093] Skipping (exists): 3101_098592.las
+[2083093] Skipping (exists): 3101_099592.las
+[2083093] Skipping (exists): 3101_100592.las
+[2083093] Skipping (exists): 3101_082591.las
+[2083093] Skipping (exists): 3101_084591.las
+[2083093] Skipping (exists): 3101_086591.las
+[2083093] Skipping (exists): 3101_087591.las
+[2083093] Skipping (exists): 3101_088591.las
+[2083093] Skipping (exists): 3101_090591.las
+[2083093] Skipping (exists): 3101_092591.las
+[2083093] Skipping (exists): 3101_093591.las
+[2083093] Skipping (exists): 3101_094591.las
+[2083093] Skipping (exists): 3101_096591.las
+[2083093] Skipping (exists): 3101_098591.las
+[2083093] Skipping (exists): 3101_099591.las
+[2083093] Skipping (exists): 3101_100591.las
+[2083093] Skipping (exists): 3101_086590.las
+[2083093] Skipping (exists): 3101_087590.las
+[2083093] Skipping (exists): 3101_088590.las
+[2083093] Skipping (exists): 3101_090590.las
+[2083093] Skipping (exists): 3101_092590.las
+[2083093] Skipping (exists): 3101_093590.las
+[2083093] Skipping (exists): 3101_094590.las
+[2083093] Skipping (exists): 3101_096590.las
+[2083093] Skipping (exists): 3101_098590.las
+[2083093] Skipping (exists): 3101_099590.las
+[2083093] Skipping (exists): 3101_087588.las
+[2083093] Skipping (exists): 3101_088588.las
+[2083093] Skipping (exists): 3101_090588.las
+[2083093] Skipping (exists): 3101_092588.las
+[2083093] Skipping (exists): 3101_093588.las
+[2083093] Skipping (exists): 3101_094588.las
+[2083093] Skipping (exists): 3101_096588.las
+[2083093] Skipping (exists): 3101_098588.las
+[2083093] Skipping (exists): 3101_099588.las
+[2083093] Skipping (exists): 3101_090586.las
+[2083093] Skipping (exists): 3101_092586.las
+[2083093] Skipping (exists): 3101_093586.las
+[2083093] Skipping (exists): 3101_094586.las
+[2083093] Skipping (exists): 3101_096586.las
+[2083093] Skipping (exists): 3101_098586.las
+[2083093] Skipping (exists): 3101_099586.las
+[2083093] Skipping (exists): 3101_093585.las
+[2083093] Skipping (exists): 3101_094585.las
+[2083093] Skipping (exists): 3101_096585.las
+[2083093] Skipping (exists): 3101_098585.las
+[2083093] Skipping (exists): 3101_099585.las
+[2083093] Skipping (exists): 3101_100585.las
+[2083093] Skipping (exists): 3101_102585.las
+[2083093] Skipping (exists): 3101_104585.las
+[2083093] Skipping (exists): 3101_094584.las
+[2083093] Skipping (exists): 3101_096584.las
+[2083093] Skipping (exists): 3101_098584.las
+[2083093] Skipping (exists): 3101_099584.las
+[2083093] Skipping (exists): 3101_100584.las
+[2083093] Skipping (exists): 3101_102584.las
+[2083093] Skipping (exists): 3101_104584.las
+[2083093] Skipping (exists): 3101_098582.las
+[2083093] Skipping (exists): 3101_099582.las
+[2083093] Skipping (exists): 3101_100582.las
+[2083093] Skipping (exists): 3101_102582.las
+[2083093] Skipping (exists): 3101_104582.las
+[2083093] Skipping (exists): 3101_105582.las
+[2083093] Skipping (exists): 3101_106582.las
+[2083093] Skipping (exists): 3101_100580.las
+[2083093] Skipping (exists): 3101_102580.las
+[2083093] Skipping (exists): 3101_104580.las
+[2083093] Skipping (exists): 3101_105580.las
+[2083093] Skipping (exists): 3101_106580.las
+[2083093] Skipping (exists): 3101_108580.las
+[2083093] Skipping (exists): 3101_102579.las
+[2083093] Skipping (exists): 3101_104579.las
+[2083093] Skipping (exists): 3101_105579.las
+[2083093] Skipping (exists): 3101_106579.las
+[2083093] Skipping (exists): 3101_108579.las
+[2083093] Skipping (exists): 3101_096582.las
+[2083093] Skipping (exists): 3101_096580.las
+[2083093] Skipping (exists): 3101_098580.las
+[2083093] Skipping (exists): 3101_099580.las
+[2083093] Skipping (exists): 3101_096579.las
+[2083093] Skipping (exists): 3101_098579.las
+[2083093] Skipping (exists): 3101_099579.las
+[2083093] Skipping (exists): 3101_100579.las
+[2083093] Skipping (exists): 3101_096578.las
+[2083093] Skipping (exists): 3101_098578.las
+[2083093] Skipping (exists): 3101_099578.las
+[2083093] Skipping (exists): 3101_100578.las
+[2083093] Skipping (exists): 3101_102578.las
+[2083093] Skipping (exists): 3101_104578.las
+[2083093] Skipping (exists): 3101_105578.las
+[2083093] Skipping (exists): 3101_106578.las
+[2083093] Skipping (exists): 3101_108578.las
+[2083093] Skipping (exists): 3101_096576.las
+[2083093] Skipping (exists): 3101_100576.las
+[2083093] Skipping (exists): 3101_102576.las
+[2083093] Skipping (exists): 3101_104576.las
+[2083093] Skipping (exists): 3101_105576.las
+[2083093] Skipping (exists): 3101_106576.las
+[2083093] Skipping (exists): 3101_108576.las
+[2083093] Skipping (exists): 3101_104574.las
+[2083093] Skipping (exists): 3101_105574.las
+[2083093] Skipping (exists): 3101_106574.las
+[2083093] Skipping (exists): 3101_108574.las
+[2083093] Skipping (exists): 3101_104573.las
+[2083093] Skipping (exists): 3101_105573.las
+
+=== Done. 415/415 tiles processed. Metrics written to: Data/Lidar/Metrics ===
+          used (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 1834052 98.0    6020438 321.6  6020438 321.6
+Vcells 2899546 22.2   14573711 111.2 17054077 130.2

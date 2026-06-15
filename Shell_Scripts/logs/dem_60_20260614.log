@@ -1,0 +1,103 @@
+these are the arguments: 
+ - Path to the DEM indexes folder Data/NYS_DEM_Indexes 
+ - Path to a file vector study area Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ - Cluster number (integer 1-75): 60 
+ - Path to DEM folder: Data/DEMs/ 
+ - Path to Save folder: Data/TerrainProcessed/HUC_DEMs/ 
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:terra’:
+
+    intersect, union
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘tidyr’
+
+The following object is masked from ‘package:terra’:
+
+    extract
+
+[1] "The number of DEM indices: 85680"
+[1] "this is the total list of DEM raster files: 85048"
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030504.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030303.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030304.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030402.tif
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030502.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030503.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900020102.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030302.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030501.tif
+[[1]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3525317 188.3    6127840 327.3  6127840 327.3
+Vcells 10231604  78.1   17543678 133.9 13626784 104.0
+
+[[2]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3526007 188.4    6127840 327.3  6127840 327.3
+Vcells 10233580  78.1   17543678 133.9 13626784 104.0
+
+[[3]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3526021 188.4    6127840 327.3  6127840 327.3
+Vcells 10233537  78.1   17543678 133.9 13626784 104.0
+
+[[4]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3526076 188.4    6127840 327.3  6127840 327.3
+Vcells 10233785  78.1   17543678 133.9 13626784 104.0
+
+[[5]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3525313 188.3    6127828 327.3  6127828 327.3
+Vcells 10231593  78.1   17543656 133.9 13624866 104.0
+
+[[6]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3526027 188.4    6127828 327.3  6127828 327.3
+Vcells 10233715  78.1   17543656 133.9 13624866 104.0
+
+[[7]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3526033 188.4    6127828 327.3  6127828 327.3
+Vcells 10233619  78.1   17543656 133.9 13624866 104.0
+
+[[8]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3526101 188.4    6127828 327.3  6127828 327.3
+Vcells 10234284  78.1   17543656 133.9 13624866 104.0
+
+[[9]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3526065 188.4    6127828 327.3  6127828 327.3
+Vcells 10233783  78.1   17543656 133.9 13624866 104.0
+
