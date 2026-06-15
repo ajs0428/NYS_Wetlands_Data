@@ -17,7 +17,7 @@ export TMPDIR=/ibstorage/anthony/tmp
 module load R/4.4.3
 
 source Shell_Scripts/batch_config.sh
-include=("${batch1[@]}")
+include=("${batch2[@]}")
 
 # Loop through each number in the list
 for number in "${include[@]}"; do

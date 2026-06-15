@@ -1,123 +1,0 @@
-these are the arguments: 
-- Path to cluster of HUCs files: Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg
-- Cluster to select: 12
-- Output path for Lidar HUC metrics files:Data/Lidar/HUC_Lidar_Metrics
-
-Using libcurl 7.76.1 with OpenSSL/3.2.2
-Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
-WARNING: different compile-time and runtime versions for GEOS found:
-Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
-It is probably a good idea to reinstall sf (and maybe lwgeom too)
-
-Attaching package: ‘dplyr’
-
-The following objects are masked from ‘package:stats’:
-
-    filter, lag
-
-The following objects are masked from ‘package:base’:
-
-    intersect, setdiff, setequal, union
-
-
-Attaching package: ‘lidR’
-
-The following object is masked from ‘package:sf’:
-
-    st_concave_hull
-
-terra 1.9.27
-WARNING: different compile-time and run-time versions of GEOS
-Compiled with:3.11.0-CAPI-1.17.0
- Running with:3.13.1-CAPI-1.19.2
-
-You should reinstall package 'terra'
-
-
-Attaching package: ‘terra’
-
-The following object is masked from ‘package:lidR’:
-
-    watershed
-
-=== Lidar Metrics Pipeline ===
-  GPKG:        Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg
-  Cluster:     12
-  Output:      Data/Lidar/HUC_Lidar_Metrics
- HUC12s in cluster: 11
-Length of current lidar metrics: 15936
-New file created for: Data/Lidar/HUC_Lidar_Metrics/Lidar_cluster_12_huc_043001040302.tif
-length of total lidar filenames in index: 111
-length of lidar filenames in huc 043001040302: 111
-|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          New file created for: Data/Lidar/HUC_Lidar_Metrics/Lidar_cluster_12_huc_043001081302.tif
-length of total lidar filenames in index: 79
-length of lidar filenames in huc 043001081302: 79
-New file created for: Data/Lidar/HUC_Lidar_Metrics/Lidar_cluster_12_huc_043001081602.tif
-length of total lidar filenames in index: 126
-length of lidar filenames in huc 043001081602: 126
-|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          New file created for: Data/Lidar/HUC_Lidar_Metrics/Lidar_cluster_12_huc_043001060504.tif
-length of total lidar filenames in index: 71
-length of lidar filenames in huc 043001060504: 71
-New file created for: Data/Lidar/HUC_Lidar_Metrics/Lidar_cluster_12_huc_043001081401.tif
-length of total lidar filenames in index: 88
-length of lidar filenames in huc 043001081401: 88
-|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          New file created for: Data/Lidar/HUC_Lidar_Metrics/Lidar_cluster_12_huc_043001081402.tif
-length of total lidar filenames in index: 74
-length of lidar filenames in huc 043001081402: 74
-|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          New file created for: Data/Lidar/HUC_Lidar_Metrics/Lidar_cluster_12_huc_043001060503.tif
-length of total lidar filenames in index: 53
-length of lidar filenames in huc 043001060503: 53
-Already file: Data/Lidar/HUC_Lidar_Metrics/Lidar_cluster_12_huc_043001081602.tif
-Already file: Data/Lidar/HUC_Lidar_Metrics/Lidar_cluster_12_huc_043001081402.tif
-Already file: Data/Lidar/HUC_Lidar_Metrics/Lidar_cluster_12_huc_043001081402.tif
-Already file: Data/Lidar/HUC_Lidar_Metrics/Lidar_cluster_12_huc_043001081402.tif
-|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          [[1]]
-          used  (Mb) gc trigger  (Mb) max used  (Mb)
-Ncells 2761961 147.6    5803981 310.0  5803981 310.0
-Vcells 9392403  71.7   21589911 164.8 18197113 138.9
-
-[[2]]
-          used  (Mb) gc trigger  (Mb) max used  (Mb)
-Ncells 2752733 147.1    5803981 310.0  5803981 310.0
-Vcells 9389907  71.7   21589911 164.8 18197113 138.9
-
-[[3]]
-          used  (Mb) gc trigger  (Mb) max used  (Mb)
-Ncells 2766558 147.8    5803981 310.0  5803981 310.0
-Vcells 9459677  72.2   21589911 164.8 18197113 138.9
-
-[[4]]
-          used  (Mb) gc trigger  (Mb) max used  (Mb)
-Ncells 2750395 146.9    5803981 310.0  5803981 310.0
-Vcells 9388953  71.7   21589911 164.8 18197113 138.9
-
-[[5]]
-          used  (Mb) gc trigger  (Mb) max used  (Mb)
-Ncells 2755400 147.2    5803981 310.0  5803981 310.0
-Vcells 9391132  71.7   21589911 164.8 18197113 138.9
-
-[[6]]
-          used  (Mb) gc trigger  (Mb) max used  (Mb)
-Ncells 2751291 147.0    5803981 310.0  5803981 310.0
-Vcells 9580780  73.1   21589911 164.8 18197113 138.9
-
-[[7]]
-          used  (Mb) gc trigger  (Mb) max used  (Mb)
-Ncells 2745119 146.7    5803981 310.0  5803981 310.0
-Vcells 9386762  71.7   21589911 164.8 18197113 138.9
-
-[[8]]
-NULL
-
-[[9]]
-NULL
-
-[[10]]
-NULL
-
-[[11]]
-NULL
-
-          used  (Mb) gc trigger  (Mb) max used  (Mb)
-Ncells 2723788 145.5    5803981 310.0  5803981 310.0
-Vcells 9313816  71.1   21589911 164.8 18197113 138.9

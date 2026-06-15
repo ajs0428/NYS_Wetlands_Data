@@ -1,142 +1,0 @@
-these are the arguments: 
-- Path to a file unprocessed CHM files:Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg
-- Path to processed CHM files:12
-
-NULL
-terra 1.9.27
-WARNING: different compile-time and run-time versions of GEOS
-Compiled with:3.11.0-CAPI-1.17.0
- Running with:3.13.1-CAPI-1.19.2
-
-You should reinstall package 'terra'
-
-Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
-WARNING: different compile-time and runtime versions for GEOS found:
-Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
-It is probably a good idea to reinstall sf (and maybe lwgeom too)
-[1] "/ibstorage/anthony/NYS_Wetlands_GHG/tmp//RtmpVHTFvZ"
-[1] "this is the total list of chm indexes: 4838405"
-[1] "this is the limited list of chm indexes: 915150"
-[1] "this is the limited list of chm basenames: 915150"
- [1] "Data/CHMs/AWS/chm_FEMA_FranklinStLawrence2016.gpkg"            
- [2] "Data/CHMs/AWS/chm_FEMA_FultonSaratogaHerkimerFranklin2017.gpkg"
- [3] "Data/CHMs/AWS/chm_FEMA_GreatLakes2014.gpkg"                    
- [4] "Data/CHMs/AWS/chm_FEMA_HudsonHoosic2012.gpkg"                  
- [5] "Data/CHMs/AWS/chm_FEMA_OneidaSubbasin2016.gpkg"                
- [6] "Data/CHMs/AWS/chm_NY_FEMAR2_Central_2_2018.gpkg"               
- [7] "Data/CHMs/AWS/chm_NY_FEMAR2_Central_3_2018.gpkg"               
- [8] "Data/CHMs/AWS/chm_NY_FEMAR2_Central_4_2018_north.gpkg"         
- [9] "Data/CHMs/AWS/chm_NY_FEMAR2_Central_4_south_2018.gpkg"         
-[10] "Data/CHMs/AWS/chm_NY_FEMAR2_Central_5_2018.gpkg"               
-[11] "Data/CHMs/AWS/chm_NY_FEMAR2_Central_B1_2018_east.gpkg"         
-[12] "Data/CHMs/AWS/chm_NY_FEMAR2_Central_B1_2018_west.gpkg"         
-[13] "Data/CHMs/AWS/chm_NYSGPO_AlleganySteuben2016.gpkg"             
-[14] "Data/CHMs/AWS/chm_NYSGPO_CayugaOswego_2018.gpkg"               
-[15] "Data/CHMs/AWS/chm_NYSGPO_CentralFingerLakes_2020.gpkg"         
-[16] "Data/CHMs/AWS/chm_NYSGPO_ColumbiaRensselaer2016.gpkg"          
-[17] "Data/CHMs/AWS/chm_NYSGPO_ErieGeneseeLivingston2019.gpkg"       
-[18] "Data/CHMs/AWS/chm_NYSGPO_GreatGully2014.gpkg"                  
-[19] "Data/CHMs/AWS/chm_NYSGPO_MadisonOtsego_2015.gpkg"              
-[20] "Data/CHMs/AWS/chm_NYSGPO_Southwest_spring_2017.gpkg"           
-[21] "Data/CHMs/AWS/chm_NYSGPO_SouthwestB_fall_2017.gpkg"            
-[22] "Data/CHMs/AWS/chm_NYSGPO_WarrenWashingtonEsssex_2015.gpkg"     
-[23] "Data/CHMs/AWS/chm_USGS_3County2014.gpkg"                       
-[24] "Data/CHMs/AWS/chm_USGS_ClintonEssexFranklin2014.gpkg"          
-[25] "Data/CHMs/AWS/chm_USGS_LongIsland2014.gpkg"                    
-[26] "Data/CHMs/AWS/chm_USGS_NorthEast2011.gpkg"                     
-[27] "Data/CHMs/AWS/chm_USGS_NYC2014.gpkg"                           
-[28] "Data/CHMs/AWS/chm_USGS_Schoharie2014.gpkg"                     
-Processing file Data/CHMs/AWS/chm_FEMA_FranklinStLawrence2016.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_FEMA_FultonSaratogaHerkimerFranklin2017.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_FEMA_GreatLakes2014.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_FEMA_HudsonHoosic2012.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_FEMA_OneidaSubbasin2016.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_NY_FEMAR2_Central_2_2018.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_NY_FEMAR2_Central_3_2018.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_NY_FEMAR2_Central_4_2018_north.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_NY_FEMAR2_Central_4_south_2018.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_NY_FEMAR2_Central_5_2018.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_NY_FEMAR2_Central_B1_2018_east.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_NY_FEMAR2_Central_B1_2018_west.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_NYSGPO_AlleganySteuben2016.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_NYSGPO_CayugaOswego_2018.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_NYSGPO_CentralFingerLakes_2020.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_NYSGPO_ColumbiaRensselaer2016.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_NYSGPO_ErieGeneseeLivingston2019.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_NYSGPO_GreatGully2014.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_NYSGPO_MadisonOtsego_2015.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_NYSGPO_Southwest_spring_2017.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_NYSGPO_SouthwestB_fall_2017.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_NYSGPO_WarrenWashingtonEsssex_2015.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_USGS_3County2014.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_USGS_ClintonEssexFranklin2014.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_USGS_LongIsland2014.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_USGS_NorthEast2011.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_USGS_NYC2014.gpkg
-  Transforming features to match polygon CRS...
-Processing file Data/CHMs/AWS/chm_USGS_Schoharie2014.gpkg
-  Transforming features to match polygon CRS...
-[1] 2
-[1] "File already exists: Data/CHMs/HUC_CHMs/cluster_12_huc_043001040302_CHM.tif"
-[1] "File already exists: Data/CHMs/HUC_CHMs/cluster_12_huc_043001081302_CHM.tif"
-|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          [1] "File already exists: Data/CHMs/HUC_CHMs/cluster_12_huc_043001060504_CHM.tif"
-|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          [1] "File already exists: Data/CHMs/HUC_CHMs/cluster_12_huc_043001081402_CHM.tif"
-Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
-WARNING: different compile-time and runtime versions for GEOS found:
-Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
-It is probably a good idea to reinstall sf (and maybe lwgeom too)
-Data/CHMs/HUC_CHMs/cluster_12_huc_043001040302_CHM.tif
-Data/CHMs/HUC_CHMs/cluster_12_huc_043001081302_CHM.tif
-Data/CHMs/HUC_CHMs/cluster_12_huc_043001081602_CHM.tif
-Data/CHMs/HUC_CHMs/cluster_12_huc_043001060504_CHM.tif
-Data/CHMs/HUC_CHMs/cluster_12_huc_043001081401_CHM.tif
-Data/CHMs/HUC_CHMs/cluster_12_huc_043001081402_CHM.tif
-[1] "File already exists: Data/CHMs/HUC_CHMs/cluster_12_huc_043001060503_CHM.tif"
-|---------|---------|---------|---------|=========================================                                          |---------|---------|---------|---------|=========================================                                          [1] "File already exists: Data/CHMs/HUC_CHMs/cluster_12_huc_043001081402_CHM.tif"
-[1] "File already exists: Data/CHMs/HUC_CHMs/cluster_12_huc_043001081402_CHM.tif"
-[1] "File already exists: Data/CHMs/HUC_CHMs/cluster_12_huc_043001081402_CHM.tif"
-Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
-WARNING: different compile-time and runtime versions for GEOS found:
-Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
-It is probably a good idea to reinstall sf (and maybe lwgeom too)
-Data/CHMs/HUC_CHMs/cluster_12_huc_043001060503_CHM.tif
-Data/CHMs/HUC_CHMs/cluster_12_huc_043001081602_CHM.tif
-Data/CHMs/HUC_CHMs/cluster_12_huc_043001081402_CHM.tif
-Data/CHMs/HUC_CHMs/cluster_12_huc_043001081402_CHM.tif
-Data/CHMs/HUC_CHMs/cluster_12_huc_043001081402_CHM.tif
-[[1]]
-[1] "Data/CHMs/HUC_CHMs/cluster_12_huc_043001040302_CHM.tif"
-
-[[2]]
-[1] "Data/CHMs/HUC_CHMs/cluster_12_huc_043001081302_CHM.tif"
-
-[[3]]
-Error: external pointer is not valid
-Execution halted
-srun: error: cbsuxu06: task 0: Exited with exit code 1
