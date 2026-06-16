@@ -46,6 +46,10 @@ OUTDIR="Data/Ortho/HUC_Ortho/"
 DATE=$(date +%Y%m%d)
 
 mkdir -p "$OUTDIR" Shell_Scripts/SLURM Shell_Scripts/logs
+# Snapshot the per-task memory budget (MB) before unsetting the SLURM mem vars,
+# so the R step can size terra::memmax to the cgroup (mem-per-cpu × cpus) rather
+# than node RAM. Tracks the #SBATCH directives above and survives the unset.
+export TASK_MEM_MB=$(( ${SLURM_MEM_PER_CPU:-0} * ${SLURM_CPUS_PER_TASK:-1} ))
 unset SLURM_MEM_PER_CPU SLURM_MEM_PER_NODE SLURM_MEM_PER_GPU
 
 echo "=== Ortho -> HUC12 (year $YEAR) ==="

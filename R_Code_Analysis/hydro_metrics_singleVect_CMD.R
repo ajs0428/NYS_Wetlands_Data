@@ -38,9 +38,17 @@ library(stringr)
 library(whitebox)
 suppressPackageStartupMessages(library(tidyterra))
 
-# SLURM allocates 64 GB / 1 core per task — no in-script parallelism.
+# terra cap derived from the SLURM per-task cgroup so it tracks the SBATCH
+# directives, not node RAM. step_hydro.sh unsets SLURM_MEM_PER_CPU before srun,
+# so it re-exports the budget as TASK_MEM_MB. This step is single-process (no
+# callr workers), so the whole task budget goes to terra, less ~15% headroom.
+# NOTE: WhiteboxTools fill/breach runs as an external process that ignores this
+# cap entirely — it loads the full DEM itself, so this only governs terra ops
+# (flowdir/terrain/flowAccumulation). Falls back to 56 GB off-SLURM.
+.task_mem_gb <- as.numeric(Sys.getenv("TASK_MEM_MB", "0")) / 1024
+memmax_gb    <- if (.task_mem_gb > 0) max(4L, as.integer(floor(.task_mem_gb * 0.85))) else 56L
 terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp",
-             memmax = 56)
+             memmax = memmax_gb)
 print(tempdir())
 
 ###############################################################################################

@@ -31,12 +31,21 @@ library(future.apply)
 library(stringr)
 suppressPackageStartupMessages(library(tidyterra))
 
+# terra cap derived from the SLURM per-task cgroup so it tracks the SBATCH
+# directives, not node RAM. step_dem.sh unsets SLURM_MEM_PER_CPU before srun,
+# so it re-exports the budget as TASK_MEM_MB; we split it across the callr
+# workers (= SLURM_CPUS_PER_TASK) with ~15% headroom for R/GDAL allocations
+# outside terra (memfrac is dropped because it reads node RAM, not the cgroup).
+# Falls back to 28 GB off-SLURM (local runs).
+.task_mem_gb <- as.numeric(Sys.getenv("TASK_MEM_MB", "0")) / 1024
+.n_workers   <- max(1L, as.integer(Sys.getenv("SLURM_CPUS_PER_TASK", "1")))
+memmax_gb    <- if (.task_mem_gb > 0)
+                    max(4L, as.integer(floor(.task_mem_gb * 0.85 / .n_workers))) else 28L
+
 # Main-process terra config (workers re-set their own inside cluster_extract).
-# memmax is GB; memfrac is a fraction of *node* RAM (not the SLURM cgroup), so
-# it's misleading on shared HPC nodes — we rely on memmax only.
 terraOptions(
     tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp",
-    memmax = 28
+    memmax = memmax_gb
 )
 ###############################################################################################
 
@@ -92,10 +101,11 @@ cluster_target <- sf::st_read(args[2], quiet = TRUE) |>
 cluster_hucs <- cluster_target$huc12
 
 cluster_extract <- function(huc){
-    # Per-worker terra cap: 2 SLURM cores × 28 GB ≈ 56 GB, fits in 64 GB allocation.
+    # Per-worker terra cap from the cgroup (see memmax_gb at top): the per-task
+    # budget split across SLURM_CPUS_PER_TASK callr workers, minus headroom.
     terra::terraOptions(
         tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp",
-        memmax = 28
+        memmax = memmax_gb
     )
     huc_sf <- cluster_target[cluster_target$huc12 == huc, ]
     

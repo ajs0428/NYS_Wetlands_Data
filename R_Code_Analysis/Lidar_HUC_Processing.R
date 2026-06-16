@@ -23,10 +23,16 @@ library(dplyr)
 library(lidR)
 library(terra)
 
-# SLURM allocates 64 GB / 1 core. memfrac is dropped because it reads node RAM
-# (not the cgroup) on shared HPC nodes; memmax is the safe cap.
+# terra cap derived from the SLURM per-task cgroup so it tracks the SBATCH
+# directives, not node RAM (memfrac is dropped because it reads node RAM, not
+# the cgroup). step_lidar.sh unsets SLURM_MEM_PER_CPU before srun, so it
+# re-exports the budget as TASK_MEM_MB. This step is single-process (sequential
+# lapply, no callr workers), so the whole task budget goes to terra, less ~15%
+# headroom. Falls back to 32 GB off-SLURM (local runs).
+.task_mem_gb <- as.numeric(Sys.getenv("TASK_MEM_MB", "0")) / 1024
+memmax_gb    <- if (.task_mem_gb > 0) max(4L, as.integer(floor(.task_mem_gb * 0.85))) else 32L
 terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp",
-             memmax = 32)
+             memmax = memmax_gb)
 
 ########################################################################################
 message("=== Lidar Metrics Pipeline ===")

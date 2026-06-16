@@ -143,11 +143,22 @@ select_tiles_for_huc <- function(tiles_huc, huc_geom, preferred_year, years_avai
     list(locs = selected$location, years = used_years)
 }
 
+# terra cap derived from the SLURM per-task cgroup so it tracks the SBATCH
+# directives, not node RAM. step_ortho_huc.sh unsets SLURM_MEM_PER_CPU before
+# srun, so it re-exports the budget as TASK_MEM_MB; we split it across the callr
+# workers (= SLURM_CPUS_PER_TASK) with ~15% headroom for R/GDAL outside terra.
+# Falls back to 28 GB off-SLURM (local runs).
+.task_mem_gb <- as.numeric(Sys.getenv("TASK_MEM_MB", "0")) / 1024
+.n_workers   <- max(1L, as.integer(Sys.getenv("SLURM_CPUS_PER_TASK", "1")))
+memmax_gb    <- if (.task_mem_gb > 0)
+                    max(4L, as.integer(floor(.task_mem_gb * 0.85 / .n_workers))) else 28L
+
 process_huc <- function(huc_num) {
     setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
+    # Per-worker terra cap from the cgroup (see memmax_gb above).
     terra::terraOptions(
         tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp",
-        memmax = 28
+        memmax = memmax_gb
     )
     target_file  <- paste0(outputPath, "cluster_", clusterSubset, "_huc_", huc_num, "_ortho_", year, ".tif")
     dem_filename <- paste0(demDir, "/cluster_", clusterSubset, "_huc_", huc_num, ".tif")

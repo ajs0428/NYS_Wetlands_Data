@@ -115,11 +115,21 @@ final_crossing_features <- dplyr::bind_rows(all_crossing_features)
 # each HUC once (the per-HUC crop/mask still uses all of its rows).
 target_hucs <- unique(cluster_target$huc12)
 
+# terra cap derived from the SLURM per-task cgroup so it tracks the SBATCH
+# directives, not node RAM. step_chm.sh unsets SLURM_MEM_PER_CPU before srun,
+# so it re-exports the budget as TASK_MEM_MB; we split it across the callr
+# workers (= SLURM_CPUS_PER_TASK) with ~15% headroom for R/GDAL outside terra.
+# Falls back to 32 GB off-SLURM (local runs).
+.task_mem_gb <- as.numeric(Sys.getenv("TASK_MEM_MB", "0")) / 1024
+.n_workers   <- max(1L, as.integer(Sys.getenv("SLURM_CPUS_PER_TASK", "1")))
+memmax_gb    <- if (.task_mem_gb > 0)
+                    max(4L, as.integer(floor(.task_mem_gb * 0.85 / .n_workers))) else 32L
+
 process_huc <- function(cluster_huc_name) {
-    # Per-worker terra cap: 2 SLURM cores × 32 GB ≈ 64 GB, fits in 72 GB allocation.
+    # Per-worker terra cap from the cgroup (see memmax_gb above).
     terra::terraOptions(
         tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp",
-        memmax = 32
+        memmax = memmax_gb
     )
     chm_filename <- paste0("Data/CHMs/HUC_CHMs", "/cluster_", args[2], "_huc_", cluster_huc_name, "_CHM.tif")
     dem_filename <- paste0("Data/TerrainProcessed/HUC_DEMs", "/cluster_", args[2], "_huc_", cluster_huc_name, ".tif")

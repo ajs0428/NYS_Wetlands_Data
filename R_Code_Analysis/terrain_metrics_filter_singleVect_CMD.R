@@ -36,7 +36,14 @@ setGDALconfig("GDAL_PAM_ENABLED", "FALSE") # does not create aux.xml files
 tmp_root <- "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp"
 tmp_session <- file.path(tmp_root, paste0("terrain_", METRIC, "_", Sys.getpid()))
 dir.create(tmp_session, recursive = TRUE, showWarnings = FALSE)
-terraOptions(memmax = 80, tempdir = tmp_session)
+# terra cap derived from the SLURM per-task cgroup so it tracks the SBATCH
+# directives, not node RAM. step_terrain.sh unsets SLURM_MEM_PER_CPU before
+# srun, so it re-exports the budget as TASK_MEM_MB. This step is single-process
+# (no in-script parallelism), so the whole task budget goes to terra, less ~15%
+# headroom. Falls back to 80 GB off-SLURM (local runs).
+.task_mem_gb <- as.numeric(Sys.getenv("TASK_MEM_MB", "0")) / 1024
+memmax_gb    <- if (.task_mem_gb > 0) max(4L, as.integer(floor(.task_mem_gb * 0.85))) else 80L
+terraOptions(memmax = memmax_gb, tempdir = tmp_session)
 ###############################################################################################
 
 process_scale <- function(dem_path, scale_factor, output_file, metric, scale_label) {
