@@ -3,14 +3,22 @@
 # Master script -- submits one SLURM job per processing step with the full
 # dependency graph, for a set of HUC12 clusters.
 #
-#   Usage:  bash step_combined_master.sh <clusters>
+#   Usage:  bash step_combined_master.sh <clusters> [step]
 #           <clusters> is either a comma-separated list ("225" or "208,225,11")
 #           or a batch name from batch_config.sh ("batch1").
+#           [step] (optional) runs only that one stage instead of the full graph.
+#             Valid steps: dem slp hydro chm naip lidar_ftp lidar
+#                          ortho_dl ortho_index ortho_huc check
+#           Before submitting a single step, its upstream outputs are checked on
+#           disk for the requested clusters; if any are missing the run aborts
+#           with the step to run first (no SLURM dependency chaining is done).
 #
 #   Examples:
 #     bash step_combined_master.sh 225
 #     bash step_combined_master.sh batch1
-#     DRYRUN=1 bash step_combined_master.sh batch1   # print sbatch graph only
+#     bash step_combined_master.sh batch2 hydro       # one stage only
+#     DRYRUN=1 bash step_combined_master.sh batch1    # print sbatch graph only
+#     DRYRUN=1 bash step_combined_master.sh batch2 hydro
 #
 #   Optional environment flags:
 #     DRYRUN=1          print the sbatch commands instead of submitting
@@ -57,6 +65,9 @@ if [[ -z "${1:-}" ]]; then
     exit 1
 fi
 
+SELECTOR="$1"   # original "batch2"/"208,225" token, reused in fix-it messages
+STEP="${2:-}"   # optional single stage to run instead of the full graph
+
 if [[ "$1" =~ ^batch[0-9]+$ ]]; then
     ref="$1[@]"
     include=("${!ref}")
@@ -87,6 +98,109 @@ submit() {  # submit <dependency-or-""> <script> [args...]
         sbatch "${flags[@]}" "$@"
     fi
 }
+
+# ── Single-step prerequisite checks (on-disk outputs) ───────────────────────
+# Each verifies the upstream products a stage reads. Globs are relative to the
+# project root (the cd at the top), matching the paths the step_*.sh scripts
+# and their Rscripts use. On a miss they print the fix-it step and return 1.
+# HUC products follow the cluster_<n>_huc_*.tif naming; the trailing "_huc_"
+# keeps cluster 12 from matching cluster 120.
+
+check_dem_sources() {  # DEM extraction reads source tiles from Data/DEMs/
+    compgen -G "Data/DEMs/*" >/dev/null && return 0
+    echo "ERROR: no DEM source tiles found in Data/DEMs/" >&2
+    echo "       DEM extraction needs source tiles + NYS_All_DEM_Index.gpkg (manual prereq)." >&2
+    return 1
+}
+
+check_huc_dems() {  # slp/hydro/chm/naip/ortho_huc all resample onto the HUC DEM
+    local missing=() n
+    for n in "${include[@]}"; do
+        compgen -G "Data/TerrainProcessed/HUC_DEMs/cluster_${n}_huc_*.tif" >/dev/null \
+            || missing+=("$n")
+    done
+    [[ ${#missing[@]} -eq 0 ]] && return 0
+    echo "ERROR: missing HUC DEMs for cluster(s): ${missing[*]}" >&2
+    echo "       Run the DEM step first:  bash $0 $SELECTOR dem" >&2
+    return 1
+}
+
+check_lidar_index() {  # lidar_ftp reads the merged collection index
+    [[ -f "$LIDAR_INDEX" ]] && return 0
+    echo "ERROR: lidar index not found: $LIDAR_INDEX" >&2
+    echo "       Build it: Rscript R_Code_Analysis/download_lidar_indexes.R \\" >&2
+    echo "              && Rscript R_Code_Analysis/build_lidar_index.R" >&2
+    return 1
+}
+
+check_lidar_metrics() {  # lidar HUC merge reads per-tile metrics (not cluster-named)
+    compgen -G "Data/Lidar/Metrics/*" >/dev/null && return 0
+    echo "ERROR: no lidar metric tiles in Data/Lidar/Metrics/" >&2
+    echo "       Run the lidar download first:  bash $0 $SELECTOR lidar_ftp" >&2
+    return 1
+}
+
+check_ortho_tiles() {  # the footprint index is rebuilt over downloaded tiles
+    compgen -G "Data/Ortho/Tiles/*" >/dev/null && return 0
+    echo "ERROR: no ortho tiles in Data/Ortho/Tiles/" >&2
+    echo "       Run the ortho download first:  bash $0 $SELECTOR ortho_dl" >&2
+    return 1
+}
+
+check_ortho_index() {  # ortho_huc reads the rebuilt footprint index
+    [[ -f "Data/Ortho/ortho_tiles.gpkg" ]] && return 0
+    echo "ERROR: ortho footprint index not found: Data/Ortho/ortho_tiles.gpkg" >&2
+    echo "       Build it:  bash $0 $SELECTOR ortho_index" >&2
+    return 1
+}
+
+# ── Single-step mode: run exactly one stage, after checking its inputs ────────
+if [[ -n "$STEP" ]]; then
+    echo "Single-step mode: '$STEP'"
+    case "$STEP" in
+        dem)
+            check_dem_sources || exit 1
+            jid=$(submit "" "$SCRIPTDIR/step_dem.sh" "$INCLUDE_STR") ;;
+        slp|terrain)
+            check_huc_dems || exit 1
+            jid=$(submit "" "$SCRIPTDIR/step_terrain.sh" "$INCLUDE_STR" slp) ;;
+        hydro)
+            check_huc_dems || exit 1
+            jid=$(submit "" "$SCRIPTDIR/step_hydro.sh" "$INCLUDE_STR") ;;
+        chm)
+            check_huc_dems || exit 1
+            jid=$(submit "" "$SCRIPTDIR/step_chm.sh" "$INCLUDE_STR") ;;
+        naip)
+            check_huc_dems || exit 1
+            jid=$(submit "" "$SCRIPTDIR/step_naip.sh" "$INCLUDE_STR") ;;
+        lidar_ftp)
+            check_lidar_index || exit 1
+            jid=$(submit "" "$SCRIPTDIR/step_lidar_ftp.sh" "$INCLUDE_STR") ;;
+        lidar)
+            check_lidar_metrics || exit 1
+            jid=$(submit "" "$SCRIPTDIR/step_lidar.sh" "$INCLUDE_STR") ;;
+        ortho_dl|ortho)
+            jid=$(submit "" "$SCRIPTDIR/step_ortho.sh" "$INCLUDE_STR" "$ORTHO_YEAR" "$ORTHO_BANDS") ;;
+        ortho_index)
+            check_ortho_tiles || exit 1
+            jid=$(submit "" "$SCRIPTDIR/step_ortho_index.sh") ;;
+        ortho_huc)
+            check_ortho_index || exit 1
+            check_huc_dems || exit 1
+            jid=$(submit "" "$SCRIPTDIR/step_ortho_huc.sh" "$INCLUDE_STR" "$ORTHO_YEAR") ;;
+        check)
+            jid=$(submit "" "$SCRIPTDIR/step_check.sh" "$INCLUDE_STR") ;;
+        *)
+            echo "ERROR: unknown step '$STEP'" >&2
+            echo "Valid steps: dem slp hydro chm naip lidar_ftp lidar ortho_dl ortho_index ortho_huc check" >&2
+            exit 1 ;;
+    esac
+    echo "  Job $jid"
+    echo ""
+    echo "Submitted step '$STEP' for clusters $INCLUDE_STR."
+    echo "Monitor with: squeue -u \$USER"
+    exit 0
+fi
 
 # ── DEM (root of the terrain-aligned steps) ─────────────────────────────────
 echo "Submitting DEM extraction..."
