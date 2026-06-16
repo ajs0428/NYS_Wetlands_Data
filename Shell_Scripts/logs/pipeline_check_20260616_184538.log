@@ -1,0 +1,6 @@
+=== Pipeline output check ===
+Clusters:   (0 HUC12s)
+Source dirs checked: dem, terr, hydro, chm, naip, ortho, lidar
+
+Complete HUCs: 0 / 0
+All sources present for all HUCs.

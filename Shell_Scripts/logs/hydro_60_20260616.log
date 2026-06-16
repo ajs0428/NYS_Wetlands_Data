@@ -1,0 +1,297 @@
+srun: Job 785064 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for job 785064
+these are the arguments: 
+ - Path to a file vector study area Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ - Cluster number (integer 1-200ish): 60 
+ - Path to the DEMs in TerrainProcessed folder Data/TerrainProcessed/HUC_DEMs/ 
+ - Path to save folder: Data/TerrainProcessed/HUC_Hydro/ 
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:terra’:
+
+    intersect, union
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘tidyr’
+
+The following object is masked from ‘package:terra’:
+
+    extract
+
+[1] "/ibstorage/anthony/NYS_Wetlands_GHG/tmp//RtmpxA5wuR"
+[1] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900020102.tif"
+[2] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030302.tif"
+[3] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030303.tif"
+[4] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030304.tif"
+[5] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030402.tif"
+[6] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030501.tif"
+[7] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030502.tif"
+[8] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030503.tif"
+[9] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030504.tif"
+[1] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900020102_wbt.tif"
+[2] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030302_wbt.tif"
+[3] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030303_wbt.tif"
+[4] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030304_wbt.tif"
+[5] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030402_wbt.tif"
+[6] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030501_wbt.tif"
+[7] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030502_wbt.tif"
+[8] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030503_wbt.tif"
+[9] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030504_wbt.tif"
+character(0)
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900020102_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030302_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030303_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030304_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030402_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030501_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030502_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030503_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030504_wbt_TWI_Facc.tif
+[[1]]
+NULL
+
+[[2]]
+NULL
+
+[[3]]
+NULL
+
+[[4]]
+NULL
+
+[[5]]
+NULL
+
+[[6]]
+NULL
+
+[[7]]
+NULL
+
+[[8]]
+NULL
+
+[[9]]
+NULL
+
+          used (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 1499804 80.1    2790671 149.1  2154982 115.1
+Vcells 1988852 15.2    8388608  64.0  2851058  21.8
+srun: Job 785073 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for job 785073
+these are the arguments: 
+ - Path to a file vector study area Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ - Cluster number (integer 1-200ish): 60 
+ - Path to the DEMs in TerrainProcessed folder Data/TerrainProcessed/HUC_DEMs/ 
+ - Path to save folder: Data/TerrainProcessed/HUC_Hydro/ 
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:terra’:
+
+    intersect, union
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘tidyr’
+
+The following object is masked from ‘package:terra’:
+
+    extract
+
+[1] "/ibstorage/anthony/NYS_Wetlands_GHG/tmp//RtmpDlYtWP"
+[1] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900020102.tif"
+[2] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030302.tif"
+[3] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030303.tif"
+[4] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030304.tif"
+[5] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030402.tif"
+[6] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030501.tif"
+[7] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030502.tif"
+[8] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030503.tif"
+[9] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030504.tif"
+[1] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900020102_wbt.tif"
+[2] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030302_wbt.tif"
+[3] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030303_wbt.tif"
+[4] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030304_wbt.tif"
+[5] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030402_wbt.tif"
+[6] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030501_wbt.tif"
+[7] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030502_wbt.tif"
+[8] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030503_wbt.tif"
+[9] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030504_wbt.tif"
+character(0)
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900020102_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030302_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030303_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030304_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030402_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030501_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030502_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030503_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030504_wbt_TWI_Facc.tif
+[[1]]
+NULL
+
+[[2]]
+NULL
+
+[[3]]
+NULL
+
+[[4]]
+NULL
+
+[[5]]
+NULL
+
+[[6]]
+NULL
+
+[[7]]
+NULL
+
+[[8]]
+NULL
+
+[[9]]
+NULL
+
+          used (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 1499825 80.1    2790731 149.1  2154982 115.1
+Vcells 1988858 15.2    8388608  64.0  2851086  21.8
+srun: Job 785076 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for job 785076
+these are the arguments: 
+ - Path to a file vector study area Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ - Cluster number (integer 1-200ish): 60 
+ - Path to the DEMs in TerrainProcessed folder Data/TerrainProcessed/HUC_DEMs/ 
+ - Path to save folder: Data/TerrainProcessed/HUC_Hydro/ 
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:terra’:
+
+    intersect, union
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘tidyr’
+
+The following object is masked from ‘package:terra’:
+
+    extract
+
+[1] "/ibstorage/anthony/NYS_Wetlands_GHG/tmp//RtmpVo8CsR"
+[1] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900020102.tif"
+[2] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030302.tif"
+[3] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030303.tif"
+[4] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030304.tif"
+[5] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030402.tif"
+[6] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030501.tif"
+[7] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030502.tif"
+[8] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030503.tif"
+[9] "Data/TerrainProcessed/HUC_DEMs//cluster_60_huc_042900030504.tif"
+[1] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900020102_wbt.tif"
+[2] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030302_wbt.tif"
+[3] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030303_wbt.tif"
+[4] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030304_wbt.tif"
+[5] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030402_wbt.tif"
+[6] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030501_wbt.tif"
+[7] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030502_wbt.tif"
+[8] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030503_wbt.tif"
+[9] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_60_huc_042900030504_wbt.tif"
+character(0)
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900020102_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030302_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030303_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030304_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030402_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030501_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030502_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030503_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_60_huc_042900030504_wbt_TWI_Facc.tif
+[[1]]
+NULL
+
+[[2]]
+NULL
+
+[[3]]
+NULL
+
+[[4]]
+NULL
+
+[[5]]
+NULL
+
+[[6]]
+NULL
+
+[[7]]
+NULL
+
+[[8]]
+NULL
+
+[[9]]
+NULL
+
+          used (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 1499825 80.1    2790731 149.1  2154982 115.1
+Vcells 1988858 15.2    8388608  64.0  2851011  21.8

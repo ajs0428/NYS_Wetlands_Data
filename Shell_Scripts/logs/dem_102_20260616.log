@@ -1,0 +1,99 @@
+srun: Job 785062 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for job 785062
+these are the arguments: 
+ - Path to the DEM indexes folder Data/NYS_DEM_Indexes 
+ - Path to a file vector study area Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ - Cluster number (integer 1-75): 102 
+ - Path to DEM folder: Data/DEMs/ 
+ - Path to Save folder: Data/TerrainProcessed/HUC_DEMs/ 
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:terra’:
+
+    intersect, union
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘tidyr’
+
+The following object is masked from ‘package:terra’:
+
+    extract
+
+[1] "The number of DEM indices: 85680"
+[1] "this is the total list of DEM raster files: 85048"
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040306.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040305.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040105.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040303.tif
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040103.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040506.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040104.tif
+DEM already exists at Data/TerrainProcessed/HUC_DEMs//cluster_102_huc_020200040301.tif
+[[1]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3525264 188.3    6216245 332.0  6216245 332.0
+Vcells 10129569  77.3   17543663 133.9 13592529 103.8
+
+[[2]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3525967 188.4    6216245 332.0  6216245 332.0
+Vcells 10131759  77.3   17543663 133.9 13592529 103.8
+
+[[3]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3526018 188.4    6216245 332.0  6216245 332.0
+Vcells 10132040  77.4   17543663 133.9 13592529 103.8
+
+[[4]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3526011 188.4    6216245 332.0  6216245 332.0
+Vcells 10131895  77.4   17543663 133.9 13592529 103.8
+
+[[5]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3525279 188.3    6216248 332.0  6216248 332.0
+Vcells 10129642  77.3   17543664 133.9 13594165 103.8
+
+[[6]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3526014 188.4    6216248 332.0  6216248 332.0
+Vcells 10132210  77.4   17543664 133.9 13594165 103.8
+
+[[7]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3525979 188.4    6216248 332.0  6216248 332.0
+Vcells 10131899  77.4   17543664 133.9 13594165 103.8
+
+[[8]]
+           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  3525982 188.4    6216248 332.0  6216248 332.0
+Vcells 10131854  77.3   17543664 133.9 13594165 103.8
+

@@ -1,0 +1,81 @@
+srun: Job 785071 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 785071 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 785071 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 785071 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 785071 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 785071 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 785071 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 785071
+these are the arguments: 
+- Path to cluster gpkg:Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg
+- Cluster:60
+- Imagery year:2024
+- Ortho tile index gpkg:Data/Ortho/ortho_tiles.gpkg
+- HUC DEM directory:Data/TerrainProcessed/HUC_DEMs
+- Output path:Data/Ortho/HUC_Ortho/
+- Target HUC12 (blank = all in cluster):
+
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+[1] "/ibstorage/anthony/NYS_Wetlands_GHG/tmp//RtmpMwZtHS"
+Ortho tile years available in index: 2020, 2021, 2022, 2023, 2024, 2025
+Ortho tiles overlapping cluster 60: 1456
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+Ortho already processed for: Data/Ortho/HUC_Ortho/cluster_60_huc_042900030504_ortho_2024.tif
+Ortho already processed for: Data/Ortho/HUC_Ortho/cluster_60_huc_042900030303_ortho_2024.tif
+Ortho already processed for: Data/Ortho/HUC_Ortho/cluster_60_huc_042900030304_ortho_2024.tif
+Ortho already processed for: Data/Ortho/HUC_Ortho/cluster_60_huc_042900030402_ortho_2024.tif
+Ortho already processed for: Data/Ortho/HUC_Ortho/cluster_60_huc_042900030502_ortho_2024.tif
+Ortho already processed for: Data/Ortho/HUC_Ortho/cluster_60_huc_042900030503_ortho_2024.tif
+Ortho already processed for: Data/Ortho/HUC_Ortho/cluster_60_huc_042900020102_ortho_2024.tif
+Ortho already processed for: Data/Ortho/HUC_Ortho/cluster_60_huc_042900030302_ortho_2024.tif
+Ortho already processed for: Data/Ortho/HUC_Ortho/cluster_60_huc_042900030501_ortho_2024.tif
+[[1]]
+NULL
+
+[[2]]
+NULL
+
+[[3]]
+NULL
+
+[[4]]
+NULL
+
+[[5]]
+NULL
+
+[[6]]
+NULL
+
+[[7]]
+NULL
+
+[[8]]
+NULL
+
+[[9]]
+NULL
+
+          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 2132708 113.9    3861050 206.3  2958575 158.1
+Vcells 3983350  30.4   16652216 127.1 14107735 107.7
