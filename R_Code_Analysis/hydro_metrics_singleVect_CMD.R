@@ -82,22 +82,37 @@ hydro_func <- function(huc_num){
     hc_fn_abs <- paste0("/ibstorage/anthony/NYS_Wetlands_Data/", hc_fn)
     
     if(!file.exists(hc_fn_abs)){
+        # WhiteboxTools' fill/breach panic with "Error unwrapping 'output'" on
+        # DEMs whose NoData is NaN -- DEM_Extract writes NaN-nodata GeoTIFFs, and
+        # WBT can't condition them (confirmed: the same DEM fills cleanly once the
+        # NoData is numeric). Feed WBT a -9999-nodata copy: terra reads NaN as NA
+        # and writes it back as -9999. Lazy NAflag check, so DEMs that already
+        # have a numeric NoData skip the rewrite. Temp copy lands in TMPDIR (terra
+        # tempdir) and is removed when hydro_func returns.
+        wbt_in <- dem_fn_abs
+        if(is.nan(terra::NAflag(terra::rast(dem_fn_abs)))){
+            wbt_in <- tempfile(fileext = ".tif")
+            terra::writeRaster(terra::rast(dem_fn_abs), wbt_in,
+                               NAflag = -9999, overwrite = TRUE)
+            on.exit(unlink(wbt_in), add = TRUE)
+        }
+
         message("Hydro-Conditioning (fill) for ", hc_fn_abs)
         wbt_fill_depressions(
-            dem = dem_fn_abs,
+            dem = wbt_in,
             output = hc_fn_abs
         )
         # wbt_* returns a status code instead of an R error, so a FillDepressions
-        # crash (the Rust panic on degenerate / mostly-NoData DEMs) leaves no
-        # output. Fall back to least-cost breaching, which is far more robust on
-        # those DEMs. fill = TRUE still fills any depressions breaching can't
-        # carve out, so the result is depressionless either way. dist (max breach
-        # channel length, in 1 m cells) is tunable if a HUC needs longer carves.
+        # crash (a Rust panic) leaves no output. Fall back to least-cost
+        # breaching, which is far more robust on tough DEMs. fill = TRUE still
+        # fills any depressions breaching can't carve out, so the result is
+        # depressionless either way. dist (max breach channel length, in 1 m
+        # cells) is tunable if a HUC needs longer carves.
         if(!file.exists(hc_fn_abs)){
             warning("FillDepressions produced no output for HUC ", huc_num,
                     " — retrying with BreachDepressionsLeastCost")
             wbt_breach_depressions_least_cost(
-                dem    = dem_fn_abs,
+                dem    = wbt_in,
                 output = hc_fn_abs,
                 dist   = 100,
                 fill   = TRUE
