@@ -44,8 +44,8 @@ extractNWI <- function(
 ) {
   # p_name <- str_remove(fieldVerifiedpatch, "^(.*?)cluster")
 
-  p_path <- paste0(wetlandSavePath, "NWI", fieldVerifiedpatch)
-
+  p_path <- paste0(wetlandSavePath, "NWI_", basename(fieldVerifiedpatch))
+  message("New file being created for: ", p_path)
   if (file.exists(p_path)) {
     message("File already exists")
     return(invisible(NULL))
@@ -115,6 +115,8 @@ extractNWI <- function(
     dplyr::select(MOD_CLASS)
 
   st_write(p_nwi_p, dsn = p_path)
+
+  message("Done writing file at: ", p_path)
 }
 
 ####################################################################################
