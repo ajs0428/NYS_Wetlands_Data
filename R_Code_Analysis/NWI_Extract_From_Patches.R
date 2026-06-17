@@ -44,6 +44,14 @@ extractNWI <- function(
   fieldVerifiedpatch
 ) {
   p_name <- str_remove(fieldVerifiedpatch, "^(.*?)cluster")
+
+  p_path <- paste0(savePath, "NWI", p_name)
+
+  if (file.exists(p_path)) {
+    message("File already exists")
+    return(invisible(NULL))
+  }
+
   p <- st_read(
     fieldVerifiedpatch
   )
@@ -106,4 +114,8 @@ extractNWI <- function(
 
 ####################################################################################
 
-lapply(list_of_field_verified, extractNWI)
+results <- lapply(
+  list_of_field_verified,
+  extractNWI,
+  savePath = wetlandSavePath
+)
