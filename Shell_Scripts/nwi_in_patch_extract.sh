@@ -6,16 +6,10 @@ export TMPDIR=/ibstorage/anthony/tmp
 
 module load R/4.4.3
 
-# Loop through each number in the list
-for number in "${include[@]}"; do
-    echo "Running Rscript with argument: $number"
-    srun --nodes=1 --ntasks=1 --exclusive \
-        Rscript R_Code_Analysis/Vector_ChipsPatches_DL.R \
-        "$number" \
-        "Data/Training_Data/HUC_NWI_Processed/" \
-        128 >> "Shell_Scripts/logs/vector_patch_${number}_$(date +%Y%m%d).log" 2>&1 &
-    
-done
+Rscript R_Code_Analysis/NWI_Extract_From_Patches.R \
+    "Data/NWI/NY_NWI_6347.gpkg" \
+    "Data/Training_Data/R_Patches_Vector_NWI/" \
+    "Data/Training_Data/R_Patches_Vector_Reviewed/" >> "Shell_Scripts/logs/nwi_patch_${number}_$(date +%Y%m%d).log" 2>&1 &
 
 wait
 echo "All Rscript executions completed."
