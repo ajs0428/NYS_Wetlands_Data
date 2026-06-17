@@ -114,7 +114,7 @@ extractNWI <- function(
     ) |>
     dplyr::select(MOD_CLASS)
 
-  st_write(p_nwi_p, dsn = paste0(wetlandSavePath, "NWI", p_path))
+  st_write(p_nwi_p, dsn = p_path)
 }
 
 ####################################################################################
