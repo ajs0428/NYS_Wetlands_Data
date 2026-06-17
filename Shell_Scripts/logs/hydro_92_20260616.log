@@ -235,3 +235,156 @@ NULL
           used (Mb) gc trigger  (Mb) max used  (Mb)
 Ncells 1499816 80.1    2790705 149.1  2154982 115.1
 Vcells 1988740 15.2    8388608  64.0  2851110  21.8
+these are the arguments: 
+ - Path to a file vector study area Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ - Cluster number (integer 1-200ish): 92 
+ - Path to the DEMs in TerrainProcessed folder Data/TerrainProcessed/HUC_DEMs/ 
+ - Path to save folder: Data/TerrainProcessed/HUC_Hydro/ 
+terra 1.9.27
+WARNING: different compile-time and run-time versions of GEOS
+Compiled with:3.11.0-CAPI-1.17.0
+ Running with:3.13.1-CAPI-1.19.2
+
+You should reinstall package 'terra'
+
+Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
+WARNING: different compile-time and runtime versions for GEOS found:
+Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
+It is probably a good idea to reinstall sf (and maybe lwgeom too)
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:terra’:
+
+    intersect, union
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘tidyr’
+
+The following object is masked from ‘package:terra’:
+
+    extract
+
+[1] "/ibstorage/anthony/NYS_Wetlands_GHG/tmp//RtmpLpOlu4"
+[1] "Data/TerrainProcessed/HUC_DEMs//cluster_92_huc_020200080305.tif"
+[2] "Data/TerrainProcessed/HUC_DEMs//cluster_92_huc_020200080306.tif"
+[3] "Data/TerrainProcessed/HUC_DEMs//cluster_92_huc_020200080406.tif"
+[4] "Data/TerrainProcessed/HUC_DEMs//cluster_92_huc_020200080501.tif"
+[5] "Data/TerrainProcessed/HUC_DEMs//cluster_92_huc_020200080502.tif"
+[6] "Data/TerrainProcessed/HUC_DEMs//cluster_92_huc_020200080503.tif"
+[1] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_92_huc_020200080305_wbt.tif"
+[2] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_92_huc_020200080306_wbt.tif"
+[3] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_92_huc_020200080406_wbt.tif"
+[4] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_92_huc_020200080501_wbt.tif"
+[5] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_92_huc_020200080502_wbt.tif"
+[6] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_92_huc_020200080503_wbt.tif"
+character(0)
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_92_huc_020200080305_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_92_huc_020200080306_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_92_huc_020200080406_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_92_huc_020200080501_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_92_huc_020200080502_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_92_huc_020200080503_wbt_TWI_Facc.tif
+[[1]]
+NULL
+
+[[2]]
+NULL
+
+[[3]]
+NULL
+
+[[4]]
+NULL
+
+[[5]]
+NULL
+
+[[6]]
+NULL
+
+          used (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 1499919 80.2    2791000 149.1  2154982 115.1
+Vcells 1988977 15.2    8388608  64.0  2851126  21.8
+srun: Job 785078 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 785078 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 785078 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 785078
+these are the arguments: 
+ - Path to a file vector study area Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg 
+ - Cluster number (integer 1-200ish): 92 
+ - Path to the DEMs in TerrainProcessed folder Data/TerrainProcessed/HUC_DEMs/ 
+ - Path to save folder: Data/TerrainProcessed/HUC_Hydro/ 
+terra 1.9.27
+Linking to GEOS 3.11.0, GDAL 3.5.2, PROJ 8.2.0; sf_use_s2() is TRUE
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:terra’:
+
+    intersect, union
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘tidyr’
+
+The following object is masked from ‘package:terra’:
+
+    extract
+
+[1] "/ibstorage/anthony/NYS_Wetlands_GHG/tmp//RtmpH6CpQo"
+[1] "Data/TerrainProcessed/HUC_DEMs//cluster_92_huc_020200080305.tif"
+[2] "Data/TerrainProcessed/HUC_DEMs//cluster_92_huc_020200080306.tif"
+[3] "Data/TerrainProcessed/HUC_DEMs//cluster_92_huc_020200080406.tif"
+[4] "Data/TerrainProcessed/HUC_DEMs//cluster_92_huc_020200080501.tif"
+[5] "Data/TerrainProcessed/HUC_DEMs//cluster_92_huc_020200080502.tif"
+[6] "Data/TerrainProcessed/HUC_DEMs//cluster_92_huc_020200080503.tif"
+[1] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_92_huc_020200080305_wbt.tif"
+[2] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_92_huc_020200080306_wbt.tif"
+[3] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_92_huc_020200080406_wbt.tif"
+[4] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_92_huc_020200080501_wbt.tif"
+[5] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_92_huc_020200080502_wbt.tif"
+[6] "Data/TerrainProcessed/HUC_DEM_Hydro//cluster_92_huc_020200080503_wbt.tif"
+character(0)
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_92_huc_020200080305_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_92_huc_020200080306_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_92_huc_020200080406_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_92_huc_020200080501_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_92_huc_020200080502_wbt_TWI_Facc.tif
+TWI and Flow Accum. already made: Data/TerrainProcessed/HUC_Hydro/cluster_92_huc_020200080503_wbt_TWI_Facc.tif
+[[1]]
+NULL
+
+[[2]]
+NULL
+
+[[3]]
+NULL
+
+[[4]]
+NULL
+
+[[5]]
+NULL
+
+[[6]]
+NULL
+
+          used (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 1502701 80.3    2798974 149.5  2155011 115.1
+Vcells 1992322 15.3    8388608  64.0  2829880  21.6

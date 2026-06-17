@@ -7,7 +7,7 @@
 ###################
 
 args = c("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
-         22,
+         105,
          "Data/TerrainProcessed/HUC_DEMs/",
          "Data/TerrainProcessed/HUC_Hydro/"
          )
