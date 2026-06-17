@@ -42,9 +42,9 @@ list_of_field_verified <- list.files(
 extractNWI <- function(
   fieldVerifiedpatch
 ) {
-  p_name <- str_remove(fieldVerifiedpatch, "^(.*?)cluster")
+  # p_name <- str_remove(fieldVerifiedpatch, "^(.*?)cluster")
 
-  p_path <- paste0(wetlandSavePath, "NWI", p_name)
+  p_path <- paste0(wetlandSavePath, "NWI", fieldVerifiedpatch)
 
   if (file.exists(p_path)) {
     message("File already exists")
@@ -114,7 +114,7 @@ extractNWI <- function(
     ) |>
     dplyr::select(MOD_CLASS)
 
-  st_write(p_nwi_p, dsn = paste0(wetlandSavePath, "NWI", p_name))
+  st_write(p_nwi_p, dsn = paste0(wetlandSavePath, "NWI", p_path))
 }
 
 ####################################################################################
