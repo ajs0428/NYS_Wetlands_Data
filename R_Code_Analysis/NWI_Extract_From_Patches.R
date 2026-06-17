@@ -40,12 +40,11 @@ list_of_field_verified <- list.files(
 ########################################################################################
 
 extractNWI <- function(
-  savePath = wetlandSavePath,
   fieldVerifiedpatch
 ) {
   p_name <- str_remove(fieldVerifiedpatch, "^(.*?)cluster")
 
-  p_path <- paste0(savePath, "NWI", p_name)
+  p_path <- paste0(wetlandSavePath, "NWI", p_name)
 
   if (file.exists(p_path)) {
     message("File already exists")
@@ -53,14 +52,20 @@ extractNWI <- function(
   }
 
   p <- st_read(
-    fieldVerifiedpatch
+    fieldVerifiedpatch,
+    quiet = TRUE
   )
 
   p_ext <- st_bbox(p) |> st_as_sfc()
   p_text <- st_as_text(p_ext)
   p_cmb <- st_union(p, by_feature = FALSE) # makes whole patch boxes no delineations
 
-  nwi <- st_read(NY_NWI, layer = "NY_Wetlands", wkt_filter = p_text) |>
+  nwi <- st_read(
+    NY_NWI,
+    layer = "NY_Wetlands",
+    wkt_filter = p_text,
+    quiet = TRUE
+  ) |>
     st_set_geometry("geom") |>
     filter(!str_detect(ATTRIBUTE, "R1|R3|R2|R4|R5")) |> # remove big rivers and small streams (unreliable)
     filter(!(str_detect(ATTRIBUTE, "L1") & as.numeric(st_area(geom)) > 2E5)) |> # remove big lakes
@@ -109,13 +114,12 @@ extractNWI <- function(
     ) |>
     dplyr::select(MOD_CLASS)
 
-  st_write(p_nwi_p, dsn = paste0(savePath, "NWI", p_name))
+  st_write(p_nwi_p, dsn = paste0(wetlandSavePath, "NWI", p_name))
 }
 
 ####################################################################################
 
-results <- lapply(
+lapply(
   list_of_field_verified,
-  extractNWI,
-  savePath = wetlandSavePath
+  extractNWI
 )
