@@ -106,5 +106,4 @@ extractNWI <- function(
 
 ####################################################################################
 
-test <- extractNWI(fieldVerifiedpatch = list_of_field_verified[1])
-test |> plot()
+lapply(list_of_field_verified, extractNWI)
