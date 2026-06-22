@@ -157,8 +157,12 @@ huc_minmax <- function(paths, skip = character()) {
 ##               patch edge does not produce NA borders
 ##   mask      : TRUE masks all bands to the DEM crop (chip parity with the old
 ##               crop(stack, vect, mask = TRUE)); FALSE keeps the full window
-build_huc_stack_patch <- function(paths, geom, buffer_px = 5, mask = TRUE) {
-  lyrs <- huc_layers(paths)
+build_huc_stack_patch <- function(paths, geom, buffer_px = 5, mask = TRUE, lyrs = NULL) {
+  # Callers cropping many patches from one HUC should build the lazy layers once
+  # (huc_layers()) and pass them in: huc_layers() re-opens all sources and forces
+  # log(flowacc) over the whole HUC, so rebuilding it per patch wastes IO and,
+  # under a memory-capped cgroup, accumulates full-HUC allocations -> OOM.
+  if (is.null(lyrs)) lyrs <- huc_layers(paths)
 
   # DEM crop defines the target grid for this patch.
   dem_crop <- crop(lyrs$dem, geom, touches = TRUE, mask = mask)

@@ -17,7 +17,7 @@ set.seed(11)
 ########################################################################################
 
 args <- c(
-    "Data/Training_Data/R_Patches_Vector_Reviewed/", #Path to GIS reviewed wetland vector patches
+    "Data/Training_Data/R_Patches_Vector_NWI/", #Path to GIS reviewed wetland vector patches
     128, # patch size 1/2
     12 # cluster subset options include number or NULL for any
 )
@@ -53,17 +53,23 @@ set.seed(420)
 rast_chip_patch_create <- function(wetland_file){
     setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
     source("R_Code_Analysis/huc_stack.R") # ensure recipe is available in callr workers
-    # Cap terra memory well below the per-task cgroup (mem-per-cpu * cpus-per-task,
-    # shared across callr workers). terra otherwise sizes off total node RAM, not
-    # the SLURM allocation, and the in-memory resample gets OOM-killed.
-    terraOptions(memmax = 20, memfrac = 0.4, tempdir = "Data/tmp")
+    # Cap terra + GDAL memory well below the per-task cgroup (TASK_MEM_MB =
+    # mem-per-cpu * cpus-per-task, exported by the .sh, shared across callr
+    # workers). terra and the GDAL block cache otherwise size off total node RAM
+    # (~251G), not the SLURM allocation, and the worker gets OOM-killed against
+    # the cgroup. GDAL_CACHEMAX is in MB; terra memmax is in GB.
+    task_mem_mb <- suppressWarnings(as.numeric(Sys.getenv("TASK_MEM_MB", "0")))
+    if (is.na(task_mem_mb) || task_mem_mb <= 0) task_mem_mb <- 20000  # interactive fallback
+    Sys.setenv(GDAL_CACHEMAX = as.character(round(task_mem_mb * 0.10)))  # ~10% of budget
+    terraOptions(memmax = max(2, (task_mem_mb / 1024) * 0.4),
+                 memfrac = 0.3, tempdir = "Data/tmp")
     ## Setup vars
     if (grepl("NWI", basename(wetland_file))) {
         sourceWetlands <- "NWI"
     } else if (grepl("NHP", basename(wetland_file))) {
         sourceWetlands <- "NHP"
     } else if (grepl("Laba", basename(wetland_file))) {
-        sourceWetlands <- "Laba"
+        sourceWetlands <- "Info"
     } else {
         sourceWetlands <- sub("_.*", "", tools::file_path_sans_ext(basename(wetland_file)))
     }
@@ -90,8 +96,16 @@ rast_chip_patch_create <- function(wetland_file){
     ### Union all the polygons then rejoin and separate as groups
         ### so that each patch of touching polygons is a separate
             ### object that can be used to crop the rasters
-    tw <- st_read(l_wet_cluster[grepl(huc_num, l_wet_cluster) & grepl(sourceWetlands, l_wet_cluster)], quiet = TRUE)
+    # Read exactly the file this iteration was handed. Re-globbing by huc_num +
+    # sourceWetlands returned >1 path when a HUC has multiple reviewed gpkgs
+    # (e.g. cluster_225 huc_042900050201), which st_read cannot take -> crash.
+    tw <- st_read(wetland_file, quiet = TRUE)
     tw_valid <- tw[st_is_valid(tw), ]
+    # Explode multi-part features to single polygons. NWI's UPL "background" is one
+    # MULTIPOLYGON whose parts are scattered across the whole HUC; left whole, the
+    # st_join below attaches it to every patch group, inflating each crop window to
+    # the entire HUC. (Reviewed patches were pre-clipped to 256 m so this never bit.)
+    tw_valid <- st_cast(st_cast(tw_valid, "MULTIPOLYGON"), "POLYGON")
     tw_valid$MOD_CLASS[tw_valid$MOD_CLASS == "OWW"] <- "UPL"
     if(any(grepl(pattern = "OWW", unique(tw_valid$MOD_CLASS)))){
       message("OWW Detected, exiting")
@@ -111,17 +125,30 @@ rast_chip_patch_create <- function(wetland_file){
         dplyr::group_split(group_id)
     
     #### Each patch should be a separate file that is patchsize*2 x patchsize*2
+    # Build the lazy source layers ONCE for this HUC and reuse them across every
+    # patch. build_huc_stack_patch() otherwise re-opens all 7 sources and
+    # recomputes log(flowacc) over the whole HUC per patch (18-31x on big HUCs),
+    # accumulating full-HUC allocations that OOM-kill under the per-task cgroup.
+    huc_lyrs <- if (length(tw_grouped_list) > 0) huc_layers(paths) else NULL
     for(i in seq_along(tw_grouped_list)){
         # message("The number is ", i)
         skip_to_next <- FALSE
         tw_vect <- vect(tw_grouped_list[[i]])
 
         tryCatch({
-          fn <- paste0("Data/Training_Data/R_Patches/", sourceWetlands,"_cluster_", cluster_num, "_huc_", huc_num, "_patch_", i, "_", patchsize*2, "m.tif" )
+          if(str_detect(patchPath, pattern = "R_Patches_Vector_NWI")){
+            # Label by the full source-file prefix (text before _cluster_) so a HUC
+            # with multiple reviewed gpkgs (e.g. NWI_ADK_WCT_AJS vs NWI_NWI_AJS for
+            # the same HUC) produces distinct, non-colliding output names.
+            file_tag <- sub("_cluster_.*$", "", tools::file_path_sans_ext(basename(wetland_file)))
+            fn <- paste0("Data/Training_Data/R_Patches_NWI/", file_tag,"_cluster_", cluster_num, "_huc_", huc_num, "_patch_", i, "_", patchsize*2, "m.tif" )
+          } else {
+            fn <- paste0("Data/Training_Data/R_Patches/", sourceWetlands,"_cluster_", cluster_num, "_huc_", huc_num, "_patch_", i, "_", patchsize*2, "m.tif" )
+          }
           
           if(!file.exists(fn)){
           # Build the predictor stack for just this patch window, in memory.
-          stack <- build_huc_stack_patch(paths, tw_vect)
+          stack <- build_huc_stack_patch(paths, tw_vect, lyrs = huc_lyrs)
           dem_crop <- stack[["DEM"]]
 
           tw_rast <- tw_vect  |>
@@ -144,8 +171,11 @@ rast_chip_patch_create <- function(wetland_file){
               )
               if(skip_to_next) { next }
           } else {
+                # This patch already exists -- skip ONLY this one and keep going.
+                # (Was return(invisible(NULL)), which exited the WHOLE HUC: on any
+                # resume of a partially-written HUC it stopped at patch_1 and
+                # dropped patches 2..N, truncating that HUC's output.)
                 message("Already file ", fn)
-                return(invisible(NULL))
               }
             },
         error = function(e) {
