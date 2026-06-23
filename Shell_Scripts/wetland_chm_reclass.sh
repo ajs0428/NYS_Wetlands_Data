@@ -2,8 +2,8 @@
 #SBATCH --nodelist=cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
-#SBATCH --mem-per-cpu=24G
-#SBATCH --cpus-per-task=4
+#SBATCH --mem-per-cpu=16G
+#SBATCH --cpus-per-task=5
 #SBATCH --job-name=wet_rcl
 #SBATCH --ntasks=2
 #SBATCH --output=Shell_Scripts/SLURM/slurm-nwi-rcl-%j.out

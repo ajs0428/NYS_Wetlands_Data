@@ -1,10 +1,11 @@
 ### NWI Reclassification based on CHM 
 
 library(terra)
-library(sf) 
+library(sf)
 library(tidyverse)
 library(stringr)
 library(tidyterra)
+library(exactextractr)
 library(future)
 library(future.apply)
 
@@ -14,7 +15,7 @@ set.seed(11)
 ########################################################################################
 
 args <- c(
-    12, #Target Cluster
+    92, #Target Cluster
     "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg", #Clusters and HUCs
     "Data/NWI/NY_NWI_6347.gpkg", # Wetlands
     "ATTRIBUTE" # Field for filtering and matching
@@ -56,11 +57,23 @@ print(huc_cluster)
 ########################################################################################
 
 # All wetlands from NWI and other sources??
-wetlands <- st_read(wetlandsSource, quiet = F, wkt_filter = hucs_bbox_wkt)
+# The NWI gpkg holds multiple layers; "NY_Wetlands" is the one carrying the ATTRIBUTE wetland-type
+# codes. Other sources (NHP/Laba/ADK) are single-layer, so only force the layer when it exists.
+src_layers <- sf::st_layers(wetlandsSource)$name
+if("NY_Wetlands" %in% src_layers){
+    wetlands <- st_read(wetlandsSource, layer = "NY_Wetlands", quiet = F, wkt_filter = hucs_bbox_wkt)
+} else {
+    wetlands <- st_read(wetlandsSource, quiet = F, wkt_filter = hucs_bbox_wkt)
+}
 
 if(st_crs(wetlands) != st_crs("EPSG:6347")){
     wetlands <- st_transform(wetlands, "EPSG:6347")
-    st_write(wetlands, paste0(str_remove(wetlandsSource, "\\..*"), "_6347", ".gpkg"), delete_layer = TRUE)
+    reproj_path <- paste0(str_remove(wetlandsSource, "\\..*"), "_6347", ".gpkg")
+    if(!file.exists(reproj_path)){
+        st_write(wetlands, reproj_path, delete_layer = TRUE)
+    } else {
+        print(paste0("Reprojected file already exists, skipping write: ", reproj_path))
+    }
 } else {
     print("No reprojection to EPSG:6347")
 }
@@ -100,19 +113,26 @@ wetland_chm_extract_classify <- function(huc_num){
     }
     tryCatch({
         r_chm <- rast(l_chm_cluster[str_detect(l_chm_cluster , huc_num)])
-        sf_wet <- wetlands_cluster |> 
-          dplyr::filter(huc12 == huc_num) |> 
-          dplyr::mutate(ID = paste0(ATTRIBUTE, "_", row_number())) 
-        v_wet <- sf_wet |> 
-          vect() |> 
-          terra::buffer(-10) #negative buffer to remove edge effects
+        sf_wet <- wetlands_cluster |>
+          dplyr::filter(huc12 == huc_num)
+        sf_wet_buff <- sf::st_buffer(sf_wet, -10) # negative buffer to remove edge effects
 
         filename <- paste0(saveFolder, suffix, "_cluster_", targetCluster, "_huc_", huc_num, ".gpkg")
-        
+
         if(!file.exists(filename)){
             message(paste0("Creating New Wetlands Reclass File: ", filename))
-            wet_chm <- terra::extract(r_chm, v_wet, "mean", bind = TRUE) |> 
-                tidyterra::mutate(
+            # coverage-weighted mean CHM per wetland in one streaming pass over the CHM (exactextractr).
+            # The negative buffer empties small polygons; exact_extract rejects empty geometries, so
+            # extract only the non-empty ones and leave the rest NA (-> "REVIEW", as the old extract did).
+            valid_buff <- !sf::st_is_empty(sf_wet_buff)
+            sf_wet$CHM <- NA_real_
+            if(any(valid_buff)){
+                sf_wet$CHM[valid_buff] <- exactextractr::exact_extract(
+                    r_chm, sf_wet_buff[valid_buff, ], "mean", progress = FALSE)
+            }
+
+            sf_wet_reclass <- sf_wet |>
+                dplyr::mutate(
                     MOD_CLASS = dplyr::case_when(
                         str_detect(.data[[reclassField]], "L1|L2|PUB|PUS|PAB|R2|R3") & !str_detect(.data[[reclassField]], "PFO|PEM|PSS") & CHM <= 1.0 ~ "OWW",
                         # str_detect(.data[[reclassField]], "L1|L2|PUB|PUS|PAB|R2|R3") & !str_detect(.data[[reclassField]], "PFO|PEM|PSS") & CHM > 1.0 & CHM <= 3.5 ~ "EMW",
@@ -133,23 +153,12 @@ wetland_chm_extract_classify <- function(huc_num){
                         str_detect(.data[[reclassField]], "PEM") & str_detect(.data[[reclassField]], "SS") & CHM <= 3.5 ~ "EMW",
                         str_detect(.data[[reclassField]], "PEM") & str_detect(.data[[reclassField]], "SS") & CHM > 3.5 & CHM <= 5.0 ~ "SSW",
                         .default = "REVIEW"
-                    ))
-            print(unique(wet_chm$MOD_CLASS))
-            
-            wet_chm_sf <- wet_chm |> 
-              st_as_sf() |> 
-              st_drop_geometry() |>   # drop buffered geometry entirely
-              dplyr::select(ID, MOD_CLASS)
-            
-            sf_wet_reclass <- sf_wet |> 
-              dplyr::left_join(wet_chm_sf, by = "ID") |> 
-              dplyr::select(MOD_CLASS) 
-            
+                    )) |>
+                dplyr::select(MOD_CLASS)
+
+            print(unique(sf_wet_reclass$MOD_CLASS))
+
             st_write(sf_wet_reclass, dsn = filename, append = FALSE)
-            # writeVector(sf_wet_reclass, filename = filename, overwrite = TRUE)
-            # rm(r_chm)
-            # rm(v_wet)
-            # rm(wet_chm)
             return(sf_wet_reclass)
         } else {
             message(paste0("NWI Reclass File Aleady Exists: ", filename))
@@ -178,7 +187,7 @@ plan(future.callr::callr, workers = corenum)
 system.time({future_lapply(huc_nums_cluster, 
                            wetland_chm_extract_classify, 
                            future.seed=TRUE,
-                           future.packages = c("terra", "sf", "tidyverse", "future", "future.lapply"),
+                           future.packages = c("terra", "sf", "tidyverse", "exactextractr", "future", "future.lapply"),
                            future.globals = TRUE)})
 
 # t <- lapply(huc_nums_cluster[1], wetland_chm_extract_classify)

@@ -93,36 +93,55 @@ rast_chip_patch_create <- function(wetland_file){
         return(invisible(NULL))
     }
 
-    ### Union all the polygons then rejoin and separate as groups
-        ### so that each patch of touching polygons is a separate
-            ### object that can be used to crop the rasters
+    ### Split the polygons into per-patch groups using the PatchGroup id that
+        ### Vector_ChipsPatches_DL.R stamps onto each 256 m square (and that
+        ### NWI_Extract_From_Patches.R propagates into the NWI patches). Grouping
+        ### by PatchGroup -- rather than re-deriving patches via st_union() ->
+        ### connected components -- keeps a given PatchGroup mapped to the SAME
+        ### geographic square in both the field-annotated and NWI runs, so the two
+        ### sets get shared _patch_<PatchGroup>_ filenames.
     # Read exactly the file this iteration was handed. Re-globbing by huc_num +
     # sourceWetlands returned >1 path when a HUC has multiple reviewed gpkgs
     # (e.g. cluster_225 huc_042900050201), which st_read cannot take -> crash.
     tw <- st_read(wetland_file, quiet = TRUE)
-    tw_valid <- tw[st_is_valid(tw), ]
+    # Repair invalid geometry rather than dropping it. Dropping (the old
+    # tw[st_is_valid(tw), ]) silently lost whole patches -- e.g. cluster_11 PG19
+    # (both polys invalid -> patch vanished) and cluster_22 PG14 (invalid UPL fill
+    # removed -> remaining slivers fell below the area filter). The NWI patches are
+    # rebuilt from clean st_intersection/st_difference geometry, so they kept these
+    # boxes, producing NWI rasters with no field-annotated counterpart. make_valid
+    # can emit GEOMETRYCOLLECTIONs (polygon + sliver line), so keep polygonal parts.
+    tw_valid <- st_make_valid(tw)
+    tw_valid <- suppressWarnings(st_collection_extract(tw_valid, "POLYGON"))
     # Explode multi-part features to single polygons. NWI's UPL "background" is one
-    # MULTIPOLYGON whose parts are scattered across the whole HUC; left whole, the
-    # st_join below attaches it to every patch group, inflating each crop window to
-    # the entire HUC. (Reviewed patches were pre-clipped to 256 m so this never bit.)
+    # MULTIPOLYGON whose parts are scattered across the whole HUC; grouping below
+    # is by PatchGroup so this no longer inflates crop windows, but exploding keeps
+    # the rasterize/area math per-polygon and matches prior behaviour.
     tw_valid <- st_cast(st_cast(tw_valid, "MULTIPOLYGON"), "POLYGON")
     tw_valid$MOD_CLASS[tw_valid$MOD_CLASS == "OWW"] <- "UPL"
     if(any(grepl(pattern = "OWW", unique(tw_valid$MOD_CLASS)))){
       message("OWW Detected, exiting")
       return(invisible(NULL))
       }
-    tw_union <- tw_valid |>
-        st_union() |>
-        st_cast("POLYGON") |>
-        st_as_sf() |>
-        mutate(group_id = row_number())
-    st_geometry(tw_union) <- "geom"
-    tw_union_area <- tw_union |>
-        mutate(area = as.numeric(st_area(geom))) |>
-        filter(area >= ((patchsize*2)**2)-0.5) #remove patches that are smaller than the 256*256 dimensions
-    tw_grouped_list <- tw_valid |> st_join(tw_union_area, left = FALSE) %>%
+    # Patches without PatchGroup (e.g. the skipped overlapping gps_jc HUCs) can't
+    # be split per-patch into shared-named outputs, so skip the whole file.
+    if(!"PatchGroup" %in% names(tw_valid)){
+        message("No PatchGroup column in ", basename(wetland_file), " - skipping")
+        return(invisible(NULL))
+    }
+    # Drop patches smaller than the full 256 m square (HUC-edge boxes clipped by
+    # the watershed boundary). The wetland + upland polygons partition each box, so
+    # their summed area equals the box area -- same threshold as before.
+    patch_area <- tw_valid |>
+        dplyr::mutate(.parea = as.numeric(st_area(tw_valid))) |>
+        sf::st_drop_geometry() |>
+        dplyr::group_by(PatchGroup) |>
+        dplyr::summarise(area = sum(.parea), .groups = "drop")
+    keep_groups <- patch_area$PatchGroup[patch_area$area >= ((patchsize*2)**2)-0.5]
+    tw_grouped_list <- tw_valid |>
+        dplyr::filter(PatchGroup %in% keep_groups) %>%
         dplyr::filter(st_is_valid(.)) |>
-        dplyr::group_split(group_id)
+        dplyr::group_split(PatchGroup)
     
     #### Each patch should be a separate file that is patchsize*2 x patchsize*2
     # Build the lazy source layers ONCE for this HUC and reuse them across every
@@ -134,16 +153,23 @@ rast_chip_patch_create <- function(wetland_file){
         # message("The number is ", i)
         skip_to_next <- FALSE
         tw_vect <- vect(tw_grouped_list[[i]])
+        # PatchGroup is constant within a group -- this is the shared per-patch id.
+        patch_group <- tw_grouped_list[[i]]$PatchGroup[1]
 
+        # Label by the full source-file prefix (text before _cluster_), used for
+        # BOTH outputs so names line up: the NWI vector file is named
+        # "NWI_<reviewed-basename>", so its file_tag is exactly "NWI_" + the
+        # reviewed file's file_tag. Combined with the shared patch_group this makes
+        # every NWI raster == "NWI_" + its field-annotated counterpart's name
+        # (and a source-NWI patch becomes NWI_NWI_*). Using the full prefix also
+        # keeps a HUC's multiple reviewed gpkgs (NWI_ADK_WCT_AJS vs NWI_NWI_AJS)
+        # from colliding.
+        file_tag <- sub("_cluster_.*$", "", tools::file_path_sans_ext(basename(wetland_file)))
         tryCatch({
           if(str_detect(patchPath, pattern = "R_Patches_Vector_NWI")){
-            # Label by the full source-file prefix (text before _cluster_) so a HUC
-            # with multiple reviewed gpkgs (e.g. NWI_ADK_WCT_AJS vs NWI_NWI_AJS for
-            # the same HUC) produces distinct, non-colliding output names.
-            file_tag <- sub("_cluster_.*$", "", tools::file_path_sans_ext(basename(wetland_file)))
-            fn <- paste0("Data/Training_Data/R_Patches_NWI/", file_tag,"_cluster_", cluster_num, "_huc_", huc_num, "_patch_", i, "_", patchsize*2, "m.tif" )
+            fn <- paste0("Data/Training_Data/R_Patches_NWI/", file_tag,"_cluster_", cluster_num, "_huc_", huc_num, "_patch_", patch_group, "_", patchsize*2, "m.tif" )
           } else {
-            fn <- paste0("Data/Training_Data/R_Patches/", sourceWetlands,"_cluster_", cluster_num, "_huc_", huc_num, "_patch_", i, "_", patchsize*2, "m.tif" )
+            fn <- paste0("Data/Training_Data/R_Patches/", file_tag,"_cluster_", cluster_num, "_huc_", huc_num, "_patch_", patch_group, "_", patchsize*2, "m.tif" )
           }
           
           if(!file.exists(fn)){

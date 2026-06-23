@@ -56,9 +56,31 @@ extractNWI <- function(
     quiet = TRUE
   )
 
-  p_ext <- st_bbox(p) |> st_as_sfc()
-  p_text <- st_as_text(p_ext)
-  p_cmb <- st_union(p, by_feature = FALSE) # makes whole patch boxes no delineations
+  # PatchGroup is the per-patch id we propagate into the NWI patches so they line
+  # up 1:1 with the field-verified patches. Source patches without it (e.g. the
+  # skipped overlapping gps_jc HUCs) can't be split per-patch, so skip them.
+  if (!"PatchGroup" %in% names(p)) {
+    message("No PatchGroup column in ", basename(fieldVerifiedpatch), " - skipping")
+    return(invisible(NULL))
+  }
+  p <- sf::st_set_geometry(p, "geom")
+
+  # One square box per patch. summarise() unions the polygons within each
+  # PatchGroup back into its 256 m box. The metadata columns are reset to the
+  # original-creation defaults rather than copied from the source patch -- these
+  # are NWI-derived delineations and must not inherit the field-review provenance.
+  p_boxes <- p |>
+    dplyr::group_by(PatchGroup) |>
+    dplyr::summarise(.groups = "drop") |>
+    sf::st_set_geometry("geom") |>
+    dplyr::mutate(
+      ReviewerName      = "TBD",
+      Confidence        = -999,
+      BoundariesAltered = NA,
+      Comments          = "NoComment"
+    )
+
+  p_text <- st_bbox(p) |> st_as_sfc() |> st_as_text()
 
   nwi <- st_read(
     NY_NWI,
@@ -71,18 +93,26 @@ extractNWI <- function(
     filter(!(str_detect(ATTRIBUTE, "L1") & as.numeric(st_area(geom)) > 2E5)) |> # remove big lakes
     filter(!str_detect(WETLAND_TYPE, "Marine|Estuarine|Other")) # remove marine/estuarine
 
-  p_ext_nwi <- st_intersection(nwi, p_ext)
+  # Clip NWI to each patch box; PatchGroup + metadata come from p_boxes.
+  if (nrow(nwi) > 0) {
+    p_nwi <- st_intersection(p_boxes, nwi) |>
+      st_collection_extract("POLYGON") |>
+      sf::st_set_geometry("geom") |>
+      dplyr::select(
+        PatchGroup, ReviewerName, Confidence, BoundariesAltered,
+        Comments, ATTRIBUTE, WETLAND_TYPE
+      )
+    p_out_nwi <- st_difference(p_boxes, st_union(st_geometry(nwi)))
+  } else {
+    p_nwi <- NULL
+    p_out_nwi <- p_boxes
+  }
 
-  p_nwi <- st_intersection(p_ext_nwi, p_cmb) |>
-    st_sf() |>
-    dplyr::select(ATTRIBUTE, WETLAND_TYPE) |>
-    sf::st_set_geometry("geom")
-
-  p_out_nwi <- st_difference(p_cmb, st_union(p_ext_nwi)) |>
-    st_sf() |>
-    st_set_geometry("geom") |>
-    mutate(ATTRIBUTE = "UPL", WETLAND_TYPE = "UPL") |>
-    select(ATTRIBUTE, WETLAND_TYPE, everything())
+  # Upland = each box minus the wetlands; metadata + PatchGroup carried from boxes.
+  p_out_nwi <- p_out_nwi |>
+    st_collection_extract("POLYGON") |>
+    sf::st_set_geometry("geom") |>
+    mutate(ATTRIBUTE = "UPL", WETLAND_TYPE = "UPL")
 
   p_nwi_p <- bind_rows(p_nwi, p_out_nwi) |>
     mutate(
@@ -112,7 +142,10 @@ extractNWI <- function(
         .default = "Other"
       ),
     ) |>
-    dplyr::select(MOD_CLASS)
+    st_cast(to = "MULTIPOLYGON") |>
+    dplyr::select(
+      ReviewerName, Confidence, BoundariesAltered, Comments, MOD_CLASS, PatchGroup
+    )
 
   st_write(p_nwi_p, dsn = p_path)
 

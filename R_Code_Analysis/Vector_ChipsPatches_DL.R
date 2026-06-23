@@ -16,7 +16,7 @@ set.seed(11)
 ########################################################################################
 
 args <- c(
-    12,# Cluster
+    92,# Cluster
     "Data/Training_Data/HUC_NWI_Processed/", #Path to wetland polygons
     128 # Patch size radius
 )
@@ -115,21 +115,25 @@ vect_chip_patch_create <- function(wetland_file){
     
     tw_bl_c_cmbbuff <- st_buffer(tw_bl_c_cmb, dist = patchSize, endCapStyle = "SQUARE")
     st_geometry(tw_bl_c_cmbbuff) <- "geom"
-    #tw = target wetlands, bl = boundary line, c = centroid, cmbbuff = combined buffer, o = overlap
+    
     tw_bl_c_cmbbuff_o <- tw_bl_c_cmbbuff[rowSums(st_overlaps(tw_bl_c_cmbbuff, sparse = F)) == 0, ] |> 
         dplyr::mutate("MOD_CLASS" = "UPL")
     tw_bl_c_cmbbuff_o <- tw_bl_c_cmbbuff_o[st_intersects(tw_bl_c_cmbbuff_o, huc_poly_ls, sparse = F) == 0, ]
-    tw_intersection <- st_intersection(target_wetlands_uplands, tw_bl_c_cmbbuff_o) |> 
-        dplyr::select(MOD_CLASS, geom)
-    tu_intersection <- st_difference(tw_bl_c_cmbbuff_o, st_union(target_wetlands_uplands)) |> 
-        dplyr::select(MOD_CLASS, geom)
+    # Stamp an integer patch identifier onto each 256 m box (one row = one patch)
+    # so every polygon split out of the box below inherits the same PatchGroup.
+    # Assigned after the huc filter above so IDs stay contiguous 1..n.
+    tw_bl_c_cmbbuff_o <- tw_bl_c_cmbbuff_o |> dplyr::mutate(PatchGroup = dplyr::row_number())
+    tw_intersection <- st_intersection(target_wetlands_uplands, tw_bl_c_cmbbuff_o) |>
+        dplyr::select(MOD_CLASS, PatchGroup, geom)
+    tu_intersection <- st_difference(tw_bl_c_cmbbuff_o, st_union(target_wetlands_uplands)) |>
+        dplyr::select(MOD_CLASS, PatchGroup, geom)
     cmb_tutw <- bind_rows(tw_intersection, tu_intersection) |>
                 mutate(ReviewerName = "TBD",
                        Confidence = -999,
                        BoundariesAltered = NA,
                        Comments = "NoComment") |>
                     st_cast(to = "MULTIPOLYGON") |>
-                dplyr::select(ReviewerName, Confidence, BoundariesAltered, Comments, MOD_CLASS)
+                dplyr::select(ReviewerName, Confidence, BoundariesAltered, Comments, MOD_CLASS, PatchGroup)
     
     fn_full_patch <- paste0("Data/Training_Data/R_Patches_Vector/", sourceWetlands,"_cluster_", clusterTarget, "_huc_", huc_num, "_", patchSize*2, "m.gpkg" )
     if(!file.exists(fn_full_patch)){

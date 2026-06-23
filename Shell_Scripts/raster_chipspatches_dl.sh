@@ -1,11 +1,11 @@
 #!/bin/bash -l
-#SBATCH --nodelist=cbsuxu05,cbsuxu06,cbsuxu07,cbsuxu08,cbsuxu09,cbsuxu10
+#SBATCH --nodelist=cbsuxu01,cbsuxu02,cbsuxu03,cbsuxu04,cbsuxu05,cbsuxu06,cbsuxu07,cbsuxu08,cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
 #SBATCH --mem-per-cpu=48G
 #SBATCH --cpus-per-task=1
 #SBATCH --job-name=patch
-#SBATCH --ntasks=6
+#SBATCH --ntasks=10
 #SBATCH --ntasks-per-node=1
 #SBATCH --output=Shell_Scripts/SLURM/slurm-patch-%j.out
 
@@ -40,7 +40,7 @@ export TASK_MEM_MB=$(( ${SLURM_MEM_PER_CPU:-0} * ${SLURM_CPUS_PER_TASK:-1} ))
 unset SLURM_MEM_PER_CPU SLURM_MEM_PER_NODE SLURM_MEM_PER_GPU
 
 source Shell_Scripts/batch_config.sh
-include=("${batch2[@]}")
+include=("${batch1[@]}")
 echo "${include[@]}"
 # Loop through each number in the list
 for number in "${include[@]}"; do
