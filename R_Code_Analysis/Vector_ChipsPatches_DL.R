@@ -16,7 +16,7 @@ set.seed(11)
 ########################################################################################
 
 args <- c(
-    92,# Cluster
+    86,# Cluster
     "Data/Training_Data/HUC_NWI_Processed/", #Path to wetland polygons
     128 # Patch size radius
 )

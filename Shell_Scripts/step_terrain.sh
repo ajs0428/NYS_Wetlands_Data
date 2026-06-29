@@ -1,12 +1,12 @@
 #!/bin/bash -l
-#SBATCH --nodelist=cbsuxu06,cbsuxu07,cbsuxu08,cbsuxu09,cbsuxu10
+#SBATCH --partition=R256C128
+#SBATCH --nodelist=cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
 #SBATCH --job-name=terrain
 #SBATCH --mem-per-cpu=96G
-#SBATCH --ntasks=5
+#SBATCH --ntasks=4
 #SBATCH --cpus-per-task=1
-#SBATCH --ntasks-per-node=1
 #SBATCH --output=Shell_Scripts/SLURM/slurm-terrain-%j.out
 
 # Usage: sbatch [--mem-per-cpu=X --cpus-per-task=Y] step_terrain.sh <include_csv> <metric>

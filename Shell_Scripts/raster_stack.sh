@@ -1,4 +1,5 @@
 #!/bin/bash -l
+#SBATCH --partition=R256C128
 #SBATCH --nodelist=cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
@@ -6,7 +7,6 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --job-name=stack
 #SBATCH --ntasks=2
-#SBATCH --ntasks-per-node=1
 #SBATCH --output=Shell_Scripts/SLURM/slurm-stack-%j.out
 
 

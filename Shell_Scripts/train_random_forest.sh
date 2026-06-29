@@ -1,4 +1,5 @@
 #!/bin/bash -l
+#SBATCH --partition=R256C128
 #SBATCH --nodelist=cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL

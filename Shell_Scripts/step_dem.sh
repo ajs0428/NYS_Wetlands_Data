@@ -1,12 +1,12 @@
 #!/bin/bash -l
-#SBATCH --nodelist=cbsuxu04,cbsuxu05,cbsuxu06,cbsuxu07,cbsuxu08,cbsuxu09,cbsuxu10
+#SBATCH --partition=R256C128
+#SBATCH --nodelist=cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
 #SBATCH --mem-per-cpu=32G
 #SBATCH --cpus-per-task=2
 #SBATCH --job-name=dem_processing
-#SBATCH --ntasks=7
-#SBATCH --ntasks-per-node=1
+#SBATCH --ntasks=6
 #SBATCH --output=Shell_Scripts/SLURM/slurm-dems-%j.out
 
 cd /ibstorage/anthony/NYS_Wetlands_Data/

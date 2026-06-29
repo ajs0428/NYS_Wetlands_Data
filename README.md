@@ -89,6 +89,10 @@ ortho_dl ───── ortho_index ──── ortho_huc
 Shared settings (cluster gpkg, ORTHO_YEAR, batch definitions) live in
 `Shell_Scripts/batch_config.sh`.
 
+All stages run in the **`R256C128` partition** (nodes `cbsuxu09`–`cbsuxu10`, 128 CPU /
+~256 GB each); each `step_*.sh` pins `--partition=R256C128 --nodelist=cbsuxu09,cbsuxu10`.
+A SLURM job can't span partitions, so don't mix in `R128C40` (`cbsuxu01`–`08`) nodes.
+
 ### Checklist
 
 1. Make sure the HUC12 watershed file is appropriate
