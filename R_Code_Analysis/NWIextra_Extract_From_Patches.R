@@ -25,20 +25,25 @@ NY_NWI <- args[1]
 wetlandSavePath <- args[2]
 fieldVerified <- args[3]
 
-### Extract NWI from existing patches
+### Goal: determine number of field/GIS verified patches, then double that number for making NWI patches in the same HUC12 watershed
 
 library(sf)
 library(dplyr)
 library(tidyr)
 library(stringr)
 
+#### List of field/GIS verified patch vector files. 
+  # Each one has a varying number of 256x256m patches in it
 list_of_field_verified <- list.files(
   fieldVerified,
   pattern = ".gpkg",
   full.names = TRUE
 )
+
+
 ########################################################################################
 
+#### Old function that extracts NWI patches from the same location as the current field/GIS verified patches
 extractNWI <- function(
   fieldVerifiedpatch
 ) {
