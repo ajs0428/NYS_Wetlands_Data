@@ -6,7 +6,7 @@ args <- c(
   "Data/Training_Data/R_Patches_Vector_Reviewed/"
 )
 
-args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
+args <- commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
 
 message(
   "these are the arguments: \n",
@@ -60,7 +60,11 @@ extractNWI <- function(
   # up 1:1 with the field-verified patches. Source patches without it (e.g. the
   # skipped overlapping gps_jc HUCs) can't be split per-patch, so skip them.
   if (!"PatchGroup" %in% names(p)) {
-    message("No PatchGroup column in ", basename(fieldVerifiedpatch), " - skipping")
+    message(
+      "No PatchGroup column in ",
+      basename(fieldVerifiedpatch),
+      " - skipping"
+    )
     return(invisible(NULL))
   }
   p <- sf::st_set_geometry(p, "geom")
@@ -74,10 +78,10 @@ extractNWI <- function(
     dplyr::summarise(.groups = "drop") |>
     sf::st_set_geometry("geom") |>
     dplyr::mutate(
-      ReviewerName      = "TBD",
-      Confidence        = -999,
+      ReviewerName = "TBD",
+      Confidence = -999,
       BoundariesAltered = NA,
-      Comments          = "NoComment"
+      Comments = "NoComment"
     )
 
   p_text <- st_bbox(p) |> st_as_sfc() |> st_as_text()
@@ -99,8 +103,13 @@ extractNWI <- function(
       st_collection_extract("POLYGON") |>
       sf::st_set_geometry("geom") |>
       dplyr::select(
-        PatchGroup, ReviewerName, Confidence, BoundariesAltered,
-        Comments, ATTRIBUTE, WETLAND_TYPE
+        PatchGroup,
+        ReviewerName,
+        Confidence,
+        BoundariesAltered,
+        Comments,
+        ATTRIBUTE,
+        WETLAND_TYPE
       )
     p_out_nwi <- st_difference(p_boxes, st_union(st_geometry(nwi)))
   } else {
@@ -144,7 +153,12 @@ extractNWI <- function(
     ) |>
     st_cast(to = "MULTIPOLYGON") |>
     dplyr::select(
-      ReviewerName, Confidence, BoundariesAltered, Comments, MOD_CLASS, PatchGroup
+      ReviewerName,
+      Confidence,
+      BoundariesAltered,
+      Comments,
+      MOD_CLASS,
+      PatchGroup
     )
 
   st_write(p_nwi_p, dsn = p_path)
