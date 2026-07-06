@@ -1,7 +1,7 @@
-### Image chips/patches for DL  
+### Image chips/patches for DL
 
 library(terra)
-library(sf) 
+library(sf)
 library(dplyr)
 library(tidyr)
 library(stringr)
@@ -17,27 +17,34 @@ set.seed(11)
 ########################################################################################
 
 args <- c(
-    "Data/Training_Data/R_Patches_Vector_NWI/", #Path to GIS reviewed wetland vector patches
+    "Data/Training_Data/R_Patches_Vector_NWIextra/", #Path to GIS reviewed wetland vector patches
     128, # patch size 1/2
-    12 # cluster subset options include number or NULL for any
+    11 # cluster subset options include number or NULL for any
 )
 
-args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
+args <- commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
 
 patchPath <- args[1]
 patchSize <- args[2]
 clusterSubset <- args[3]
 
-message("these are the arguments: \n", 
-    "1) path the reviewed training data :", patchPath, "\n",
-    "2) patch size :", patchSize, "\n",
-    "3) cluster number :", clusterSubset, "\n"
+message(
+    "these are the arguments: \n",
+    "1) path the reviewed training data :",
+    patchPath,
+    "\n",
+    "2) patch size :",
+    patchSize,
+    "\n",
+    "3) cluster number :",
+    clusterSubset,
+    "\n"
 )
 
 
 setGDALconfig("GDAL_PAM_ENABLED", "FALSE") # does not create aux.xml files but maybe needed
 ########################################################################################
-l_wet <- list.files(patchPath, pattern = ".gpkg$", full.names = TRUE) 
+l_wet <- list.files(patchPath, pattern = ".gpkg$", full.names = TRUE)
 l_wet_cluster_nums <- sub(".*cluster_(\\d+).*", "\\1", l_wet) |> unique()
 l_wet_extracted_clusters <- sub(".*cluster_(\\d+)_.*", "\\1", l_wet)
 l_wet_cluster <- l_wet[grepl(paste0("cluster_", clusterSubset, "_"), l_wet)]
@@ -46,11 +53,11 @@ print(l_wet_cluster)
 ########################################################################################
 # fct_df <- data.frame(ID = 0:4, MOD_CLASS = c("EMW", "FSW", "OWW", "SSW", "UPL"))
 fct_df <- data.frame(ID = 0:3, MOD_CLASS = c("EMW", "FSW", "SSW", "UPL"))
-patchsize = as.numeric(patchSize)
+patchsize <- as.numeric(patchSize)
 ########################################################################################
 set.seed(420)
 
-rast_chip_patch_create <- function(wetland_file){
+rast_chip_patch_create <- function(wetland_file) {
     setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
     source("R_Code_Analysis/huc_stack.R") # ensure recipe is available in callr workers
     # Cap terra + GDAL memory well below the per-task cgroup (TASK_MEM_MB =
@@ -59,10 +66,15 @@ rast_chip_patch_create <- function(wetland_file){
     # (~251G), not the SLURM allocation, and the worker gets OOM-killed against
     # the cgroup. GDAL_CACHEMAX is in MB; terra memmax is in GB.
     task_mem_mb <- suppressWarnings(as.numeric(Sys.getenv("TASK_MEM_MB", "0")))
-    if (is.na(task_mem_mb) || task_mem_mb <= 0) task_mem_mb <- 20000  # interactive fallback
-    Sys.setenv(GDAL_CACHEMAX = as.character(round(task_mem_mb * 0.10)))  # ~10% of budget
-    terraOptions(memmax = max(2, (task_mem_mb / 1024) * 0.4),
-                 memfrac = 0.3, tempdir = "Data/tmp")
+    if (is.na(task_mem_mb) || task_mem_mb <= 0) {
+        task_mem_mb <- 20000
+    } # interactive fallback
+    Sys.setenv(GDAL_CACHEMAX = as.character(round(task_mem_mb * 0.10))) # ~10% of budget
+    terraOptions(
+        memmax = max(2, (task_mem_mb / 1024) * 0.4),
+        memfrac = 0.3,
+        tempdir = "Data/tmp"
+    )
     ## Setup vars
     if (grepl("NWI", basename(wetland_file))) {
         sourceWetlands <- "NWI"
@@ -71,35 +83,43 @@ rast_chip_patch_create <- function(wetland_file){
     } else if (grepl("Laba", basename(wetland_file))) {
         sourceWetlands <- "Info"
     } else {
-        sourceWetlands <- sub("_.*", "", tools::file_path_sans_ext(basename(wetland_file)))
+        sourceWetlands <- sub(
+            "_.*",
+            "",
+            tools::file_path_sans_ext(basename(wetland_file))
+        )
     }
-    patchsize = as.numeric(patchSize)
+    patchsize <- as.numeric(patchSize)
     huc_num <- str_extract(wetland_file, "(?<=huc_)\\d+")
     cluster_num <- str_extract(wetland_file, "(?<=cluster_)\\d+")
     message("HUC num: ", huc_num)
-    if(cluster_num != clusterSubset & !is.null(clusterSubset)){
+    if (cluster_num != clusterSubset & !is.null(clusterSubset)) {
         message("skip this cluster and huc, selecting cluster: ", clusterSubset)
         return(invisible(NULL))
-    } else if(cluster_num != clusterSubset & is.null(clusterSubset)) {
+    } else if (cluster_num != clusterSubset & is.null(clusterSubset)) {
         message("Processing for all clusters in folder")
     }
-    
+
     ## Resolve the per-HUC source rasters (lazy pointers). The stack is built
     ## in memory per patch below via build_huc_stack_patch() -- no *_stack.tif
     ## is read or written, so source rasters are never duplicated on disk.
     paths <- huc_source_paths(huc_num, cluster_num)
     if (!huc_sources_ready(paths, huc_num)) {
-        message("Skipping HUC ", huc_num, ": one or more source datasets missing")
+        message(
+            "Skipping HUC ",
+            huc_num,
+            ": one or more source datasets missing"
+        )
         return(invisible(NULL))
     }
 
     ### Split the polygons into per-patch groups using the PatchGroup id that
-        ### Vector_ChipsPatches_DL.R stamps onto each 256 m square (and that
-        ### NWI_Extract_From_Patches.R propagates into the NWI patches). Grouping
-        ### by PatchGroup -- rather than re-deriving patches via st_union() ->
-        ### connected components -- keeps a given PatchGroup mapped to the SAME
-        ### geographic square in both the field-annotated and NWI runs, so the two
-        ### sets get shared _patch_<PatchGroup>_ filenames.
+    ### Vector_ChipsPatches_DL.R stamps onto each 256 m square (and that
+    ### NWI_Extract_From_Patches.R propagates into the NWI patches). Grouping
+    ### by PatchGroup -- rather than re-deriving patches via st_union() ->
+    ### connected components -- keeps a given PatchGroup mapped to the SAME
+    ### geographic square in both the field-annotated and NWI runs, so the two
+    ### sets get shared _patch_<PatchGroup>_ filenames.
     # Read exactly the file this iteration was handed. Re-globbing by huc_num +
     # sourceWetlands returned >1 path when a HUC has multiple reviewed gpkgs
     # (e.g. cluster_225 huc_042900050201), which st_read cannot take -> crash.
@@ -119,14 +139,18 @@ rast_chip_patch_create <- function(wetland_file){
     # the rasterize/area math per-polygon and matches prior behaviour.
     tw_valid <- st_cast(st_cast(tw_valid, "MULTIPOLYGON"), "POLYGON")
     tw_valid$MOD_CLASS[tw_valid$MOD_CLASS == "OWW"] <- "UPL"
-    if(any(grepl(pattern = "OWW", unique(tw_valid$MOD_CLASS)))){
-      message("OWW Detected, exiting")
-      return(invisible(NULL))
-      }
+    if (any(grepl(pattern = "OWW", unique(tw_valid$MOD_CLASS)))) {
+        message("OWW Detected, exiting")
+        return(invisible(NULL))
+    }
     # Patches without PatchGroup (e.g. the skipped overlapping gps_jc HUCs) can't
     # be split per-patch into shared-named outputs, so skip the whole file.
-    if(!"PatchGroup" %in% names(tw_valid)){
-        message("No PatchGroup column in ", basename(wetland_file), " - skipping")
+    if (!"PatchGroup" %in% names(tw_valid)) {
+        message(
+            "No PatchGroup column in ",
+            basename(wetland_file),
+            " - skipping"
+        )
         return(invisible(NULL))
     }
     # Drop patches smaller than the full 256 m square (HUC-edge boxes clipped by
@@ -137,19 +161,21 @@ rast_chip_patch_create <- function(wetland_file){
         sf::st_drop_geometry() |>
         dplyr::group_by(PatchGroup) |>
         dplyr::summarise(area = sum(.parea), .groups = "drop")
-    keep_groups <- patch_area$PatchGroup[patch_area$area >= ((patchsize*2)**2)-0.5]
+    keep_groups <- patch_area$PatchGroup[
+        patch_area$area >= ((patchsize * 2)**2) - 0.5
+    ]
     tw_grouped_list <- tw_valid |>
         dplyr::filter(PatchGroup %in% keep_groups) %>%
         dplyr::filter(st_is_valid(.)) |>
         dplyr::group_split(PatchGroup)
-    
+
     #### Each patch should be a separate file that is patchsize*2 x patchsize*2
     # Build the lazy source layers ONCE for this HUC and reuse them across every
     # patch. build_huc_stack_patch() otherwise re-opens all 7 sources and
     # recomputes log(flowacc) over the whole HUC per patch (18-31x on big HUCs),
     # accumulating full-HUC allocations that OOM-kill under the per-task cgroup.
     huc_lyrs <- if (length(tw_grouped_list) > 0) huc_layers(paths) else NULL
-    for(i in seq_along(tw_grouped_list)){
+    for (i in seq_along(tw_grouped_list)) {
         # message("The number is ", i)
         skip_to_next <- FALSE
         tw_vect <- vect(tw_grouped_list[[i]])
@@ -164,116 +190,187 @@ rast_chip_patch_create <- function(wetland_file){
         # (and a source-NWI patch becomes NWI_NWI_*). Using the full prefix also
         # keeps a HUC's multiple reviewed gpkgs (NWI_ADK_WCT_AJS vs NWI_NWI_AJS)
         # from colliding.
-        file_tag <- sub("_cluster_.*$", "", tools::file_path_sans_ext(basename(wetland_file)))
-        tryCatch({
-          if(str_detect(patchPath, pattern = "R_Patches_Vector_NWI")){
-            fn <- paste0("Data/Training_Data/R_Patches_NWI/", file_tag,"_cluster_", cluster_num, "_huc_", huc_num, "_patch_", patch_group, "_", patchsize*2, "m.tif" )
-          } else {
-            fn <- paste0("Data/Training_Data/R_Patches/", file_tag,"_cluster_", cluster_num, "_huc_", huc_num, "_patch_", patch_group, "_", patchsize*2, "m.tif" )
-          }
-          
-          if(!file.exists(fn)){
-          # Build the predictor stack for just this patch window, in memory.
-          stack <- build_huc_stack_patch(paths, tw_vect, lyrs = huc_lyrs)
-          dem_crop <- stack[["DEM"]]
+        file_tag <- sub(
+            "_cluster_.*$",
+            "",
+            tools::file_path_sans_ext(basename(wetland_file))
+        )
+        tryCatch(
+            {
+                if (
+                    str_detect(
+                        patchPath,
+                        pattern = "R_Patches_Vector_NWIextra/?$"
+                    )
+                ) {
+                    fn <- paste0(
+                        "Data/Training_Data/R_Patches_NWIextra/",
+                        file_tag,
+                        "_cluster_",
+                        cluster_num,
+                        "_huc_",
+                        huc_num,
+                        "_patch_",
+                        patch_group,
+                        "_",
+                        patchsize * 2,
+                        "m.tif"
+                    )
+                } else if (
+                    str_detect(patchPath, pattern = "R_Patches_Vector_NWI/?$")
+                ) {
+                    fn <- paste0(
+                        "Data/Training_Data/R_Patches_NWI/",
+                        file_tag,
+                        "_cluster_",
+                        cluster_num,
+                        "_huc_",
+                        huc_num,
+                        "_patch_",
+                        patch_group,
+                        "_",
+                        patchsize * 2,
+                        "m.tif"
+                    )
+                } else {
+                    fn <- paste0(
+                        "Data/Training_Data/R_Patches/",
+                        file_tag,
+                        "_cluster_",
+                        cluster_num,
+                        "_huc_",
+                        huc_num,
+                        "_patch_",
+                        patch_group,
+                        "_",
+                        patchsize * 2,
+                        "m.tif"
+                    )
+                }
 
-          tw_rast <- tw_vect  |>
-              terra::rasterize(y = dem_crop, field = "MOD_CLASS", touches = TRUE)
-          tw_rast_lc <- levels(tw_rast)[[1]][[2]] #character vector of levels present
-          tw_rast_ln <- levels(tw_rast)[[1]][[1]] #numbers/integers of levels present
-          fct_n <- fct_df[fct_df$MOD_CLASS %in% tw_rast_lc, ][,1] # subset the levels present from the full factor dataframe
-          tw_rast_sub <- subst(tw_rast, from = tw_rast_ln, to = fct_n, raw = TRUE)
-          levels(tw_rast_sub) <- fct_df
+                if (!file.exists(fn)) {
+                    # Build the predictor stack for just this patch window, in memory.
+                    stack <- build_huc_stack_patch(
+                        paths,
+                        tw_vect,
+                        lyrs = huc_lyrs
+                    )
+                    dem_crop <- stack[["DEM"]]
 
-          # fn_labels <- paste0("Data/Training_Data/R_Patches_Labels/", "labels_only_", sourceWetlands, "_cluster_", cluster_num, "_huc_", huc_num, "_patch_", i, "_", patchsize*2, "m.tif" )
+                    tw_rast <- tw_vect |>
+                        terra::rasterize(
+                            y = dem_crop,
+                            field = "MOD_CLASS",
+                            touches = TRUE
+                        )
+                    tw_rast_lc <- levels(tw_rast)[[1]][[2]] #character vector of levels present
+                    tw_rast_ln <- levels(tw_rast)[[1]][[1]] #numbers/integers of levels present
+                    fct_n <- fct_df[fct_df$MOD_CLASS %in% tw_rast_lc, ][, 1] # subset the levels present from the full factor dataframe
+                    tw_rast_sub <- subst(
+                        tw_rast,
+                        from = tw_rast_ln,
+                        to = fct_n,
+                        raw = TRUE
+                    )
+                    levels(tw_rast_sub) <- fct_df
 
-          # Regular Patches with all predictors
-          
-              tryCatch({
-                  cropped_stack_labeled <- c(stack, tw_rast_sub)
-                  writeRaster(cropped_stack_labeled, filename = fn, overwrite = TRUE)
-              }, error = function(e) { message("Cropping Stack")
-                                               skip_to_next <<- TRUE}
-              )
-              if(skip_to_next) { next }
-          } else {
-                # This patch already exists -- skip ONLY this one and keep going.
-                # (Was return(invisible(NULL)), which exited the WHOLE HUC: on any
-                # resume of a partially-written HUC it stopped at patch_1 and
-                # dropped patches 2..N, truncating that HUC's output.)
-                message("Already file ", fn)
-              }
+                    # fn_labels <- paste0("Data/Training_Data/R_Patches_Labels/", "labels_only_", sourceWetlands, "_cluster_", cluster_num, "_huc_", huc_num, "_patch_", i, "_", patchsize*2, "m.tif" )
+
+                    # Regular Patches with all predictors
+
+                    tryCatch(
+                        {
+                            cropped_stack_labeled <- c(stack, tw_rast_sub)
+                            writeRaster(
+                                cropped_stack_labeled,
+                                filename = fn,
+                                overwrite = TRUE
+                            )
+                        },
+                        error = function(e) {
+                            message("Cropping Stack")
+                            skip_to_next <<- TRUE
+                        }
+                    )
+                    if (skip_to_next) {
+                        next
+                    }
+                } else {
+                    # This patch already exists -- skip ONLY this one and keep going.
+                    # (Was return(invisible(NULL)), which exited the WHOLE HUC: on any
+                    # resume of a partially-written HUC it stopped at patch_1 and
+                    # dropped patches 2..N, truncating that HUC's output.)
+                    message("Already file ", fn)
+                }
             },
-        error = function(e) {
-            message("Error: ", conditionMessage(e))
-            return(invisible(NULL))
-        })
+            error = function(e) {
+                message("Error: ", conditionMessage(e))
+                return(invisible(NULL))
+            }
+        )
     }
 
     return(NULL)
-
 }
 
 ### Non-parallel
 # system.time({lapply(l_wet_cluster, rast_chip_patch_create)})
-# 
+#
 # l_dem_cluster[[1]] |> rast() |> plot()
 # l_hydro_cluster[[1]] |> rast() |> plot()
 # l_chm_cluster[[1]] |> rast() |> plot()
 # l_naip_cluster[[1]] |> rast() |> plot()
 # l_sat_cluster[[1]] |> rast() |> plot()
 
-
 ### Parallel
 
 slurm_cpus <- Sys.getenv("SLURM_CPUS_PER_TASK", unset = "")
 
 if (nzchar(slurm_cpus)) {
-  corenum <- as.integer(slurm_cpus)
+    corenum <- as.integer(slurm_cpus)
 } else {
-  corenum <- min(future::availableCores(), 4)
+    corenum <- min(future::availableCores(), 4)
 }
 
 print(corenum)
-options(future.globals.maxSize= 48.0 * 1e9)
+options(future.globals.maxSize = 48.0 * 1e9)
 # plan(multisession, workers = corenum)
 plan(future.callr::callr, workers = corenum)
 
-future_lapply(l_wet_cluster, rast_chip_patch_create,
-              future.seed = TRUE,
-              future.packages = c("terra", "sf", "dplyr", "tidyr", "stringr", "purrr"),
-              future.globals = TRUE
-              # future.globals = list(
-              #   l_chm_cluster = l_chm_cluster,
-              #   l_dem_cluster = l_dem_cluster,
-              #   l_lidar_cluster = l_lidar_cluster,
-              #   l_sat_cluster = l_sat_cluster,
-              #   l_terr_cluster = l_terr_cluster,
-              #   l_hydro_cluster = l_hydro_cluster,
-              #   args = args,
-              #   fct_df = fct_df
-              # )
-              )
+future_lapply(
+    l_wet_cluster,
+    rast_chip_patch_create,
+    future.seed = TRUE,
+    future.packages = c("terra", "sf", "dplyr", "tidyr", "stringr", "purrr"),
+    future.globals = TRUE
+    # future.globals = list(
+    #   l_chm_cluster = l_chm_cluster,
+    #   l_dem_cluster = l_dem_cluster,
+    #   l_lidar_cluster = l_lidar_cluster,
+    #   l_sat_cluster = l_sat_cluster,
+    #   l_terr_cluster = l_terr_cluster,
+    #   l_hydro_cluster = l_hydro_cluster,
+    #   args = args,
+    #   fct_df = fct_df
+    # )
+)
 
-### Checks 
+### Checks
 # l_patches <- list.files("Data/Training_Data/R_Patches_Vector")
-# 
+#
 # check_df <- data.frame(patch_file_name = l_patches,
 #                        reviewer = rep("NAME", length(l_patches)),
 #                        boundaries_altered = rep("TBD", length(l_patches)),
 #                        confidence = rep("TBD", length(l_patches)))
-# 
+#
 # readr::write_csv(check_df, "Data/Training_Data/R_Patches_Vector/Vector_Patch_Checklist.csv")
 # ### Checks
 # list_patches <- list.files("Data/Training_Data/R_Patches_Labels/", full.names = T)
 # lapply(list_patches, \(x) rast(x))
 # lp <- lapply(list_patches, FUN = \(x) {rast(x) |> nlyr()}) |> unlist()
 # # lapply(list_patches, FUN = \(x) {rast(x) |> nlyr()}) |> unlist() |> table()
-# 
+#
 # le <- lapply(list_patches, FUN = \(x) {rast(x, lyrs = "MOD_CLASS") |> values() |> unique() |> nrow()}) |> unlist()
-# 
+#
 # list_patches[le == 1]
 # list_patches[lp < 27]
-
-
-

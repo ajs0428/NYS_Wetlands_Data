@@ -32,6 +32,15 @@ export TMPDIR=/ibstorage/anthony/tmp
 
 module load R/4.4.3
 
+# The R128C40 nodes (cbsuxu01-08) image ships GDAL 3.4/PROJ 9.6, not the
+# GDAL/PROJ sonames terra+sf in the default home library were built against on
+# cbsuxu09/10 (libproj.so.22/libgdal.so.31). A partition-specific rebuild of
+# terra and sf lives in 4.4-R128C40; everything else falls through to the
+# default library.
+if [[ "${SLURM_JOB_PARTITION:-}" == "R128C40" ]]; then
+    export R_LIBS_USER="/home/ajs544/R/x86_64-pc-linux-gnu-library/4.4-R128C40:/home/ajs544/R/x86_64-pc-linux-gnu-library/4.4"
+fi
+
 # Size terra/GDAL memory to the per-task cgroup (mem-per-cpu × cpus), not the
 # node's physical RAM (~251G). Without this terra and the GDAL block cache size
 # off node memory and the worker OOM-kills against the 48G cgroup. Mirrors the

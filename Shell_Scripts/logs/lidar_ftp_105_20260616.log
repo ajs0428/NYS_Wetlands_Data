@@ -1,596 +1,0 @@
-srun: Job 785067 step creation temporarily disabled, retrying (Requested nodes are busy)
-srun: Step created for job 785067
-Using libcurl 7.76.1 with OpenSSL/3.2.2
-Linking to GEOS 3.13.1, GDAL 3.5.1, PROJ 8.2.0; sf_use_s2() is TRUE
-WARNING: different compile-time and runtime versions for GEOS found:
-Linked against: 3.13.1-CAPI-1.19.2 compiled against: 3.11.0-CAPI-1.17.0
-It is probably a good idea to reinstall sf (and maybe lwgeom too)
-
-Attaching package: ‘dplyr’
-
-The following objects are masked from ‘package:stats’:
-
-    filter, lag
-
-The following objects are masked from ‘package:base’:
-
-    intersect, setdiff, setequal, union
-
-
-Attaching package: ‘lidR’
-
-The following object is masked from ‘package:sf’:
-
-    st_concave_hull
-
-terra 1.9.27
-WARNING: different compile-time and run-time versions of GEOS
-Compiled with:3.11.0-CAPI-1.17.0
- Running with:3.13.1-CAPI-1.19.2
-
-You should reinstall package 'terra'
-
-
-Attaching package: ‘terra’
-
-The following object is masked from ‘package:lidR’:
-
-    watershed
-
-=== Lidar Metrics Pipeline ===
-  GPKG:        Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg
-  Cluster:     105
-  Tile Index:  Data/Lidar/NYS_Lidar_All_Indexes.gpkg
-  Output:      Data/Lidar/Metrics
-  Workers:     2
-  HUC12s in cluster: 7
-
-Finding overlapping tiles...
-Unique full-size tiles to process: 360
-Using 2 parallel workers
-                                                                                Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[======================================------------] 77% (1 threads)Delaunay rasterization[=======================================-----------] 78% (1 threads)Delaunay rasterization[=======================================-----------] 79% (1 threads)Delaunay rasterization[========================================----------] 80% (1 threads)Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                                                                                                                                                                                Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                                                                                                Delaunay rasterization[========================================----------] 80% (1 threads)Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[========================================----------] 80% (1 threads)Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                                                                                                                                                                                                                                                                Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[===================================---------------] 71% (1 threads)Delaunay rasterization[====================================--------------] 72% (1 threads)Delaunay rasterization[====================================--------------] 73% (1 threads)Delaunay rasterization[=====================================-------------] 74% (1 threads)Delaunay rasterization[=====================================-------------] 75% (1 threads)Delaunay rasterization[======================================------------] 76% (1 threads)Delaunay rasterization[======================================------------] 77% (1 threads)Delaunay rasterization[=======================================-----------] 78% (1 threads)Delaunay rasterization[=======================================-----------] 79% (1 threads)Delaunay rasterization[========================================----------] 80% (1 threads)Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[======================================------------] 77% (1 threads)Delaunay rasterization[=======================================-----------] 78% (1 threads)Delaunay rasterization[=======================================-----------] 79% (1 threads)Delaunay rasterization[========================================----------] 80% (1 threads)Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                                                                                                Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                                                                                                Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[================================------------------] 64% (1 threads)Delaunay rasterization[================================------------------] 65% (1 threads)Delaunay rasterization[=================================-----------------] 66% (1 threads)Delaunay rasterization[=================================-----------------] 67% (1 threads)Delaunay rasterization[==================================----------------] 68% (1 threads)Delaunay rasterization[==================================----------------] 69% (1 threads)Delaunay rasterization[===================================---------------] 70% (1 threads)Delaunay rasterization[===================================---------------] 71% (1 threads)Delaunay rasterization[====================================--------------] 72% (1 threads)Delaunay rasterization[====================================--------------] 73% (1 threads)Delaunay rasterization[=====================================-------------] 74% (1 threads)Delaunay rasterization[=====================================-------------] 75% (1 threads)Delaunay rasterization[======================================------------] 76% (1 threads)Delaunay rasterization[======================================------------] 77% (1 threads)Delaunay rasterization[=======================================-----------] 78% (1 threads)Delaunay rasterization[=======================================-----------] 79% (1 threads)Delaunay rasterization[========================================----------] 80% (1 threads)Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[==============================--------------------] 60% (1 threads)Delaunay rasterization[==============================--------------------] 61% (1 threads)Delaunay rasterization[===============================-------------------] 62% (1 threads)Delaunay rasterization[===============================-------------------] 63% (1 threads)Delaunay rasterization[================================------------------] 64% (1 threads)Delaunay rasterization[================================------------------] 65% (1 threads)Delaunay rasterization[=================================-----------------] 66% (1 threads)Delaunay rasterization[=================================-----------------] 67% (1 threads)Delaunay rasterization[==================================----------------] 68% (1 threads)Delaunay rasterization[==================================----------------] 69% (1 threads)Delaunay rasterization[===================================---------------] 70% (1 threads)Delaunay rasterization[===================================---------------] 71% (1 threads)Delaunay rasterization[====================================--------------] 72% (1 threads)Delaunay rasterization[====================================--------------] 73% (1 threads)Delaunay rasterization[=====================================-------------] 74% (1 threads)Delaunay rasterization[=====================================-------------] 75% (1 threads)Delaunay rasterization[======================================------------] 76% (1 threads)Delaunay rasterization[======================================------------] 77% (1 threads)Delaunay rasterization[=======================================-----------] 78% (1 threads)Delaunay rasterization[=======================================-----------] 79% (1 threads)Delaunay rasterization[========================================----------] 80% (1 threads)Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                                                                                                                                                                                Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[==================================----------------] 69% (1 threads)Delaunay rasterization[===================================---------------] 70% (1 threads)Delaunay rasterization[===================================---------------] 71% (1 threads)Delaunay rasterization[====================================--------------] 72% (1 threads)Delaunay rasterization[====================================--------------] 73% (1 threads)Delaunay rasterization[=====================================-------------] 74% (1 threads)Delaunay rasterization[=====================================-------------] 75% (1 threads)Delaunay rasterization[======================================------------] 76% (1 threads)Delaunay rasterization[======================================------------] 77% (1 threads)Delaunay rasterization[=======================================-----------] 78% (1 threads)Delaunay rasterization[=======================================-----------] 79% (1 threads)Delaunay rasterization[========================================----------] 80% (1 threads)Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[============================----------------------] 57% (1 threads)Delaunay rasterization[=============================---------------------] 58% (1 threads)Delaunay rasterization[=============================---------------------] 59% (1 threads)Delaunay rasterization[==============================--------------------] 60% (1 threads)Delaunay rasterization[==============================--------------------] 61% (1 threads)Delaunay rasterization[===============================-------------------] 62% (1 threads)Delaunay rasterization[===============================-------------------] 63% (1 threads)Delaunay rasterization[================================------------------] 64% (1 threads)Delaunay rasterization[================================------------------] 65% (1 threads)Delaunay rasterization[=================================-----------------] 66% (1 threads)Delaunay rasterization[=================================-----------------] 67% (1 threads)Delaunay rasterization[==================================----------------] 68% (1 threads)Delaunay rasterization[==================================----------------] 69% (1 threads)Delaunay rasterization[===================================---------------] 70% (1 threads)Delaunay rasterization[===================================---------------] 71% (1 threads)Delaunay rasterization[====================================--------------] 72% (1 threads)Delaunay rasterization[====================================--------------] 73% (1 threads)Delaunay rasterization[=====================================-------------] 74% (1 threads)Delaunay rasterization[=====================================-------------] 75% (1 threads)Delaunay rasterization[======================================------------] 76% (1 threads)Delaunay rasterization[======================================------------] 77% (1 threads)Delaunay rasterization[=======================================-----------] 78% (1 threads)Delaunay rasterization[=======================================-----------] 79% (1 threads)Delaunay rasterization[========================================----------] 80% (1 threads)Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[================================------------------] 64% (1 threads)Delaunay rasterization[================================------------------] 65% (1 threads)Delaunay rasterization[=================================-----------------] 66% (1 threads)Delaunay rasterization[=================================-----------------] 67% (1 threads)Delaunay rasterization[==================================----------------] 68% (1 threads)Delaunay rasterization[==================================----------------] 69% (1 threads)Delaunay rasterization[===================================---------------] 70% (1 threads)Delaunay rasterization[===================================---------------] 71% (1 threads)Delaunay rasterization[====================================--------------] 72% (1 threads)Delaunay rasterization[====================================--------------] 73% (1 threads)Delaunay rasterization[=====================================-------------] 74% (1 threads)Delaunay rasterization[=====================================-------------] 75% (1 threads)Delaunay rasterization[======================================------------] 76% (1 threads)Delaunay rasterization[======================================------------] 77% (1 threads)Delaunay rasterization[=======================================-----------] 78% (1 threads)Delaunay rasterization[=======================================-----------] 79% (1 threads)Delaunay rasterization[========================================----------] 80% (1 threads)Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[==================================----------------] 68% (1 threads)Delaunay rasterization[==================================----------------] 69% (1 threads)Delaunay rasterization[===================================---------------] 70% (1 threads)Delaunay rasterization[===================================---------------] 71% (1 threads)Delaunay rasterization[====================================--------------] 72% (1 threads)Delaunay rasterization[====================================--------------] 73% (1 threads)Delaunay rasterization[=====================================-------------] 74% (1 threads)Delaunay rasterization[=====================================-------------] 75% (1 threads)Delaunay rasterization[======================================------------] 76% (1 threads)Delaunay rasterization[======================================------------] 77% (1 threads)Delaunay rasterization[=======================================-----------] 78% (1 threads)Delaunay rasterization[=======================================-----------] 79% (1 threads)Delaunay rasterization[========================================----------] 80% (1 threads)Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                                                                                                                                                                                Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                                                                                                Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[=======================================-----------] 79% (1 threads)Delaunay rasterization[========================================----------] 80% (1 threads)Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[============================----------------------] 57% (1 threads)Delaunay rasterization[=============================---------------------] 58% (1 threads)Delaunay rasterization[=============================---------------------] 59% (1 threads)Delaunay rasterization[==============================--------------------] 60% (1 threads)Delaunay rasterization[==============================--------------------] 61% (1 threads)Delaunay rasterization[===============================-------------------] 62% (1 threads)Delaunay rasterization[===============================-------------------] 63% (1 threads)Delaunay rasterization[================================------------------] 64% (1 threads)Delaunay rasterization[================================------------------] 65% (1 threads)Delaunay rasterization[=================================-----------------] 66% (1 threads)Delaunay rasterization[=================================-----------------] 67% (1 threads)Delaunay rasterization[==================================----------------] 68% (1 threads)Delaunay rasterization[==================================----------------] 69% (1 threads)Delaunay rasterization[===================================---------------] 70% (1 threads)Delaunay rasterization[===================================---------------] 71% (1 threads)Delaunay rasterization[====================================--------------] 72% (1 threads)Delaunay rasterization[====================================--------------] 73% (1 threads)Delaunay rasterization[=====================================-------------] 74% (1 threads)Delaunay rasterization[=====================================-------------] 75% (1 threads)Delaunay rasterization[======================================------------] 76% (1 threads)Delaunay rasterization[======================================------------] 77% (1 threads)Delaunay rasterization[=======================================-----------] 78% (1 threads)Delaunay rasterization[=======================================-----------] 79% (1 threads)Delaunay rasterization[========================================----------] 80% (1 threads)Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[==========================------------------------] 52% (1 threads)Delaunay rasterization[==========================------------------------] 53% (1 threads)Delaunay rasterization[===========================-----------------------] 54% (1 threads)Delaunay rasterization[===========================-----------------------] 55% (1 threads)Delaunay rasterization[============================----------------------] 56% (1 threads)Delaunay rasterization[============================----------------------] 57% (1 threads)Delaunay rasterization[=============================---------------------] 58% (1 threads)Delaunay rasterization[=============================---------------------] 59% (1 threads)Delaunay rasterization[==============================--------------------] 60% (1 threads)Delaunay rasterization[==============================--------------------] 61% (1 threads)Delaunay rasterization[===============================-------------------] 62% (1 threads)Delaunay rasterization[===============================-------------------] 63% (1 threads)Delaunay rasterization[================================------------------] 64% (1 threads)Delaunay rasterization[================================------------------] 65% (1 threads)Delaunay rasterization[=================================-----------------] 66% (1 threads)Delaunay rasterization[=================================-----------------] 67% (1 threads)Delaunay rasterization[==================================----------------] 68% (1 threads)Delaunay rasterization[==================================----------------] 69% (1 threads)Delaunay rasterization[===================================---------------] 70% (1 threads)Delaunay rasterization[===================================---------------] 71% (1 threads)Delaunay rasterization[====================================--------------] 72% (1 threads)Delaunay rasterization[====================================--------------] 73% (1 threads)Delaunay rasterization[=====================================-------------] 74% (1 threads)Delaunay rasterization[=====================================-------------] 75% (1 threads)Delaunay rasterization[======================================------------] 76% (1 threads)Delaunay rasterization[======================================------------] 77% (1 threads)Delaunay rasterization[=======================================-----------] 78% (1 threads)Delaunay rasterization[=======================================-----------] 79% (1 threads)Delaunay rasterization[========================================----------] 80% (1 threads)Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                                                                                                                                                                                                                                                                Delaunay rasterization[=======================================-----------] 78% (1 threads)Delaunay rasterization[=======================================-----------] 79% (1 threads)Delaunay rasterization[========================================----------] 80% (1 threads)Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[===================================---------------] 70% (1 threads)Delaunay rasterization[===================================---------------] 71% (1 threads)Delaunay rasterization[====================================--------------] 72% (1 threads)Delaunay rasterization[====================================--------------] 73% (1 threads)Delaunay rasterization[=====================================-------------] 74% (1 threads)Delaunay rasterization[=====================================-------------] 75% (1 threads)Delaunay rasterization[======================================------------] 76% (1 threads)Delaunay rasterization[======================================------------] 77% (1 threads)Delaunay rasterization[=======================================-----------] 78% (1 threads)Delaunay rasterization[=======================================-----------] 79% (1 threads)Delaunay rasterization[========================================----------] 80% (1 threads)Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[======================================------------] 77% (1 threads)Delaunay rasterization[=======================================-----------] 78% (1 threads)Delaunay rasterization[=======================================-----------] 79% (1 threads)Delaunay rasterization[========================================----------] 80% (1 threads)Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[======================================------------] 76% (1 threads)Delaunay rasterization[======================================------------] 77% (1 threads)Delaunay rasterization[=======================================-----------] 78% (1 threads)Delaunay rasterization[=======================================-----------] 79% (1 threads)Delaunay rasterization[========================================----------] 80% (1 threads)Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                                                                                                                                                                                                                                                                Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                                                                                                                                                                                                                                                                Delaunay rasterization[=======================================-----------] 79% (1 threads)Delaunay rasterization[========================================----------] 80% (1 threads)Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                                                                                                                                                                                                                                                                                                                                                Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                                                                                                                                                                                Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                Delaunay rasterization[==================================----------------] 68% (1 threads)Delaunay rasterization[==================================----------------] 69% (1 threads)Delaunay rasterization[===================================---------------] 70% (1 threads)Delaunay rasterization[===================================---------------] 71% (1 threads)Delaunay rasterization[====================================--------------] 72% (1 threads)Delaunay rasterization[====================================--------------] 73% (1 threads)Delaunay rasterization[=====================================-------------] 74% (1 threads)Delaunay rasterization[=====================================-------------] 75% (1 threads)Delaunay rasterization[======================================------------] 76% (1 threads)Delaunay rasterization[======================================------------] 77% (1 threads)Delaunay rasterization[=======================================-----------] 78% (1 threads)Delaunay rasterization[=======================================-----------] 79% (1 threads)Delaunay rasterization[========================================----------] 80% (1 threads)Delaunay rasterization[========================================----------] 81% (1 threads)Delaunay rasterization[=========================================---------] 82% (1 threads)Delaunay rasterization[=========================================---------] 83% (1 threads)Delaunay rasterization[==========================================--------] 84% (1 threads)Delaunay rasterization[==========================================--------] 85% (1 threads)Delaunay rasterization[===========================================-------] 86% (1 threads)Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                Delaunay rasterization[===========================================-------] 87% (1 threads)Delaunay rasterization[============================================------] 88% (1 threads)Delaunay rasterization[============================================------] 89% (1 threads)Delaunay rasterization[=============================================-----] 90% (1 threads)Delaunay rasterization[=============================================-----] 91% (1 threads)Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)                                                                                                                                                                Delaunay rasterization[=============================================-----] 91% (1 threads)Using libcurl 7.76.1 with OpenSSL/3.2.2
-terra 1.9.27
-WARNING: different compile-time and run-time versions of GEOS
-Compiled with:3.11.0-CAPI-1.17.0
- Running with:3.13.1-CAPI-1.19.2
-
-You should reinstall package 'terra'
-
-[2302131] Skipping (exists): 18TVN575295.las
-[2302131] Skipping (exists): 18TVN590265.las
-[2302131] Skipping (exists): 18TVN620340.las
-[2302131] Skipping (exists): 18TVN605295.las
-[2302131] Skipping (exists): 18TVN635280.las
-[2302131] Skipping (exists): 18TVN590295.las
-[2302131] Skipping (exists): 18TVN650295.las
-[2302131] Skipping (exists): 18TVN620280.las
-[2302131] Skipping (exists): 18TVN515340.las
-[2302131] Skipping (exists): 18TVN560355.las
-[2302131] Skipping (exists): 18TVN575340.las
-[2302131] Skipping (exists): 18TVN545355.las
-[2302131] Skipping (exists): 18TVN605340.las
-[2302131] Skipping (exists): 18TVN575250.las
-[2302131] Skipping (exists): 18TVN665295.las
-[2302131] Skipping (exists): 18TVN650280.las
-[2302131] Skipping (exists): 18TVN515355.las
-[2302131] Skipping (exists): 18TVN590280.las
-[2302131] Skipping (exists): 18TVN575310.las
-[2302131] Skipping (exists): 18TVN575325.las
-[2302131] Skipping (exists): 18TVN560310.las
-[2302131] Skipping (exists): 18TVN575265.las
-[2302131] Skipping (exists): 18TVN545325.las
-[2302131] Skipping (exists): 18TVN590310.las
-[2302131] Skipping (exists): 18TVN590340.las
-[2302131] Skipping (exists): 18TVN620325.las
-[2302131] Skipping (exists): 18TVN605325.las
-[2302131] Skipping (exists): 18TVN575355.las
-[2302131] Skipping (exists): 18TVN560325.las
-[2302131] Skipping (exists): 18TVN620265.las
-[2302131] Skipping (exists): 18TVN605310.las
-[2302131] Skipping (exists): 18TVN590355.las
-[2302131] Skipping (exists): 18TVN635310.las
-[2302131] Skipping (exists): 18TVN680310.las
-[2302131] Skipping (exists): 18TVN560295.las
-[2302131] Skipping (exists): 18TVN575280.las
-[2302131] Skipping (exists): 18TVN665280.las
-[2302131] Skipping (exists): 18TVN635295.las
-[2302131] Skipping (exists): 18TVN650310.las
-[2302131] Skipping (exists): 18TVN530340.las
-[2302131] Skipping (exists): 18TVN605265.las
-[2302131] Skipping (exists): 18TVN635325.las
-[2302131] Skipping (exists): 18TVN500355.las
-[2302131] Skipping (exists): 18TVN545340.las
-[2302131] Skipping (exists): 18TVN605250.las
-[2302131] Skipping (exists): 18TVN530355.las
-[2302131] Skipping (exists): 18TVN605280.las
-[2302131] Skipping (exists): 18TVN545310.las
-[2302131] Skipping (exists): 18TVN665310.las
-[2302131] Skipping (exists): 18TVN620310.las
-[2302131] Skipping (exists): 18TVN590325.las
-[2302131] Skipping (exists): 18TVN590250.las
-[2302131] Skipping (exists): 18TVN560340.las
-[2302131] Skipping (exists): 18TVN530325.las
-[2302131] Skipping (exists): 18TVN620295.las
-[2302131] Skipping (exists): 18TVN545295.las
-[2302131] Skipping (exists): u_4657575275.las
-[2302131] Skipping (exists): u_4665075275.las
-[2302131] Skipping (exists): u_4672575200.las
-[2302131] Skipping (exists): u_4680075200.las
-[2302131] Downloading: 447000_4737000.las
-[2302131] Computing metrics: 447000_4737000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 450000_4737000.las
-[2302131] Computing metrics: 450000_4737000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 451500_4737000.las
-[2302131] Computing metrics: 451500_4737000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 453000_4737000.las
-[2302131] Computing metrics: 453000_4737000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 454500_4737000.las
-[2302131] Computing metrics: 454500_4737000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 456000_4737000.las
-[2302131] Computing metrics: 456000_4737000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 450000_4735500.las
-[2302131] Computing metrics: 450000_4735500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 451500_4735500.las
-[2302131] Computing metrics: 451500_4735500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 453000_4735500.las
-[2302131] Computing metrics: 453000_4735500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 454500_4735500.las
-[2302131] Computing metrics: 454500_4735500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 456000_4735500.las
-[2302131] Computing metrics: 456000_4735500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 457500_4735500.las
-[2302131] Computing metrics: 457500_4735500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 459000_4735500.las
-[2302131] Computing metrics: 459000_4735500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 451500_4734000.las
-[2302131] Computing metrics: 451500_4734000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 453000_4734000.las
-[2302131] Computing metrics: 453000_4734000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 454500_4734000.las
-[2302131] Computing metrics: 454500_4734000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 456000_4734000.las
-[2302131] Computing metrics: 456000_4734000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 457500_4734000.las
-[2302131] Computing metrics: 457500_4734000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 459000_4734000.las
-[2302131] Computing metrics: 459000_4734000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 460500_4734000.las
-[2302131] Computing metrics: 460500_4734000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 462000_4734000.las
-[2302131] Computing metrics: 462000_4734000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 453000_4732500.las
-[2302131] Computing metrics: 453000_4732500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 454500_4732500.las
-[2302131] Computing metrics: 454500_4732500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 456000_4732500.las
-[2302131] Computing metrics: 456000_4732500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 457500_4732500.las
-[2302131] Computing metrics: 457500_4732500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 459000_4732500.las
-[2302131] Computing metrics: 459000_4732500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 460500_4732500.las
-[2302131] Computing metrics: 460500_4732500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 462000_4732500.las
-[2302131] Computing metrics: 462000_4732500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 463500_4732500.las
-[2302131] Computing metrics: 463500_4732500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 454500_4731000.las
-[2302131] Computing metrics: 454500_4731000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 456000_4731000.las
-[2302131] Computing metrics: 456000_4731000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 457500_4731000.las
-[2302131] Computing metrics: 457500_4731000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 459000_4731000.las
-[2302131] Computing metrics: 459000_4731000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 460500_4731000.las
-[2302131] Computing metrics: 460500_4731000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 462000_4731000.las
-[2302131] Computing metrics: 462000_4731000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 463500_4731000.las
-[2302131] Computing metrics: 463500_4731000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 465000_4731000.las
-[2302131] Computing metrics: 465000_4731000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 466500_4731000.las
-[2302131] Computing metrics: 466500_4731000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 454500_4729500.las
-[2302131] Computing metrics: 454500_4729500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 456000_4729500.las
-[2302131] Computing metrics: 456000_4729500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 457500_4729500.las
-[2302131] Computing metrics: 457500_4729500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 459000_4729500.las
-[2302131] Computing metrics: 459000_4729500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 460500_4729500.las
-[2302131] Computing metrics: 460500_4729500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 462000_4729500.las
-[2302131] Computing metrics: 462000_4729500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 463500_4729500.las
-[2302131] Computing metrics: 463500_4729500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 465000_4729500.las
-[2302131] Computing metrics: 465000_4729500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 466500_4729500.las
-[2302131] Computing metrics: 466500_4729500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 457500_4728000.las
-[2302131] Computing metrics: 457500_4728000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 459000_4728000.las
-[2302131] Computing metrics: 459000_4728000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 460500_4728000.las
-[2302131] Computing metrics: 460500_4728000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 462000_4728000.las
-[2302131] Computing metrics: 462000_4728000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 463500_4728000.las
-[2302131] Computing metrics: 463500_4728000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 465000_4728000.las
-[2302131] Computing metrics: 465000_4728000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 466500_4728000.las
-[2302131] Computing metrics: 466500_4728000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 457500_4726500.las
-[2302131] Computing metrics: 457500_4726500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 459000_4726500.las
-[2302131] Computing metrics: 459000_4726500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 460500_4726500.las
-[2302131] Computing metrics: 460500_4726500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 462000_4726500.las
-[2302131] Computing metrics: 462000_4726500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 457500_4725000.las
-[2302131] Computing metrics: 457500_4725000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 459000_4725000.las
-[2302131] Computing metrics: 459000_4725000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 460500_4725000.las
-[2302131] Computing metrics: 460500_4725000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 465000_4732500.las
-[2302131] Computing metrics: 465000_4732500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 466500_4732500.las
-[2302131] Computing metrics: 466500_4732500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 468000_4732500.las
-[2302131] Computing metrics: 468000_4732500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 463500_4734000.las
-[2302131] Computing metrics: 463500_4734000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 465000_4734000.las
-[2302131] Computing metrics: 465000_4734000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 460500_4735500.las
-[2302131] Computing metrics: 460500_4735500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 462000_4735500.las
-[2302131] Computing metrics: 462000_4735500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 463500_4735500.las
-[2302131] Computing metrics: 463500_4735500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 448500_4737000.las
-[2302131] Computing metrics: 448500_4737000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 459000_4737000.las
-[2302131] Computing metrics: 459000_4737000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 460500_4737000.las
-[2302131] Computing metrics: 460500_4737000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 445500_4738500.las
-[2302131] Computing metrics: 445500_4738500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 447000_4738500.las
-[2302131] Computing metrics: 447000_4738500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 448500_4738500.las
-[2302131] Computing metrics: 448500_4738500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 450000_4738500.las
-[2302131] Computing metrics: 450000_4738500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 451500_4738500.las
-[2302131] Computing metrics: 451500_4738500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 456000_4738500.las
-[2302131] Computing metrics: 456000_4738500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 457500_4738500.las
-[2302131] Computing metrics: 457500_4738500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 444000_4740000.las
-[2302131] Computing metrics: 444000_4740000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 445500_4740000.las
-[2302131] Computing metrics: 445500_4740000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 454500_4740000.las
-[2302131] Computing metrics: 454500_4740000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 468000_4731000.las
-[2302131] Computing metrics: 468000_4731000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 457500_4737000.las
-[2302131] Computing metrics: 457500_4737000.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 453000_4738500.las
-[2302131] Computing metrics: 453000_4738500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Downloading: 454500_4738500.las
-[2302131] Computing metrics: 454500_4738500.las
-  Reprojecting from NA to EPSG:6347
-[2302131] Skipping (exists): u_4650075200_2015.las
-[2302131] Skipping (exists): u_4665075200_2015.las
-[2302131] Skipping (exists): u_4680075200_2015.las
-[2302131] Skipping (exists): u_4485075050_2015.las
-[2302131] Skipping (exists): u_4500075050_2015.las
-[2302131] Skipping (exists): u_4530075050_2015.las
-[2302131] Skipping (exists): u_4545075050_2015.las
-[2302131] Skipping (exists): u_4650075050_2015.las
-[2302131] Skipping (exists): u_4665075050_2015.las
-[2302131] Skipping (exists): u_4680075050_2015.las
-[2302131] Skipping (exists): u_4695075050_2015.las
-[2302131] Skipping (exists): u_4710075050_2015.las
-[2302131] Skipping (exists): u_4725075050_2015.las
-[2302131] Skipping (exists): u_4395074900_2015.las
-[2302131] Skipping (exists): u_4410074900_2015.las
-[2302131] Skipping (exists): u_4485074900_2015.las
-[2302131] Skipping (exists): u_4500074900_2015.las
-[2302131] Skipping (exists): u_4515074900_2015.las
-[2302131] Skipping (exists): u_4530074900_2015.las
-[2302131] Skipping (exists): u_4545074900_2015.las
-[2302131] Skipping (exists): u_4560074900_2015.las
-[2302131] Skipping (exists): u_4590074900_2015.las
-[2302131] Skipping (exists): u_4620074900_2015.las
-[2302131] Skipping (exists): u_4650074900_2015.las
-[2302131] Skipping (exists): u_4665074900_2015.las
-[2302131] Skipping (exists): u_4680074900_2015.las
-[2302131] Skipping (exists): u_4695074900_2015.las
-[2302131] Skipping (exists): u_4710074900_2015.las
-[2302131] Skipping (exists): u_4725074900_2015.las
-[2302131] Skipping (exists): u_4395074750_2015.las
-[2302131] Skipping (exists): u_4410074750_2015.las
-[2302131] Skipping (exists): u_4425074750_2015.las
-[2302131] Skipping (exists): u_4440074750_2015.las
-[2302131] Skipping (exists): u_4455074750_2015.las
-[2302131] Skipping (exists): u_4485074750_2015.las
-[2302131] Skipping (exists): u_4500074750_2015.las
-[2302131] Skipping (exists): u_4515074750_2015.las
-[2302131] Skipping (exists): u_4530074750_2015.las
-[2302131] Skipping (exists): u_4545074750_2015.las
-[2302131] Skipping (exists): u_4560074750_2015.las
-[2302131] Skipping (exists): u_4575074750_2015.las
-[2302131] Skipping (exists): u_4590074750_2015.las
-[2302131] Skipping (exists): u_4605074750_2015.las
-[2302131] Skipping (exists): u_4620074750_2015.las
-[2302131] Skipping (exists): u_4635074750_2015.las
-[2302131] Skipping (exists): u_4650074750_2015.las
-[2302131] Skipping (exists): u_4665074750_2015.las
-[2302131] Skipping (exists): u_4680074750_2015.las
-[2302131] Skipping (exists): u_4695074750_2015.las
-[2302131] Skipping (exists): u_4710074750_2015.las
-[2302131] Skipping (exists): u_4380074600_2015.las
-[2302131] Skipping (exists): u_4395074600_2015.las
-[2302131] Skipping (exists): u_4410074600_2015.las
-[2302131] Skipping (exists): u_4425074600_2015.las
-[2302131] Skipping (exists): u_4440074600_2015.las
-[2302131] Skipping (exists): u_4455074600_2015.las
-[2302131] Skipping (exists): u_4470074600_2015.las
-[2302131] Skipping (exists): u_4485074600_2015.las
-[2302131] Skipping (exists): u_4500074600_2015.las
-[2302131] Skipping (exists): u_4515074600_2015.las
-[2302131] Skipping (exists): u_4530074600_2015.las
-[2302131] Skipping (exists): u_4545074600_2015.las
-[2302131] Skipping (exists): u_4560074600_2015.las
-[2302131] Skipping (exists): u_4575074600_2015.las
-[2302131] Skipping (exists): u_4590074600_2015.las
-[2302131] Skipping (exists): u_4605074600_2015.las
-[2302131] Skipping (exists): u_4620074600_2015.las
-[2302131] Skipping (exists): u_4635074600_2015.las
-[2302131] Skipping (exists): u_4650074600_2015.las
-[2302131] Skipping (exists): u_4665074600_2015.las
-[2302131] Skipping (exists): u_4680074600_2015.las
-[2302131] Skipping (exists): u_4695074600_2015.las
-[2302131] Skipping (exists): u_4710074600_2015.las
-[2302131] Skipping (exists): u_4380074450_2015.las
-[2302131] Skipping (exists): u_4395074450_2015.las
-[2302131] Skipping (exists): u_4410074450_2015.las
-[2302131] Skipping (exists): u_4425074450_2015.las
-[2302131] Skipping (exists): u_4440074450_2015.las
-[2302131] Skipping (exists): u_4455074450_2015.las
-[2302131] Skipping (exists): u_4470074450_2015.las
-[2302131] Skipping (exists): u_4485074450_2015.las
-[2302131] Skipping (exists): u_4500074450_2015.las
-[2302131] Skipping (exists): u_4515074450_2015.las
-[2302131] Skipping (exists): u_4530074450_2015.las
-[2302131] Skipping (exists): u_4545074450_2015.las
-[2302131] Skipping (exists): u_4560074450_2015.las
-[2302131] Skipping (exists): u_4575074450_2015.las
-[2302131] Skipping (exists): u_4590074450_2015.las
-[2302131] Skipping (exists): u_4605074450_2015.las
-[2302131] Skipping (exists): u_4620074450_2015.las
-[2302131] Skipping (exists): u_4635074450_2015.las
-[2302131] Skipping (exists): u_4650074450_2015.las
-[2302131] Skipping (exists): u_4665074450_2015.las
-[2302131] Skipping (exists): u_4680074450_2015.las
-[2302131] Skipping (exists): u_4695074450_2015.las
-[2302131] Skipping (exists): u_4710074450_2015.las
-[2302131] Skipping (exists): u_4395074300_2015.las
-[2302131] Skipping (exists): u_4410074300_2015.las
-[2302131] Skipping (exists): u_4425074300_2015.las
-[2302131] Skipping (exists): u_4440074300_2015.las
-[2302131] Skipping (exists): u_4455074300_2015.las
-[2302131] Skipping (exists): u_4470074300_2015.las
-[2302131] Skipping (exists): u_4485074300_2015.las
-[2302131] Skipping (exists): u_4500074300_2015.las
-[2302131] Skipping (exists): u_4515074300_2015.las
-[2302131] Skipping (exists): u_4530074300_2015.las
-[2302131] Skipping (exists): u_4545074300_2015.las
-[2302131] Skipping (exists): u_4560074300_2015.las
-[2302131] Skipping (exists): u_4575074300_2015.las
-[2302131] Skipping (exists): u_4590074300_2015.las
-[2302131] Skipping (exists): u_4605074300_2015.las
-[2302131] Skipping (exists): u_4620074300_2015.las
-[2302131] Skipping (exists): u_4635074300_2015.las
-[2302131] Skipping (exists): u_4650074300_2015.las
-[2302131] Skipping (exists): u_4665074300_2015.las
-[2302131] Skipping (exists): u_4680074300_2015.las
-[2302131] Skipping (exists): u_4695074300_2015.las
-[2302131] Skipping (exists): u_4710074300_2015.las
-[2302131] Skipping (exists): u_4395074150_2015.las
-[2302131] Skipping (exists): u_4440074150_2015.las
-[2302131] Skipping (exists): u_4455074150_2015.las
-[2302131] Skipping (exists): u_4470074150_2015.las
-[2302131] Skipping (exists): u_4485074150_2015.las
-[2302131] Skipping (exists): u_4500074150_2015.las
-[2302131] Skipping (exists): u_4515074150_2015.las
-[2302131] Skipping (exists): u_4530074150_2015.las
-[2302131] Skipping (exists): u_4545074150_2015.las
-[2302131] Skipping (exists): u_4560074150_2015.las
-[2302131] Skipping (exists): u_4575074150_2015.las
-[2302131] Skipping (exists): u_4590074150_2015.las
-[2302131] Skipping (exists): u_4605074150_2015.las
-[2302131] Skipping (exists): u_4620074150_2015.las
-[2302131] Skipping (exists): u_4635074150_2015.las
-[2302131] Skipping (exists): u_4650074150_2015.las
-[2302131] Skipping (exists): u_4665074150_2015.las
-[2302131] Skipping (exists): u_4680074150_2015.las
-[2302131] Skipping (exists): u_4695074150_2015.las
-[2302131] Skipping (exists): u_4440074000_2015.las
-[2302131] Skipping (exists): u_4455074000_2015.las
-[2302131] Skipping (exists): u_4470074000_2015.las
-[2302131] Skipping (exists): u_4485074000_2015.las
-[2302131] Skipping (exists): u_4500074000_2015.las
-[2302131] Skipping (exists): u_4515074000_2015.las
-[2302131] Skipping (exists): u_4530074000_2015.las
-[2302131] Skipping (exists): u_4545074000_2015.las
-[2302131] Skipping (exists): u_4560074000_2015.las
-[2302131] Skipping (exists): u_4575074000_2015.las
-[2302131] Skipping (exists): u_4590074000_2015.las
-[2302131] Skipping (exists): u_4605074000_2015.las
-[2302131] Skipping (exists): u_4620074000_2015.las
-[2302131] Skipping (exists): u_4635074000_2015.las
-[2302131] Skipping (exists): u_4650074000_2015.las
-[2302131] Skipping (exists): u_4665074000_2015.las
-[2302131] Skipping (exists): u_4680074000_2015.las
-[2302131] Skipping (exists): u_4455073850_2015.las
-[2302131] Skipping (exists): u_4470073850_2015.las
-[2302131] Skipping (exists): u_4485073850_2015.las
-[2302131] Skipping (exists): u_4500073850_2015.las
-[2302131] Skipping (exists): u_4515073850_2015.las
-[2302131] Skipping (exists): u_4530073850_2015.las
-[2302131] Skipping (exists): u_4545073850_2015.las
-[2302131] Skipping (exists): u_4560073850_2015.las
-[2302131] Skipping (exists): u_4575073850_2015.las
-[2302131] Skipping (exists): u_4590073850_2015.las
-[2302131] Skipping (exists): u_4605073850_2015.las
-[2302131] Skipping (exists): u_4620073850_2015.las
-[2302131] Skipping (exists): u_4635073850_2015.las
-[2302131] Skipping (exists): u_4650073850_2015.las
-[2302131] Skipping (exists): u_4665073850_2015.las
-[2302131] Skipping (exists): u_4680073850_2015.las
-[2302131] Skipping (exists): u_4470073700_2015.las
-[2302131] Skipping (exists): u_4485073700_2015.las
-[2302131] Skipping (exists): u_4500073700_2015.las
-[2302131] Skipping (exists): u_4515073700_2015.las
-[2302131] Skipping (exists): u_4530073700_2015.las
-[2302131] Skipping (exists): u_4545073700_2015.las
-[2302131] Skipping (exists): u_4560073700_2015.las
-[2302131] Skipping (exists): u_4575073700_2015.las
-[2302131] Skipping (exists): u_4590073700_2015.las
-[2302131] Skipping (exists): u_4605073700_2015.las
-[2302131] Skipping (exists): u_4620073700_2015.las
-[2302131] Skipping (exists): u_4635073700_2015.las
-[2302131] Skipping (exists): u_4650073700_2015.las
-[2302131] Skipping (exists): u_4665073700_2015.las
-[2302131] Skipping (exists): u_4680073700_2015.las
-[2302131] Skipping (exists): u_4500073550_2015.las
-[2302131] Skipping (exists): u_4515073550_2015.las
-[2302131] Skipping (exists): u_4530073550_2015.las
-[2302131] Skipping (exists): u_4545073550_2015.las
-[2302131] Skipping (exists): u_4560073550_2015.las
-[2302131] Skipping (exists): u_4575073550_2015.las
-[2302131] Skipping (exists): u_4590073550_2015.las
-[2302131] Skipping (exists): u_4605073550_2015.las
-[2302131] Skipping (exists): u_4620073550_2015.las
-[2302131] Skipping (exists): u_4635073550_2015.las
-[2302131] Skipping (exists): u_4650073550_2015.las
-[2302131] Skipping (exists): u_4665073550_2015.las
-[2302131] Skipping (exists): u_4680073550_2015.las
-[2302131] Skipping (exists): u_4590073400_2015.las
-[2302131] Skipping (exists): u_4605073400_2015.las
-[2302131] Skipping (exists): u_4620073400_2015.las
-[2302131] Skipping (exists): u_4635073400_2015.las
-[2302131] Skipping (exists): u_4650073400_2015.las
-[2302131] Skipping (exists): u_4665073400_2015.las
-[2302131] Skipping (exists): u_4680073400_2015.las
-[2302131] Skipping (exists): u_4620073250_2015.las
-[2302131] Skipping (exists): u_4635073250_2015.las
-[2302131] Skipping (exists): u_4650073250_2015.las
-[2302131] Skipping (exists): u_4665073250_2015.las
-[2302131] Skipping (exists): u_4680073250_2015.las
-[2302131] Skipping (exists): u_4635073100_2015.las
-[2302131] Skipping (exists): u_4650073100_2015.las
-[2302131] Skipping (exists): u_4665073100_2015.las
-[2302131] Skipping (exists): u_4680073100_2015.las
-There were 50 or more warnings (use warnings() to see the first 50)
-
-=== Done. 274/360 tiles processed. Metrics written to: Data/Lidar/Metrics ===
-Delaunay rasterization[==============================================----] 92% (1 threads)Delaunay rasterization[==============================================----] 93% (1 threads)Delaunay rasterization[===============================================---] 94% (1 threads)Delaunay rasterization[===============================================---] 95% (1 threads)Delaunay rasterization[================================================--] 96% (1 threads)Delaunay rasterization[================================================--] 97% (1 threads)Delaunay rasterization[=================================================-] 98% (1 threads)Delaunay rasterization[=================================================-] 99% (1 threads)Delaunay rasterization[==================================================] 100% (1 threads)          used (Mb) gc trigger  (Mb) max used  (Mb)
-Ncells 1833497 98.0    6021060 321.6  6021060 321.6
-Vcells 2850625 21.8   14523112 110.9 15765524 120.3
