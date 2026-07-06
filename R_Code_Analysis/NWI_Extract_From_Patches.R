@@ -172,3 +172,8 @@ lapply(
   list_of_field_verified,
   extractNWI
 )
+
+#### count patches
+# l <- list.files(fieldVerified, full.names = TRUE)
+# l <- list.files(wetlandSavePath, full.names = TRUE)
+# lapply(l, \(x) st_read(x, quiet = TRUE) |> group_by(PatchGroup) |> reframe(n = n()) |> nrow()) |> unlist() |> sum()
