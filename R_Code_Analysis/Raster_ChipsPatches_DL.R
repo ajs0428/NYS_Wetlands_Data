@@ -17,7 +17,7 @@ set.seed(11)
 ########################################################################################
 
 args <- c(
-    "Data/Training_Data/R_Patches_Vector_NWIextra/", #Path to GIS reviewed wetland vector patches
+    "Data/Training_Data/R_Patches_Vector_NWIextra/", #Path to wetland vector patches
     128, # patch size 1/2
     11 # cluster subset options include number or NULL for any
 )

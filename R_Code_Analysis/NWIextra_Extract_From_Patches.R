@@ -363,3 +363,12 @@ lapply(
   unique(na.omit(huc_table$huc12[!is.na(huc_table$n_patches)])),
   extractNWIrandom
 )
+
+#### count patches
+# l <- list.files(wetlandSavePath, full.names = TRUE)
+
+# lapply(l, \(x) {
+#   st_read(x, quiet = TRUE) |> group_by(PatchGroup) |> reframe(n = n()) |> nrow()
+# }) |>
+#   unlist() |>
+#   sum()

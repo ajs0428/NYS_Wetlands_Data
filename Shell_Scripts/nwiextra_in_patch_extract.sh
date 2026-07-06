@@ -6,7 +6,7 @@ export TMPDIR=/ibstorage/anthony/tmp
 
 module load R/4.4.3
 
-Rscript R_Code_Analysis/NWI_Extract_From_Patches.R \
+Rscript R_Code_Analysis/NWIextra_Extract_From_Patches.R \
     "Data/NWI/NY_NWI_6347.gpkg" \
     "Data/Training_Data/R_Patches_Vector_NWIextra/" \
     "Data/Training_Data/R_Patches_Vector_Reviewed/" \
