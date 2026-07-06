@@ -155,15 +155,28 @@ rast_chip_patch_create <- function(wetland_file) {
     }
     # Drop patches smaller than the full 256 m square (HUC-edge boxes clipped by
     # the watershed boundary). The wetland + upland polygons partition each box, so
-    # their summed area equals the box area -- same threshold as before.
+    # their summed area equals the box area. The 0.998 factor tolerates reviewed
+    # polygons that come out ~255.98 m on a side (sliver/precision loss) -- still
+    # close enough to rasterize to a full 256x256 window for the DL pipeline.
     patch_area <- tw_valid |>
         dplyr::mutate(.parea = as.numeric(st_area(tw_valid))) |>
         sf::st_drop_geometry() |>
         dplyr::group_by(PatchGroup) |>
         dplyr::summarise(area = sum(.parea), .groups = "drop")
     keep_groups <- patch_area$PatchGroup[
-        patch_area$area >= ((patchsize * 2)**2) - 0.5
+        patch_area$area >= 0.998 * ((patchsize * 2)**2)
     ]
+    dropped <- patch_area[!patch_area$PatchGroup %in% keep_groups, ]
+    if (nrow(dropped) > 0) {
+        message(
+            "Dropping ", nrow(dropped), " PatchGroup(s) below area threshold in ",
+            basename(wetland_file), ": ",
+            paste0(
+                dropped$PatchGroup, " (", round(dropped$area), " m2)",
+                collapse = ", "
+            )
+        )
+    }
     tw_grouped_list <- tw_valid |>
         dplyr::filter(PatchGroup %in% keep_groups) %>%
         dplyr::filter(st_is_valid(.)) |>
@@ -288,7 +301,11 @@ rast_chip_patch_create <- function(wetland_file) {
                             )
                         },
                         error = function(e) {
-                            message("Cropping Stack")
+                            message(
+                                "Excluding patch ", patch_group, " (", fn,
+                                "): failed to write stack: ",
+                                conditionMessage(e)
+                            )
                             skip_to_next <<- TRUE
                         }
                     )
@@ -303,8 +320,14 @@ rast_chip_patch_create <- function(wetland_file) {
                     message("Already file ", fn)
                 }
             },
+            # Patches inside the HUC boundary but outside the DEM/other source
+            # rasters land here (e.g. "[crop] extents do not overlap") -- exclude
+            # the patch, say which one, and keep going.
             error = function(e) {
-                message("Error: ", conditionMessage(e))
+                message(
+                    "Excluding patch ", patch_group, " of ",
+                    basename(wetland_file), ": ", conditionMessage(e)
+                )
                 return(invisible(NULL))
             }
         )
