@@ -3,10 +3,15 @@
 #SBATCH --nodelist=cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
-#SBATCH --mem-per-cpu=64G
+#SBATCH --mem-per-cpu=32G
 #SBATCH --job-name=hydro
 #SBATCH --ntasks=5
-#SBATCH --cpus-per-task=1
+# WhiteboxTools fill/breach panic ("Error unwrapping 'output'") near-100% of
+# the time in a 1-CPU cgroup: worker threads drop their Arc<Raster> only AFTER
+# tx.send(), and on one CPU the woken main thread preempts them right at the
+# Arc::try_unwrap. >=2 CPUs makes the race vanish. Keep cpus-per-task >= 2 for
+# any WBT-calling step; 32G x 2 preserves the 64G/task budget via TASK_MEM_MB.
+#SBATCH --cpus-per-task=2
 #SBATCH --output=Shell_Scripts/SLURM/slurm-hydro-%j.out
 
 
@@ -26,7 +31,7 @@ unset SLURM_MEM_PER_CPU SLURM_MEM_PER_NODE SLURM_MEM_PER_GPU
 
 for number in "${include[@]}"; do
     echo "  Cluster $number – Hydro"
-    srun --nodes=1 --ntasks=1 --exclusive \
+    srun --nodes=1 --ntasks=1 --cpus-per-task="${SLURM_CPUS_PER_TASK:-2}" --exclusive \
         Rscript R_Code_Analysis/hydro_metrics_singleVect_CMD.R \
         "$GPKG" \
         "$number" \
