@@ -26,10 +26,13 @@ As of 6/10/2026 Metrics needed for wetland mapping model (the authoritative band
 recipe is `R_Code_Analysis/huc_stack.R` — stacks are assembled in memory, never
 written to disk): 
 
-- Terrain: Elevation - 'DEM', Slope/Gradient - 'slope_local', Geomorphons categories - 'Geomorph_local'
+- Terrain: Elevation - 'DEM', Slope/Gradient - 'slope_local', Topographic position index - 'TPI_local', Geomorphons categories - 'Geomorph_local', Mean curvature - 'meanc_local', Deviation from mean elevation - 'dmv_local'
   - Digital elevation model (DEM) rasters are [downloaded from the NYS GIS Clearinghouse](https://data.gis.ny.gov/) via FTP into Data/DEMs/ (manual, one-time per region; no automated download script exists yet)
   - `DEM_Extract_singleVect_CMD.R` collects and crops to the HUC12 raster
-  - `terrain_metrics_filter_singleVect_CMD.R` calculates slope and Geomorphons categories (also writes TPI, which is dropped at stack time). Curvature/DMV metrics are no longer produced by the pipeline (not in the band contract) but remain available via `step_terrain.sh <clusters> curv|dmv`
+  - `terrain_metrics_filter_singleVect_CMD.R` writes **one** combined terrain raster per HUC — `cluster_<n>_huc_<id>_terrain_slp_local.tif`, bands `slope_local, TPI_local, Geomorph_local, meanc_local, dmv_local`, all five of which go into the stack. Slope/TPI come from `terra::terrain`, landforms from `rgeomorphon::geomorphons`, mean curvature from `MultiscaleDTM::Qfit(metrics = "meanc")`, and deviation from mean elevation from `MultiscaleDTM::DMV`
+  - `DMV` runs at a **21×21** cell window (~21 m on a 1 m DEM), not the 3×3 the old `dmv` metric used: at 3×3 it was numerically identical to TPI (r = 1.0000 on a test HUC). At 21×21 the two are independent — `TPI_local` is fine-scale pit/peak roughness, `dmv_local` is position relative to the surrounding ~20 m. TPI was dropped at stack time before 2026-07 for exactly this redundancy; it is kept now. Window sizes are the `CURV_W`/`DMV_W` constants at the top of the script
+  - As of 2026-07 there is no multiscale filtering: every metric is computed directly on the HUC DEM (the 5/100/500 m aggregate→resample scales are gone; the `_local` suffix is kept only because the downstream filename filters key on it). Plan (`planc`) and profile (`profc`) curvature are deliberately not produced
+  - The step skips a HUC only when the existing file's band names match the contract, so terrain rasters written before 2026-07 are rebuilt automatically; `FORCE_TERRAIN=1` rebuilds everything
 - Hydrology: Flow accumulation - 'flowacc' (log-transformed at stack time), Topographic wetness index - 'twi'
   - From the same digital elevation models: `hydro_metrics_singleVect_CMD.R` calculates flow accumulation and TWI
 - Vegetation: Beier et al,. Canopy Height - 'CHM'
@@ -51,8 +54,15 @@ written to disk):
   - Ortho imagery is stored in JPG2000 format, which the BioHPC GDAL cannot read — `ortho_gdalwarp.sh` wraps a JP2-capable conda gdalwarp (see comments in that file)
 
 **Dropped from the pipeline (2026-06):** Sentinel satellite indices (`step_sat_gee.sh`)
-and terrain curvature/DMV — their outputs are not part of the `huc_stack.R` band
-contract. The scripts live in `Shell_Scripts/archive/`.
+— their outputs are not part of the `huc_stack.R` band contract. The scripts live
+in `Shell_Scripts/archive/`.
+
+**Restored 2026-07:** mean curvature and DMV, dropped alongside the satellite
+indices in 2026-06, are back — but as extra *bands* of the existing `slp` terrain
+stage rather than the separate `curv`/`dmv` metrics they used to be. There is
+still exactly one terrain job in the dependency graph, and `step_terrain.sh` now
+rejects `curv`/`dmv` as metric arguments. Plan/profile curvature and the
+multiscale filtering were not restored.
 
 ## Running the pipeline
 
@@ -76,7 +86,7 @@ SKIP_LIDAR_FTP=1 SKIP_ORTHO_DL=1 bash Shell_Scripts/step_combined_master.sh 225
 Dependency graph (all `afterok` unless noted):
 
 ```
-dem ──┬── terrain slp (slope/TPI/geomorphons)
+dem ──┬── terrain slp (slope/TPI/geomorphons/meanc/dmv)
       ├── hydro (flowacc/twi)
       ├── chm
       ├── naip

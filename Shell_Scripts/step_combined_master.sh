@@ -30,7 +30,7 @@
 #
 # Dependency graph (afterok unless noted):
 #
-#   dem ──┬── terrain slp
+#   dem ──┬── terrain slp   (slope/TPI/geomorphons/meanc/dmv, one file)
 #         ├── hydro
 #         ├── chm            (CHM resamples onto the HUC DEM)
 #         ├── naip           (NAIP resamples onto the HUC DEM)
@@ -39,9 +39,16 @@
 #   ortho_dl ─── ortho_index ── ortho_huc   (needs index AND dem)
 #         (everything) ── check    (afterany; missing-output report)
 #
-# Satellite (sat_gee) and terrain curv/dmv were removed 2026-06: their outputs
-# are not in the huc_stack.R band contract. step_terrain.sh still accepts
-# curv/dmv as a manual one-off if ever needed.
+# Satellite (sat_gee) was removed 2026-06: its outputs are not in the
+# huc_stack.R band contract.
+#
+# Terrain curv/dmv, dropped at the same time, came back 2026-07 as extra BANDS
+# of the slp stage's single output file (meanc_local, dmv_local) rather than as
+# separate stages -- there is still exactly one terrain job in the graph. The
+# multiscale (5/100/500 m) smoothing was removed with them. Terrain rasters
+# written before that change have the wrong band set; the slp stage detects
+# this by band name and rebuilds them, and check_stack_ready.sh / step_check
+# report any that were missed as "terr-bands".
 #
 # MANUAL PREREQUISITES (once per data refresh, not per run):
 #   - DEM source tiles for these clusters exist in Data/DEMs/ (no automated
@@ -207,7 +214,7 @@ echo "Submitting DEM extraction..."
 jid_dem=$(submit "" "$SCRIPTDIR/step_dem.sh" "$INCLUDE_STR")
 echo "  Job $jid_dem"
 
-echo "Submitting terrain slope/geomorphons (after DEM)..."
+echo "Submitting terrain slope/geomorphons/meanc/dmv (after DEM)..."
 jid_slp=$(submit "afterok:$jid_dem" "$SCRIPTDIR/step_terrain.sh" "$INCLUDE_STR" slp)
 echo "  Job $jid_slp"
 

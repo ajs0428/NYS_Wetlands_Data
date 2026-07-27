@@ -9,15 +9,25 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --output=Shell_Scripts/SLURM/slurm-terrain-%j.out
 
-# Usage: sbatch [--mem-per-cpu=X --cpus-per-task=Y] step_terrain.sh <include_csv> <metric>
-# metric: slp, curv, or dmv
+# Usage: sbatch [--mem-per-cpu=X --cpus-per-task=Y] step_terrain.sh <include_csv> [metric]
+#
+# metric: "slp" (the only value; defaults to slp). It names the ONE combined
+#   terrain raster per HUC -- cluster_<n>_huc_<id>_terrain_slp_local.tif -- whose
+#   bands are slope_local, TPI_local, Geomorph_local, meanc_local, dmv_local.
+#   Mean curvature and DMV used to be separate curv/dmv metrics writing separate
+#   files; they were folded into this stack 2026-07, along with the removal of
+#   the multiscale (5/100/500 m) smoothing. Passing curv or dmv now errors out.
+#
+# FORCE_TERRAIN=1 sbatch ... rebuilds every HUC. Not normally needed: the R step
+#   skips a HUC only when the existing file's band names match the contract, so
+#   pre-2026-07 3-band terrain rasters are rebuilt automatically.
 
 cd /ibstorage/anthony/NYS_Wetlands_Data/
 export TMPDIR=/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp/
 module load R/4.4.3
 
 IFS=',' read -ra include <<< "$1"
-metric="$2"
+metric="${2:-slp}"
 DATE=$(date +%Y%m%d)
 
 # Snapshot the per-task memory budget (MB) before unsetting the SLURM mem vars,

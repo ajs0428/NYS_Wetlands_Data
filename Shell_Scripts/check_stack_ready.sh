@@ -17,8 +17,15 @@ set -uo pipefail
 #   terr -> the local slope file, excluding 10m / 1000m scales
 #   rest -> any .tif matching the huc id and the exact cluster
 #
+# The terrain file is additionally opened (gdalinfo header read) and its band
+# descriptions compared against TERR_BANDS below. A terrain raster written
+# before meanc/dmv were folded in (2026-07) still exists on disk and so would
+# pass a presence-only check while silently narrowing the DL stack; those HUCs
+# are reported as missing "terr-bands". This costs ~0.1 s per HUC -- pass
+# --no-bands for the old presence-only behaviour (noticeably faster on "all").
+#
 # Usage:
-#   bash Shell_Scripts/check_stack_ready.sh <SELECTION...> [-o OUTFILE]
+#   bash Shell_Scripts/check_stack_ready.sh <SELECTION...> [-o OUTFILE] [--no-bands]
 #
 #   SELECTION  one or more of:
 #     batchN         a batch name from Shell_Scripts/batch_config.sh
@@ -29,12 +36,13 @@ set -uo pipefail
 #   bash Shell_Scripts/check_stack_ready.sh batch1
 #   bash Shell_Scripts/check_stack_ready.sh batch1 batch2
 #   bash Shell_Scripts/check_stack_ready.sh 208,225 -o /tmp/ready.txt
-#   bash Shell_Scripts/check_stack_ready.sh all
+#   bash Shell_Scripts/check_stack_ready.sh all --no-bands
 #
 # Output (two files):
 #   OUTFILE                 tab-separated report:  valid  cluster:huc  [missing:...]
 #                             yes  208:041402011002
 #                             no   64:020200040404   missing:chm,lidar
+#                             no   12:041300010203   missing:terr-bands
 #   OUTFILE minus .txt + _valid_pairs.txt
 #                           only the ready cluster:huc pairs, one per line --
 #                           feed it straight to the DL project's
@@ -58,8 +66,19 @@ subdir_for() {
     esac
 }
 
+# Band contract of the combined terrain raster, in order. Mirrors
+# TERRAIN_BANDS in R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.R
+# (the producer) and terr_expected_bands() in R_Code_Analysis/huc_stack.R.
+TERR_BANDS="slope_local TPI_local Geomorph_local meanc_local dmv_local"
+
+# The system gdalinfo (/usr/local/bin) is broken against the current libgdal;
+# the packaged 3.4 CLI is the working one (see also step_hydro.sh). Override
+# with GDALINFO=... if that changes.
+GDALINFO="${GDALINFO:-/usr/bin/gdal3.4-gdalinfo}"
+
 # === ARGS ===
 OUTFILE=""
+CHECK_BANDS=1
 SELECTORS=()
 while [ "$#" -gt 0 ]; do
     case "$1" in
@@ -67,6 +86,8 @@ while [ "$#" -gt 0 ]; do
             shift
             [ "$#" -ge 1 ] || { echo "ERROR: -o needs a file argument" >&2; exit 1; }
             OUTFILE="$1" ;;
+        --no-bands)
+            CHECK_BANDS=0 ;;
         -h|--help)
             grep -E '^#( |$)' "$0" | sed -E 's/^# ?//'
             exit 0 ;;
@@ -135,23 +156,41 @@ for key in $KEYS; do
     ls "$(subdir_for "$key")" 2>/dev/null | grep '\.tif$' > "$TMP/$key.all" || true
 done
 
-# At least one file for this huc in a per-cluster listing, after the
-# dataset-specific filters? (mirrors keep_file / match_one)
-has_source() {
-    local key="$1" huc="$2" listing="$3" hit=""
+# First file for this huc in a per-cluster listing, after the dataset-specific
+# filters (mirrors keep_file / match_one). Echoes the basename, or nothing.
+find_source() {
+    local key="$1" huc="$2" listing="$3"
     case "$key" in
-        dem)  hit="$(grep -F "$huc" "$listing" | grep -v 'wbt'        | head -1)" ;;
-        terr) hit="$(grep -F "$huc" "$listing" | grep 'slp' | grep 'local' \
-                                               | grep -vE '10m|1000m' | head -1)" ;;
-        *)    hit="$(grep -F "$huc" "$listing" | head -1)" ;;
+        dem)  grep -F "$huc" "$listing" | grep -v 'wbt'        | head -1 ;;
+        terr) grep -F "$huc" "$listing" | grep 'slp' | grep 'local' \
+                                        | grep -vE '10m|1000m' | head -1 ;;
+        *)    grep -F "$huc" "$listing" | head -1 ;;
     esac
-    [ -n "$hit" ]
 }
+
+# Do the terrain raster's band descriptions match TERR_BANDS exactly, in order?
+# Header read only -- gdalinfo does not touch the pixel data.
+terr_bands_ok() {
+    local got
+    got="$("$GDALINFO" "$1" 2>/dev/null \
+           | sed -nE 's/^ *Description = (.*)$/\1/p' | tr '\n' ' ')"
+    # unquoted $got / $TERR_BANDS collapses whitespace on both sides
+    [ "$(echo $got)" = "$(echo $TERR_BANDS)" ]
+}
+
+if [ "$CHECK_BANDS" -eq 1 ] && ! command -v "$GDALINFO" >/dev/null 2>&1; then
+    echo "WARNING: $GDALINFO not found -- skipping the terrain band check." >&2
+    echo "         (set GDALINFO=... or pass --no-bands to silence this)" >&2
+    CHECK_BANDS=0
+fi
 
 {
     echo "# stack-readiness report  $(date '+%Y-%m-%d %H:%M:%S')"
     echo "# selection: ${SELECTORS[*]}  (${#CLUSTERS[@]} clusters)"
     echo "# datasets checked: $KEYS  (band contract of R_Code_Analysis/huc_stack.R)"
+    [ "$CHECK_BANDS" -eq 1 ] \
+        && echo "# terrain bands required: $TERR_BANDS" \
+        || echo "# terrain band check: DISABLED (--no-bands)"
     echo "# columns: valid <TAB> cluster:huc <TAB> missing datasets (if any)"
 } > "$OUTFILE"
 : > "$PAIRSFILE"
@@ -172,7 +211,14 @@ for cl in "${CLUSTERS[@]}"; do
         N_TOTAL=$((N_TOTAL + 1))
         missing=()
         for key in $KEYS; do
-            has_source "$key" "$huc" "$TMP/$key.cl" || missing+=("$key")
+            hit="$(find_source "$key" "$huc" "$TMP/$key.cl")"
+            if [ -z "$hit" ]; then
+                missing+=("$key")
+            elif [ "$key" = "terr" ] && [ "$CHECK_BANDS" -eq 1 ] \
+                 && ! terr_bands_ok "$(subdir_for terr)/$hit"; then
+                # present but stale (e.g. no meanc/dmv) -- unusable for stacking
+                missing+=("terr-bands")
+            fi
         done
         if [ "${#missing[@]}" -eq 0 ]; then
             printf 'yes\t%s:%s\n' "$cl" "$huc" >> "$OUTFILE"

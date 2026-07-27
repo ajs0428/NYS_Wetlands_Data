@@ -34,6 +34,30 @@ huc_source_dirs <- function() {
   )
 }
 
+## --- Terrain band contract ---------------------------------------------------
+## Band names, in order, of the combined per-HUC terrain raster written by
+## R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.R
+## (cluster_<n>_huc_<hucid>_terrain_slp_local.tif). All five go into the stack.
+##
+## Mirrors TERRAIN_BANDS in terrain_metrics_filter_singleVect_CMD.R (the
+## producer) and TERR_BANDS in Shell_Scripts/check_stack_ready.sh (the shell
+## readiness check). Keep the three in sync.
+##
+## The "_local" suffix is vestigial — multiscale smoothing was removed 2026-07 —
+## but is load-bearing for the filename filter in huc_source_paths() and for the
+## "Geomorph_local" one-hot skip in DL_Extract_Normalize_Stats_FullRasters.R.
+terr_expected_bands <- function() {
+  c("slope_local", "TPI_local", "Geomorph_local", "meanc_local", "dmv_local")
+}
+
+## TRUE when a terrain file on disk matches the contract above. Used by
+## Pipeline_Check_CMD.R to flag stale (pre-meanc/dmv) terrain rasters, which
+## exist on disk and so pass a plain presence check.
+terr_bands_ok <- function(path) {
+  got <- tryCatch(names(terra::rast(path)), error = function(e) character(0))
+  identical(got, terr_expected_bands())
+}
+
 ## --- Locate the source file for one HUC in each dataset ----------------------
 ## Mirrors the file filtering in the original Raster_Stack.R clust_extract_fun:
 ##   DEM      -> exclude whitebox ("wbt") intermediates
@@ -73,8 +97,8 @@ huc_sources_ready <- function(paths, huc_number) {
 
 ## --- Read + transform each source into a lazy SpatRaster ---------------------
 ## Order here defines the band order of the final stack (the contract):
-##   DEM, terrain(slope, TPI dropped), hydro(log flowacc), CHM,
-##   NAIP(ndvi/ndwi dropped), lidar
+##   DEM, terrain(slope, TPI, Geomorph, meanc, dmv -- all bands kept),
+##   hydro(log flowacc), CHM, NAIP(ndvi/ndwi dropped), ortho, lidar
 ## rast() returns lazy file pointers; no pixels are read until a downstream
 ## crop / resample / minmax / extract forces it.
 huc_layers <- function(paths) {
@@ -86,8 +110,21 @@ huc_layers <- function(paths) {
   dem <- rast(pick1(paths$dem, "DEM"))
   set.names(dem, "DEM")
 
-  terr <- rast(pick1(paths$terr, "terrain")) 
-  terr <- terra::subset(terr, grep("^TPI_", names(terr), invert = TRUE))
+  terr_path <- pick1(paths$terr, "terrain")
+  terr <- rast(terr_path)
+  # A stale terrain raster (e.g. pre-2026-07, without meanc/dmv) would silently
+  # narrow the stack, so say so loudly here; assert_band_names() then fails the
+  # run on the first build. Rebuild with:
+  #   bash Shell_Scripts/step_combined_master.sh <clusters> slp
+  if (!identical(names(terr), terr_expected_bands())) {
+    message("WARNING: terrain band contract mismatch in ", basename(terr_path),
+            "\n    on disk : ", paste(names(terr), collapse = ", "),
+            "\n    expected: ", paste(terr_expected_bands(), collapse = ", "),
+            "\n    rerun the terrain step for this cluster.")
+  }
+  # All terrain bands are kept. TPI_local used to be dropped here because it
+  # duplicated the old 3x3 dmv; DMV now runs at 21x21, so TPI (fine-scale
+  # pit/peak roughness) and dmv (~20 m context) are independent predictors.
 
   hydro <- rast(pick1(paths$hydro, "hydro"))
   hydro$flowacc <- log(hydro$flowacc)

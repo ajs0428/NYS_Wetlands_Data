@@ -93,7 +93,12 @@ GPKG="Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg"
 #         "Data/CHMs/AWS"
 # done
 
-### Run LiDAR 
+### Run LiDAR
+# STALE (2026-07): this calls the superseded *_noparallel_* variant with the
+# "curv" metric, which writes *_terrain_curv_local.tif -- a file nothing reads
+# any more. Mean curvature and DMV are now bands of the single combined terrain
+# stack. To rescue individual HUCs use the current script/step instead:
+#   bash Shell_Scripts/step_combined_master.sh <clusters> slp
 for number in "${include[@]}"; do
     echo "Running Lidar_HUC_Processing with argument: $number"
       Rscript R_Code_Analysis/terrain_metrics_noparallel_filter_singleVect_CMD.R \

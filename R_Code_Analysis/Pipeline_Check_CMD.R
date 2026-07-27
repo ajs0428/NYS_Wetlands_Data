@@ -12,6 +12,12 @@
 # huc_source_paths() from huc_stack.R, so what is checked here is BY
 # CONSTRUCTION what the DL stacking will look for.
 #
+# The terrain file is additionally opened and its band names compared against
+# terr_expected_bands(); a stale terrain raster (e.g. one written before
+# meanc/dmv were folded in, 2026-07) exists on disk and so would otherwise pass
+# a presence-only check while silently narrowing the stack. Such HUCs are
+# reported as missing "terr-bands". Set CHECK_TERR_BANDS=0 to skip that read.
+#
 # Exits non-zero when anything is missing, so a SLURM job running this fails
 # visibly (mail-type=FAIL / sacct state) instead of burying the gap in a log.
 # =============================================================================
@@ -43,12 +49,22 @@ message("Clusters: ", paste(clusters, collapse = ", "),
 message("Source dirs checked: ",
         paste(names(huc_source_dirs()), collapse = ", "))
 
+check_terr_bands <- !Sys.getenv("CHECK_TERR_BANDS", "1") %in% c("0", "false", "FALSE")
+if (check_terr_bands) {
+    message("Terrain band contract: ",
+            paste(terr_expected_bands(), collapse = ", "))
+}
+
 missing_rows <- list()
 for (i in seq_len(nrow(hucs_all))) {
     cl  <- hucs_all$cluster[i]
     huc <- hucs_all$huc12[i]
     paths   <- huc_source_paths(huc, cl)
     missing <- names(paths)[lengths(paths) == 0]
+    # Terrain present but stale (wrong band set) is as unusable as terrain absent.
+    if (check_terr_bands && length(paths$terr) > 0 && !terr_bands_ok(paths$terr[1])) {
+        missing <- c(missing, "terr-bands")
+    }
     if (length(missing) > 0) {
         missing_rows[[length(missing_rows) + 1]] <- data.frame(
             cluster = cl, huc12 = huc,
