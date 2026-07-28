@@ -27,6 +27,14 @@
 #     SKIP_ORTHO_DL=1   skip the ortho tile download stage (tiles in
 #                       Data/Ortho/Tiles already cover these clusters); the
 #                       footprint index is still rebuilt
+#     TERRAIN_PARTITION=R128C40
+#                       send ONLY the terrain (slp) stage to cbsuxu01-08
+#                       (125 GB/node) instead of the R256C128 default
+#                       (cbsuxu09-10, 251 GB/node). Sets a matching nodelist,
+#                       --ntasks=8, --mem-per-cpu=120G and a reduced terra
+#                       budget; see "Terrain partition" below. A job cannot span
+#                       partitions, so run one job per partition to use both
+#                       node sets concurrently.
 #
 # Dependency graph (afterok unless noted):
 #
@@ -91,6 +99,50 @@ echo "Ortho year: $ORTHO_YEAR ($ORTHO_BANDS)"
 
 mkdir -p "$LOGDIR" "$SCRIPTDIR/SLURM"
 
+# ── Terrain partition (optional override of step_terrain.sh's #SBATCH lines) ──
+# sbatch command-line flags beat #SBATCH directives, so these are just passed
+# through to the terrain submission. Empty by default = the R256C128 defaults
+# baked into step_terrain.sh; nothing else in the graph is affected.
+#
+# The R128C40 preset reserves ~the whole node per task (120G of 125G), which
+# lets exactly one task land per node -> 8 concurrent clusters across
+# cbsuxu01-08. TASK_MEM_MB is pinned WELL below the allocation on purpose:
+# rgeomorphon/MultiscaleDTM allocate outside terra's accounting, so real RSS
+# runs ~25-30 GB above terra's memmax (measured 107 GB peak against an 81 GB
+# memmax on a 251 GB node). 80 GB of budget -> ~68 GB memmax -> ~50 GB of slack
+# for that overshoot. terra spills the difference to TMPDIR, which is slower but
+# does not get the task OOM-killed.
+terrain_opts=()
+case "${TERRAIN_PARTITION:-}" in
+    "")  ;;   # default: whatever step_terrain.sh's own #SBATCH lines say
+    R128C40)
+        terrain_opts=(
+            --partition=R128C40
+            --nodelist="${TERRAIN_NODELIST:-cbsuxu01,cbsuxu02,cbsuxu03,cbsuxu04,cbsuxu05,cbsuxu06,cbsuxu07,cbsuxu08}"
+            --ntasks="${TERRAIN_NTASKS:-8}"
+            --cpus-per-task="${TERRAIN_CPUS:-1}"
+            --mem-per-cpu="${TERRAIN_MEM_PER_CPU:-120G}"
+        )
+        export TASK_MEM_MB="${TASK_MEM_MB:-81920}"   # ~68 GB terra memmax
+        echo "Terrain stage -> R128C40 (${TERRAIN_NTASKS:-8} tasks, ${TERRAIN_MEM_PER_CPU:-120G}/task, TASK_MEM_MB=$TASK_MEM_MB)"
+        ;;
+    R256C128)
+        terrain_opts=(
+            --partition=R256C128
+            --nodelist="${TERRAIN_NODELIST:-cbsuxu09,cbsuxu10}"
+            --ntasks="${TERRAIN_NTASKS:-4}"
+            --cpus-per-task="${TERRAIN_CPUS:-1}"
+            --mem-per-cpu="${TERRAIN_MEM_PER_CPU:-96G}"
+        )
+        # An inherited TASK_MEM_MB is already in the environment and reaches the
+        # job via sbatch's default --export=ALL; nothing to do here.
+        echo "Terrain stage -> R256C128 (${TERRAIN_NTASKS:-4} tasks, ${TERRAIN_MEM_PER_CPU:-96G}/task)"
+        ;;
+    *)
+        echo "ERROR: TERRAIN_PARTITION must be R128C40 or R256C128 (got '$TERRAIN_PARTITION')" >&2
+        exit 1 ;;
+esac
+
 # ── Submission helper (DRYRUN=1 prints instead of submitting) ───────────────
 submit() {  # submit <dependency-or-""> <script> [args...]
     local dep="$1"; shift
@@ -100,7 +152,11 @@ submit() {  # submit <dependency-or-""> <script> [args...]
         echo "DRYRUN: sbatch ${flags[*]} $*" >&2
         # Fake job id named after the script so the printed dependency
         # strings stay readable (runs in a subshell; a counter won't stick).
-        echo "dry_$(basename "$1" .sh)"
+        # Scan for the .sh rather than assuming $1 -- sbatch options may precede
+        # the script path (see terrain_opts).
+        local a script=""
+        for a in "$@"; do [[ "$a" == *.sh ]] && script="$a"; done
+        echo "dry_$(basename "${script:-$1}" .sh)"
     else
         sbatch "${flags[@]}" "$@"
     fi
@@ -170,7 +226,7 @@ if [[ -n "$STEP" ]]; then
             jid=$(submit "" "$SCRIPTDIR/step_dem.sh" "$INCLUDE_STR") ;;
         slp|terrain)
             check_huc_dems || exit 1
-            jid=$(submit "" "$SCRIPTDIR/step_terrain.sh" "$INCLUDE_STR" slp) ;;
+            jid=$(submit "" "${terrain_opts[@]}" "$SCRIPTDIR/step_terrain.sh" "$INCLUDE_STR" slp) ;;
         hydro)
             check_huc_dems || exit 1
             jid=$(submit "" "$SCRIPTDIR/step_hydro.sh" "$INCLUDE_STR") ;;
@@ -215,7 +271,7 @@ jid_dem=$(submit "" "$SCRIPTDIR/step_dem.sh" "$INCLUDE_STR")
 echo "  Job $jid_dem"
 
 echo "Submitting terrain slope/geomorphons/meanc/dmv (after DEM)..."
-jid_slp=$(submit "afterok:$jid_dem" "$SCRIPTDIR/step_terrain.sh" "$INCLUDE_STR" slp)
+jid_slp=$(submit "afterok:$jid_dem" "${terrain_opts[@]}" "$SCRIPTDIR/step_terrain.sh" "$INCLUDE_STR" slp)
 echo "  Job $jid_slp"
 
 echo "Submitting hydro (after DEM)..."
