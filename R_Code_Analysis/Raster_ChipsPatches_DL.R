@@ -28,6 +28,19 @@ patchPath <- args[1]
 patchSize <- args[2]
 clusterSubset <- args[3]
 
+# Force a rebuild of already-written patches. Set via the REMOVE_EXISTING env
+# var (the .sh exports it) or as a 4th positional arg, which wins if given.
+# Needed when the source vector data changed: without it every existing .tif is
+# skipped by the file.exists() guard below, so edits never reach the rasters.
+parse_flag <- function(x) {
+    tolower(trimws(x)) %in% c("1", "true", "t", "yes", "y")
+}
+removeExisting <- if (length(args) >= 4 && nzchar(args[4])) {
+    parse_flag(args[4])
+} else {
+    parse_flag(Sys.getenv("REMOVE_EXISTING", ""))
+}
+
 message(
     "these are the arguments: \n",
     "1) path the reviewed training data :",
@@ -38,6 +51,9 @@ message(
     "\n",
     "3) cluster number :",
     clusterSubset,
+    "\n",
+    "4) remove existing patches :",
+    removeExisting,
     "\n"
 )
 
@@ -182,6 +198,56 @@ rast_chip_patch_create <- function(wetland_file) {
         dplyr::filter(st_is_valid(.)) |>
         dplyr::group_split(PatchGroup)
 
+    # Output folder mirrors the vector source folder (see the fn build below).
+    out_dir <- if (
+        str_detect(patchPath, pattern = "R_Patches_Vector_NWIextra/?$")
+    ) {
+        "Data/Training_Data/R_Patches_NWIextra/"
+    } else if (str_detect(patchPath, pattern = "R_Patches_Vector_NWI/?$")) {
+        "Data/Training_Data/R_Patches_NWI/"
+    } else {
+        "Data/Training_Data/R_Patches/"
+    }
+
+    # Label by the full source-file prefix (text before _cluster_), used for
+    # BOTH outputs so names line up: the NWI vector file is named
+    # "NWI_<reviewed-basename>", so its file_tag is exactly "NWI_" + the
+    # reviewed file's file_tag. Combined with the shared patch_group this makes
+    # every NWI raster == "NWI_" + its field-annotated counterpart's name
+    # (and a source-NWI patch becomes NWI_NWI_*). Using the full prefix also
+    # keeps a HUC's multiple reviewed gpkgs (NWI_ADK_WCT_AJS vs NWI_NWI_AJS)
+    # from colliding.
+    file_tag <- sub(
+        "_cluster_.*$",
+        "",
+        tools::file_path_sans_ext(basename(wetland_file))
+    )
+    # The literal _huc_ separator keeps cluster 12 from matching cluster 120;
+    # scoping by file_tag keeps one gpkg from wiping a sibling gpkg's patches.
+    fn_prefix <- paste0(
+        file_tag, "_cluster_", cluster_num, "_huc_", huc_num, "_patch_"
+    )
+
+    # REMOVE_EXISTING: wipe this HUC's previously written patches so changed
+    # vector data is fully re-rasterized. Done as a sweep (not just
+    # overwrite=TRUE) so PatchGroups that no longer exist in the new vector file
+    # don't survive as stale rasters. Deliberately placed AFTER the
+    # source-ready / PatchGroup / area filtering above -- a HUC that is being
+    # skipped keeps its existing patches rather than losing them to a transient
+    # missing input. Note this cannot clean up a HUC whose vector file was
+    # deleted outright, since that file is never iterated over.
+    if (removeExisting) {
+        stale <- list.files(out_dir, full.names = TRUE)
+        stale <- stale[startsWith(basename(stale), fn_prefix)]
+        if (length(stale) > 0) {
+            message(
+                "REMOVE_EXISTING: deleting ", length(stale),
+                " existing patch file(s) for ", fn_prefix
+            )
+            file.remove(stale)
+        }
+    }
+
     #### Each patch should be a separate file that is patchsize*2 x patchsize*2
     # Build the lazy source layers ONCE for this HUC and reuse them across every
     # patch. build_huc_stack_patch() otherwise re-opens all 7 sources and
@@ -195,71 +261,16 @@ rast_chip_patch_create <- function(wetland_file) {
         # PatchGroup is constant within a group -- this is the shared per-patch id.
         patch_group <- tw_grouped_list[[i]]$PatchGroup[1]
 
-        # Label by the full source-file prefix (text before _cluster_), used for
-        # BOTH outputs so names line up: the NWI vector file is named
-        # "NWI_<reviewed-basename>", so its file_tag is exactly "NWI_" + the
-        # reviewed file's file_tag. Combined with the shared patch_group this makes
-        # every NWI raster == "NWI_" + its field-annotated counterpart's name
-        # (and a source-NWI patch becomes NWI_NWI_*). Using the full prefix also
-        # keeps a HUC's multiple reviewed gpkgs (NWI_ADK_WCT_AJS vs NWI_NWI_AJS)
-        # from colliding.
-        file_tag <- sub(
-            "_cluster_.*$",
-            "",
-            tools::file_path_sans_ext(basename(wetland_file))
-        )
         tryCatch(
             {
-                if (
-                    str_detect(
-                        patchPath,
-                        pattern = "R_Patches_Vector_NWIextra/?$"
-                    )
-                ) {
-                    fn <- paste0(
-                        "Data/Training_Data/R_Patches_NWIextra/",
-                        file_tag,
-                        "_cluster_",
-                        cluster_num,
-                        "_huc_",
-                        huc_num,
-                        "_patch_",
-                        patch_group,
-                        "_",
-                        patchsize * 2,
-                        "m.tif"
-                    )
-                } else if (
-                    str_detect(patchPath, pattern = "R_Patches_Vector_NWI/?$")
-                ) {
-                    fn <- paste0(
-                        "Data/Training_Data/R_Patches_NWI/",
-                        file_tag,
-                        "_cluster_",
-                        cluster_num,
-                        "_huc_",
-                        huc_num,
-                        "_patch_",
-                        patch_group,
-                        "_",
-                        patchsize * 2,
-                        "m.tif"
-                    )
-                } else {
-                    fn <- paste0(
-                        "Data/Training_Data/R_Patches/",
-                        file_tag,
-                        "_cluster_",
-                        cluster_num,
-                        "_huc_",
-                        huc_num,
-                        "_patch_",
-                        patch_group,
-                        "_",
-                        patchsize * 2,
-                        "m.tif"
-                    )
-                }
+                fn <- paste0(
+                    out_dir,
+                    fn_prefix,
+                    patch_group,
+                    "_",
+                    patchsize * 2,
+                    "m.tif"
+                )
 
                 if (!file.exists(fn)) {
                     # Build the predictor stack for just this patch window, in memory.
