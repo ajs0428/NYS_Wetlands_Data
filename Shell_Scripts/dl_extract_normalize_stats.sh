@@ -30,7 +30,7 @@ source Shell_Scripts/batch_config.sh
 # computed once.
 batches=("$@")
 if [ ${#batches[@]} -eq 0 ]; then
-    batches=(batch1 batch2)
+    batches=(batch1 batch2 batch3)
 fi
 
 include=()
