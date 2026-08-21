@@ -7,6 +7,11 @@ library(terra)
 library(future)
 library(future.apply)
 
+# Print warnings as they happen. R's default (warn = 0) buffers them and
+# collapses the tail into "There were 50 or more warnings", which threw away
+# every per-tile download/metric failure reason in past runs.
+options(warn = 1)
+
 n_workers <- as.integer(Sys.getenv("SLURM_CPUS_PER_TASK", unset = "1"))
 
 nys_lidar_ftp <- "ftp://ftp.gis.ny.gov/elevation/LIDAR/"
@@ -182,8 +187,19 @@ compute_lidar_metrics <- function(las_path, out_dir, res = 1) {
     out_path
 }
 
+### Touch the heartbeat file the shell watchdog in step_lidar_ftp.sh polls.
+# Bumped at the start and end of every tile, so a stale mtime means no worker
+# has made progress -- the signal the watchdog uses to kill a stalled step.
+beat <- function(hb_file) {
+    if (!is.null(hb_file) && nzchar(hb_file)) {
+        try(file.create(hb_file, showWarnings = FALSE), silent = TRUE)
+    }
+    invisible(NULL)
+}
+
 ### Process a single tile: download → compute metrics → clean up
-process_tile <- function(tile_name, tile_url, out_dir) {
+process_tile <- function(tile_name, tile_url, out_dir, hb_file = NULL) {
+    beat(hb_file)
     out_path <- file.path(out_dir, paste0(tools::file_path_sans_ext(tile_name), "_metrics.tif"))
 
     # Skip if already processed
@@ -217,6 +233,7 @@ process_tile <- function(tile_name, tile_url, out_dir) {
 
     # Clean up raw LAS to save disk space
     unlink(las_path)
+    beat(hb_file)
     result
 }
 
@@ -244,13 +261,22 @@ args <- c("Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
 args <- commandArgs(trailingOnly = TRUE)
 
 if (length(args) < 4) {
-    stop("Usage: Rscript Lidar_ftp.R <gpkg_path> <cluster> <index_path> <output_dir>")
+    stop("Usage: Rscript Lidar_ftp.R <gpkg_path> <cluster> <index_path> <output_dir> [heartbeat_file]")
 }
 
 gpkg_path   <- args[1]
 cluster_num <- args[2]
 index_path  <- args[3]
 out_dir     <- args[4]
+# Optional 5th arg: file whose mtime this script bumps on every tile so the
+# watchdog in step_lidar_ftp.sh can tell "still working" from "hung".
+hb_file     <- if (length(args) >= 5) args[5] else ""
+
+# Per-cluster record of tiles that produced no output, so a re-run can be
+# targeted instead of re-walking the whole cluster.
+log_dir     <- if (dir.exists("Shell_Scripts/logs")) "Shell_Scripts/logs" else out_dir
+failed_file <- file.path(log_dir,
+                         paste0("lidar_ftp_", cluster_num, "_failed_tiles.txt"))
 # if (future::availableCores() > 16) {
 #     n_workers <- 1
 # } else {
@@ -300,16 +326,61 @@ if (n_workers > 1) {
     plan(sequential)
 }
 
-# Process all tiles (ftp_url already built by get_overlapping_tiles)
-results <- future_lapply(seq_len(nrow(unique_tiles)), function(idx) {
-    process_tile(unique_tiles$tile_name[idx], unique_tiles$ftp_url[idx], out_dir)
-}, future.seed = NULL)
+# Process all tiles (ftp_url already built by get_overlapping_tiles).
+#
+# Chunked on purpose: future_lapply aborts the ENTIRE run if a single parallel
+# worker dies (a segfaulting callr subprocess took out all 1085 tiles of
+# cluster 1 on 2026-08-18). Wrapping each chunk means one crash costs at most
+# `chunk_size` tiles, and the backend is rebuilt before continuing. Tiles
+# already on disk are skipped, so nothing is redone on the next pass.
+beat(hb_file)
+n_tiles    <- nrow(unique_tiles)
+chunk_size <- max(4L * n_workers, 16L)
+chunks     <- split(seq_len(n_tiles), ceiling(seq_len(n_tiles) / chunk_size))
+results    <- vector("list", n_tiles)
+
+for (ci in seq_along(chunks)) {
+    ids <- chunks[[ci]]
+    out <- tryCatch(
+        future_lapply(ids, function(idx) {
+            process_tile(unique_tiles$tile_name[idx], unique_tiles$ftp_url[idx],
+                         out_dir, hb_file)
+        }, future.seed = NULL),
+        error = function(e) {
+            message("!! chunk ", ci, "/", length(chunks),
+                    " (tiles ", min(ids), "-", max(ids), ") failed: ",
+                    conditionMessage(e))
+            # A dead worker poisons the backend; stand a fresh one up.
+            if (n_workers > 1) {
+                try(plan(sequential), silent = TRUE)
+                try(plan(future.callr::callr), silent = TRUE)
+            }
+            vector("list", length(ids))
+        }
+    )
+    results[ids] <- out
+}
 
 # Reset to sequential
-plan(sequential)
+try(plan(sequential), silent = TRUE)
 
-n_success <- sum(!sapply(results, is.null))
-message("\n=== Done. ", n_success, "/", nrow(unique_tiles),
+failed <- unique_tiles$tile_name[vapply(results, is.null, logical(1))]
+if (length(failed)) {
+    writeLines(failed, failed_file)
+    message("!! ", length(failed), " tiles produced no output. Names written to: ",
+            failed_file)
+} else if (file.exists(failed_file)) {
+    unlink(failed_file)          # clean slate once a cluster is fully covered
+}
+
+n_success <- n_tiles - length(failed)
+message("\n=== Done. ", n_success, "/", n_tiles,
         " tiles processed. Metrics written to: ", out_dir, " ===")
 
-gc()
+# Hard exit. Every raster is already written; R's normal shutdown has been
+# observed to hang here waiting on lingering future.callr worker processes,
+# which left the srun step (and therefore the whole batch job) alive doing
+# nothing. runLast = FALSE skips .Last and finalizers.
+flush(stdout()); flush(stderr())
+beat(hb_file)
+quit(save = "no", status = 0, runLast = FALSE)

@@ -36,14 +36,14 @@
 #                       partitions, so run one job per partition to use both
 #                       node sets concurrently.
 #
-# Dependency graph (afterok unless noted):
+# Dependency graph (afterok unless noted; lidar_huc is afterany -- see below):
 #
 #   dem ──┬── terrain slp   (slope/TPI/geomorphons/meanc/dmv, one file)
 #         ├── hydro
 #         ├── chm            (CHM resamples onto the HUC DEM)
 #         ├── naip           (NAIP resamples onto the HUC DEM)
 #         └────────────────────────┐
-#   lidar_ftp ── lidar_huc         │
+#   lidar_ftp ── lidar_huc         │   (afterany: ftp stage is resumable)
 #   ortho_dl ─── ortho_index ── ortho_huc   (needs index AND dem)
 #         (everything) ── check    (afterany; missing-output report)
 #
@@ -296,7 +296,13 @@ else
     echo "Submitting lidar tile download + metrics..."
     jid_lftp=$(submit "" "$SCRIPTDIR/step_lidar_ftp.sh" "$INCLUDE_STR")
     echo "  Job $jid_lftp"
-    lidar_dep="afterok:$jid_lftp"
+    # afterany, NOT afterok. The FTP stage is resumable (tiles already on disk
+    # are skipped) and can legitimately exit non-zero -- a wall-clock TIMEOUT,
+    # or the watchdog killing a hung step. Under afterok that turned into
+    # DependencyNeverSatisfied on the HUC merge, which then wedged the
+    # pipeline_check job behind it forever (786256 -> 786257 -> 786261,
+    # 2026-08-19). The merge simply builds from whatever tiles exist.
+    lidar_dep="afterany:$jid_lftp"
 fi
 
 echo "Submitting lidar HUC merge${lidar_dep:+ (after lidar FTP)}..."

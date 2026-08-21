@@ -11,6 +11,7 @@ library(future)
 library(future.apply)
 
 source("R_Code_Analysis/huc_stack.R") # shared in-memory stack recipe
+source("R_Code_Analysis/patch_groups.R") # shared PatchGroup cleaning/filter contract
 
 set.seed(11)
 
@@ -73,9 +74,10 @@ patchsize <- as.numeric(patchSize)
 ########################################################################################
 set.seed(420)
 
-rast_chip_patch_create <- function(wetland_file) {
+rast_chip_patch_create_one <- function(wetland_file) {
     setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
     source("R_Code_Analysis/huc_stack.R") # ensure recipe is available in callr workers
+    source("R_Code_Analysis/patch_groups.R") # ditto for the PatchGroup contract
     # Cap terra + GDAL memory well below the per-task cgroup (TASK_MEM_MB =
     # mem-per-cpu * cpus-per-task, exported by the .sh, shared across callr
     # workers). terra and the GDAL block cache otherwise size off total node RAM
@@ -109,6 +111,17 @@ rast_chip_patch_create <- function(wetland_file) {
     huc_num <- str_extract(wetland_file, "(?<=huc_)\\d+")
     cluster_num <- str_extract(wetland_file, "(?<=cluster_)\\d+")
     message("HUC num: ", huc_num)
+    # A filename missing the literal _huc_ (or _cluster_) separator leaves these
+    # NA, which used to travel all the way into huc_source_paths() and blow up
+    # with "missing value where TRUE/FALSE needed" -- taking the whole cluster's
+    # future_lapply down with it. Name the offending file and skip it instead.
+    if (is.na(huc_num) || is.na(cluster_num)) {
+        message(
+            "Cannot parse cluster/HUC from ", basename(wetland_file),
+            " (expected <tag>_cluster_<N>_huc_<HUCID>_...) - skipping"
+        )
+        return(invisible(NULL))
+    }
     if (cluster_num != clusterSubset & !is.null(clusterSubset)) {
         message("skip this cluster and huc, selecting cluster: ", clusterSubset)
         return(invisible(NULL))
@@ -140,20 +153,24 @@ rast_chip_patch_create <- function(wetland_file) {
     # sourceWetlands returned >1 path when a HUC has multiple reviewed gpkgs
     # (e.g. cluster_225 huc_042900050201), which st_read cannot take -> crash.
     tw <- st_read(wetland_file, quiet = TRUE)
-    # Repair invalid geometry rather than dropping it. Dropping (the old
-    # tw[st_is_valid(tw), ]) silently lost whole patches -- e.g. cluster_11 PG19
-    # (both polys invalid -> patch vanished) and cluster_22 PG14 (invalid UPL fill
-    # removed -> remaining slivers fell below the area filter). The NWI patches are
-    # rebuilt from clean st_intersection/st_difference geometry, so they kept these
-    # boxes, producing NWI rasters with no field-annotated counterpart. make_valid
-    # can emit GEOMETRYCOLLECTIONs (polygon + sliver line), so keep polygonal parts.
-    tw_valid <- st_make_valid(tw)
-    tw_valid <- suppressWarnings(st_collection_extract(tw_valid, "POLYGON"))
-    # Explode multi-part features to single polygons. NWI's UPL "background" is one
-    # MULTIPOLYGON whose parts are scattered across the whole HUC; grouping below
-    # is by PatchGroup so this no longer inflates crop windows, but exploding keeps
-    # the rasterize/area math per-polygon and matches prior behaviour.
-    tw_valid <- st_cast(st_cast(tw_valid, "MULTIPOLYGON"), "POLYGON")
+    # Drop empties, repair invalid geometry, keep polygonal parts, explode
+    # multi-part features. See patch_groups.R for why each step is there --
+    # Check_Patch_Vectors.R runs the identical code, so its report predicts
+    # exactly what this loop will write.
+    cleaned <- clean_patch_vector(tw)
+    if (cleaned$n_empty > 0) {
+        message(
+            "Dropping ", cleaned$n_empty, " empty geometry/geometries in ",
+            basename(wetland_file)
+        )
+    }
+    if (is.null(cleaned$sf)) {
+        message(
+            "Skipping ", basename(wetland_file), ": ", cleaned$note
+        )
+        return(invisible(NULL))
+    }
+    tw_valid <- cleaned$sf
     tw_valid$MOD_CLASS[tw_valid$MOD_CLASS == "OWW"] <- "UPL"
     if (any(grepl(pattern = "OWW", unique(tw_valid$MOD_CLASS)))) {
         message("OWW Detected, exiting")
@@ -169,32 +186,53 @@ rast_chip_patch_create <- function(wetland_file) {
         )
         return(invisible(NULL))
     }
-    # Drop patches smaller than the full 256 m square (HUC-edge boxes clipped by
-    # the watershed boundary). The wetland + upland polygons partition each box, so
-    # their summed area equals the box area. The 0.998 factor tolerates reviewed
-    # polygons that come out ~255.98 m on a side (sliver/precision loss) -- still
-    # close enough to rasterize to a full 256x256 window for the DL pipeline.
-    patch_area <- tw_valid |>
-        dplyr::mutate(.parea = as.numeric(st_area(tw_valid))) |>
-        sf::st_drop_geometry() |>
-        dplyr::group_by(PatchGroup) |>
-        dplyr::summarise(area = sum(.parea), .groups = "drop")
-    keep_groups <- patch_area$PatchGroup[
-        patch_area$area >= 0.998 * ((patchsize * 2)**2)
-    ]
-    dropped <- patch_area[!patch_area$PatchGroup %in% keep_groups, ]
-    if (nrow(dropped) > 0) {
+    # NA PatchGroups cannot name an output raster (and `NA %in% NA` is TRUE in R,
+    # so they used to slip through the filters below silently) -- see
+    # patch_groups.R.
+    na_drop <- drop_na_patch_groups(tw_valid)
+    tw_valid <- na_drop$sf
+    if (na_drop$n_na > 0) {
         message(
-            "Dropping ", nrow(dropped), " PatchGroup(s) below area threshold in ",
+            "Dropping ", na_drop$n_na, " polygon(s) with NA PatchGroup in ",
+            basename(wetland_file)
+        )
+    }
+    if (nrow(tw_valid) == 0) {
+        message(
+            "No polygons with a usable PatchGroup in ",
+            basename(wetland_file), " - skipping"
+        )
+        return(invisible(NULL))
+    }
+    # Per-PatchGroup summed area AND bounding box -- both gate a group; see
+    # patch_groups.R for the thresholds and the failure modes each one catches.
+    side <- patchsize * 2
+    patch_area <- patch_group_summary(tw_valid)
+    cls <- classify_patch_groups(patch_area, side)
+    keep_groups <- cls$keep
+    small <- cls$small
+    if (nrow(small) > 0) {
+        message(
+            "Dropping ", nrow(small), " PatchGroup(s) below area threshold in ",
             basename(wetland_file), ": ",
+            paste0(small$PatchGroup, " (", round(small$area), " m2)", collapse = ", ")
+        )
+    }
+    oversize <- cls$oversize
+    if (nrow(oversize) > 0) {
+        message(
+            "Dropping ", nrow(oversize), " PatchGroup(s) whose bbox is not one ",
+            side, " m square in ", basename(wetland_file),
+            " (id reused across separated patches?): ",
             paste0(
-                dropped$PatchGroup, " (", round(dropped$area), " m2)",
+                oversize$PatchGroup, " (", round(oversize$w), " x ",
+                round(oversize$h), " m)",
                 collapse = ", "
             )
         )
     }
     tw_grouped_list <- tw_valid |>
-        dplyr::filter(PatchGroup %in% keep_groups) %>%
+        dplyr::filter(as.character(PatchGroup) %in% keep_groups) %>%
         dplyr::filter(st_is_valid(.)) |>
         dplyr::group_split(PatchGroup)
 
@@ -345,6 +383,25 @@ rast_chip_patch_create <- function(wetland_file) {
     }
 
     return(NULL)
+}
+
+# future_lapply has no per-element error handling: any error escaping the worker
+# prints "Caught simpleError. Canceling all iterations ..." and halts the whole
+# Rscript, so every gpkg after the bad one in this cluster is never (re)generated
+# and its stale rasters survive untouched (REMOVE_EXISTING never reaches them).
+# On 2026-08-12 two malformed files wiped out all of cluster 208 and cluster 225
+# that way. Contain the blast radius to the one file, and name it in the log.
+rast_chip_patch_create <- function(wetland_file) {
+    tryCatch(
+        rast_chip_patch_create_one(wetland_file),
+        error = function(e) {
+            message(
+                "SKIPPING ", basename(wetland_file),
+                " - unhandled error: ", conditionMessage(e)
+            )
+            invisible(NULL)
+        }
+    )
 }
 
 ### Non-parallel

@@ -32,12 +32,16 @@
 #                    same name; the positional wins). Comma-separated list of
 #                    batch names from batch_config.sh and/or bare cluster
 #                    numbers, e.g. "batch3", "batch1,batch2", "208,225",
-#                    "batch3,250". Default "batch1,batch2".
+#                    "batch3,250". Default "batch1,batch2,batch3" -- the batches
+#                    whose upstream sources (DEM/terrain/hydro/CHM) are fully
+#                    built, so it matches what check_patch_vectors.sh checks by
+#                    default. Leaving batch3 out of the default is what let
+#                    cluster 204's NWI patches sit stale from 2026-08-12.
 #                    NOTE batch1-3 overlap batch4-18 -- don't run overlapping
 #                    selections concurrently (see batch_config.sh).
 #
 # Examples:
-#   sbatch Shell_Scripts/raster_chipspatches_dl.sh                                            # reviewed, batch1+batch2
+#   sbatch Shell_Scripts/raster_chipspatches_dl.sh                                            # reviewed, batch1+batch2+batch3
 #   sbatch Shell_Scripts/raster_chipspatches_dl.sh Data/Training_Data/R_Patches_Vector_NWI/   # NWI -> R_Patches_NWI/
 #   REMOVE_EXISTING=1 sbatch Shell_Scripts/raster_chipspatches_dl.sh                          # force full rebuild
 #   sbatch Shell_Scripts/raster_chipspatches_dl.sh Data/Training_Data/R_Patches_Vector_NWI/ 1 # NWI, forced rebuild
@@ -81,7 +85,7 @@ source Shell_Scripts/batch_config.sh
 # Resolve the cluster selection: positional $3 beats the CLUSTERS env var,
 # which beats the batch1+batch2 default. Each comma-separated token is either a
 # batch name from batch_config.sh (expanded) or a bare cluster number.
-CLUSTERS="${3:-${CLUSTERS:-batch1,batch2}}"
+CLUSTERS="${3:-${CLUSTERS:-batch1,batch2,batch3}}"
 include=()
 IFS=',' read -ra tokens <<< "$CLUSTERS"
 for token in "${tokens[@]}"; do
