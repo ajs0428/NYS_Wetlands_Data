@@ -25,6 +25,25 @@ NY_NWI <- args[1]
 wetlandSavePath <- args[2]
 fieldVerified <- args[3]
 
+# Force a rebuild of already-written NWI patch vectors. Set via the
+# REMOVE_EXISTING env var (the .sh exports it) or as a 4th positional arg,
+# which wins if given. Needed when the reviewed source patches changed:
+# without it every existing .gpkg is skipped by the file.exists() guard below,
+# so edits never reach the NWI patches.
+parse_flag <- function(x) {
+  tolower(trimws(x)) %in% c("1", "true", "t", "yes", "y")
+}
+removeExisting <- if (length(args) >= 4 && nzchar(args[4])) {
+  parse_flag(args[4])
+} else {
+  parse_flag(Sys.getenv("REMOVE_EXISTING", ""))
+}
+message("4) remove existing NWI patches: ", removeExisting, "\n")
+
+if (!dir.exists(wetlandSavePath)) {
+  dir.create(wetlandSavePath, recursive = TRUE)
+}
+
 ### Extract NWI from existing patches
 
 library(sf)
@@ -46,9 +65,18 @@ extractNWI <- function(
 
   p_path <- paste0(wetlandSavePath, "NWI_", basename(fieldVerifiedpatch))
   message("New file being created for: ", p_path)
+  # REMOVE_EXISTING wipes this file first so the rebuilt patches reflect the
+  # current reviewed vector data (PatchGroups deleted upstream would otherwise
+  # survive inside the stale .gpkg). A reviewed file deleted outright is never
+  # iterated over, so remove its NWI_* counterpart by hand.
   if (file.exists(p_path)) {
-    message("File already exists")
-    return(invisible(NULL))
+    if (removeExisting) {
+      message("REMOVE_EXISTING: deleting existing ", basename(p_path))
+      file.remove(p_path)
+    } else {
+      message("File already exists")
+      return(invisible(NULL))
+    }
   }
 
   p <- st_read(

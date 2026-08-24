@@ -37,6 +37,24 @@ wetlandSavePath <- args[2]
 fieldVerified <- args[3]
 hucZones <- args[4]
 
+# Force a rebuild of already-written NWIextra patch vectors. Set via the
+# REMOVE_EXISTING env var (the .sh exports it) or as a 5th positional arg,
+# which wins if given. Needed when the reviewed source patches changed: the
+# per-HUC patch COUNT is derived from them, and without this every existing
+# .gpkg is skipped by the file.exists() guard below so the new count never
+# takes effect. Because the random boxes are drawn from a single seeded RNG
+# stream in HUC order, a full rebuild (all outputs removed) reproduces the
+# same placement; a partial one does not.
+parse_flag <- function(x) {
+  tolower(trimws(x)) %in% c("1", "true", "t", "yes", "y")
+}
+removeExisting <- if (length(args) >= 5 && nzchar(args[5])) {
+  parse_flag(args[5])
+} else {
+  parse_flag(Sys.getenv("REMOVE_EXISTING", ""))
+}
+message("5) remove existing NWIextra patches: ", removeExisting, "\n")
+
 if (!dir.exists(wetlandSavePath)) {
   dir.create(wetlandSavePath, recursive = TRUE)
 }
@@ -311,9 +329,18 @@ extractNWIrandom <- function(huc_id) {
     "_256m.gpkg"
   )
   message("New file being created for: ", p_path)
+  # REMOVE_EXISTING wipes this HUC's file first so the rebuilt patches reflect
+  # the current reviewed patch count and footprints. A HUC that drops out of
+  # the reviewed data entirely is never iterated over, so remove its
+  # NWIextra_* file by hand.
   if (file.exists(p_path)) {
-    message("File already exists")
-    return(invisible(NULL))
+    if (removeExisting) {
+      message("REMOVE_EXISTING: deleting existing ", basename(p_path))
+      file.remove(p_path)
+    } else {
+      message("File already exists")
+      return(invisible(NULL))
+    }
   }
   if (n == 0) {
     message("No countable patches for HUC ", huc_id, " - skipping")

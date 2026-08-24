@@ -37,8 +37,8 @@
 #                    built, so it matches what check_patch_vectors.sh checks by
 #                    default. Leaving batch3 out of the default is what let
 #                    cluster 204's NWI patches sit stale from 2026-08-12.
-#                    NOTE batch1-3 overlap batch4-18 -- don't run overlapping
-#                    selections concurrently (see batch_config.sh).
+#                    NOTE the 18 batches are disjoint and cover 1-250 exactly
+#                    once, so selections can be run concurrently.
 #
 # Examples:
 #   sbatch Shell_Scripts/raster_chipspatches_dl.sh                                            # reviewed, batch1+batch2+batch3

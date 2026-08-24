@@ -39,10 +39,14 @@ set -uo pipefail
 #   bash Shell_Scripts/check_stack_ready.sh all --no-bands
 #
 # Output (two files):
-#   OUTFILE                 tab-separated report:  valid  cluster:huc  [missing:...]
-#                             yes  208:041402011002
-#                             no   64:020200040404   missing:chm,lidar
-#                             no   12:041300010203   missing:terr-bands
+#   OUTFILE                 tab-separated report:
+#                             valid  batch_num  cluster:huc  [missing:...]
+#                             yes  1     208:041402011002
+#                             no   1,9   64:020200040404   missing:chm,lidar
+#                             no   2     12:041300010203   missing:terr-bands
+#                           batch_num is the batchN name(s) from batch_config.sh
+#                           containing that cluster ("-" if none, comma-joined
+#                           when a cluster sits in more than one batch).
 #   OUTFILE minus .txt + _valid_pairs.txt
 #                           only the ready cluster:huc pairs, one per line --
 #                           feed it straight to the DL project's
@@ -142,6 +146,23 @@ else
     mapfile -t CLUSTERS < <(printf '%s\n' "${CLUSTERS[@]}" | sort -un)
 fi
 
+# === CLUSTER -> BATCH NUMBER(S) ===
+# Every batchN array in batch_config.sh, inverted. A cluster can appear in more
+# than one batch (e.g. 46 is in batch1 and batch7), so values are comma-joined;
+# clusters in no batch get "-".
+declare -A BATCH_OF=()
+for bname in $(compgen -A variable | grep -E '^batch[0-9]+$' | sort -t h -k2 -n); do
+    declare -n _b="$bname"
+    for c in "${_b[@]}"; do
+        if [ -n "${BATCH_OF[$c]:-}" ]; then
+            BATCH_OF[$c]="${BATCH_OF[$c]},${bname#batch}"
+        else
+            BATCH_OF[$c]="${bname#batch}"
+        fi
+    done
+    unset -n _b
+done
+
 # === OUTPUT FILES ===
 TAG="$(printf '%s-' "${SELECTORS[@]}")"; TAG="${TAG%-}"; TAG="${TAG//,/_}"
 [ -n "$OUTFILE" ] || OUTFILE="Shell_Scripts/logs/stack_ready_${TAG}_$(date +%Y%m%d_%H%M%S).txt"
@@ -191,7 +212,7 @@ fi
     [ "$CHECK_BANDS" -eq 1 ] \
         && echo "# terrain bands required: $TERR_BANDS" \
         || echo "# terrain band check: DISABLED (--no-bands)"
-    echo "# columns: valid <TAB> cluster:huc <TAB> missing datasets (if any)"
+    echo "# columns: valid <TAB> batch_num <TAB> cluster:huc <TAB> missing datasets (if any)"
 } > "$OUTFILE"
 : > "$PAIRSFILE"
 
@@ -203,6 +224,7 @@ for cl in "${CLUSTERS[@]}"; do
         echo "WARNING: cluster $cl has no HUCs in $PAIRS_CACHE -- skipped" >&2
         continue
     fi
+    batch_num="${BATCH_OF[$cl]:--}"
     # Pre-filter every dataset listing to this exact cluster (208, not 20/2080).
     for key in $KEYS; do
         grep -E "cluster_${cl}([^0-9]|$)" "$TMP/$key.all" > "$TMP/$key.cl" || true
@@ -221,11 +243,11 @@ for cl in "${CLUSTERS[@]}"; do
             fi
         done
         if [ "${#missing[@]}" -eq 0 ]; then
-            printf 'yes\t%s:%s\n' "$cl" "$huc" >> "$OUTFILE"
+            printf 'yes\t%s\t%s:%s\n' "$batch_num" "$cl" "$huc" >> "$OUTFILE"
             printf '%s:%s\n'      "$cl" "$huc" >> "$PAIRSFILE"
             N_OK=$((N_OK + 1))
         else
-            printf 'no\t%s:%s\tmissing:%s\n' "$cl" "$huc" \
+            printf 'no\t%s\t%s:%s\tmissing:%s\n' "$batch_num" "$cl" "$huc" \
                    "$(IFS=,; echo "${missing[*]}")" >> "$OUTFILE"
             N_BAD=$((N_BAD + 1))
         fi

@@ -37,6 +37,19 @@
 #   bash Shell_Scripts/check_patch_vectors.sh Data/Training_Data/R_Patches_Vector_Reviewed/ 208,225
 #   SKIP_RASTER_CHECK=1 bash Shell_Scripts/check_patch_vectors.sh
 #
+#   # one batch, report named after it (REPORT is $3, so $1 and $2 must be given):
+#   bash Shell_Scripts/check_patch_vectors.sh \
+#       Data/Training_Data/R_Patches_Vector_Reviewed/ batch4 \
+#       Shell_Scripts/logs/patch_vector_check_Reviewed_batch4.txt
+#
+#   # several batches plus a loose cluster, into a per-run report:
+#   bash Shell_Scripts/check_patch_vectors.sh \
+#       Data/Training_Data/R_Patches_Vector_NWI/ batch5,batch6,225 \
+#       Shell_Scripts/logs/patch_vector_check_NWI_batch5-6.txt
+#
+#   # same selection via the env var (report then falls back to the dated default):
+#   CLUSTERS=batch7,batch8 bash Shell_Scripts/check_patch_vectors.sh
+#
 # Exit codes: 0 = clean, 1 = flags/mismatches found, 2 = usage/setup error.
 # =============================================================================
 
@@ -90,7 +103,7 @@ else
     if [[ ${#include[@]} -eq 0 ]]; then
         echo "ERROR: CLUSTERS='$CLUSTERS' selected no clusters" >&2; exit 2
     fi
-    # de-duplicate: batch1-3 can overlap batch4-18
+    # de-duplicate: batches are disjoint, but a bare number can repeat a batch's
     CLUSTER_LIST=$(printf '%s\n' "${include[@]}" | sort -un | paste -sd,)
 fi
 
