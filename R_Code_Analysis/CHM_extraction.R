@@ -1,15 +1,23 @@
 #!/usr/bin/env Rscript
 
-args = c(
+args <- c(
     "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg",
     64,
     "Data/CHMs/AWS"
 )
-args = commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
+args <- commandArgs(trailingOnly = TRUE) # arguments are passed from terminal to here
 
-(message("these are the arguments: \n", 
-     "- Path to a file unprocessed CHM files:", args[1], "\n",
-     "- Path to processed CHM files:", args[2], "\n"
+(message(
+    "these are the arguments: \n",
+    "- Path to a file unprocessed CHM files: ",
+    args[1],
+    "\n",
+    "- Cluster number: ",
+    args[2],
+    "\n",
+    "- Path to processed CHM files: ",
+    args[3],
+    "\n"
 ))
 
 ###############################################################################################
@@ -24,12 +32,12 @@ terraOptions(tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp")
 print(tempdir())
 ###############################################################################################
 
-cluster_target <- sf::st_read(args[1], quiet = TRUE) |> 
-    dplyr::filter(cluster == args[2]) 
+cluster_target <- sf::st_read(args[1], quiet = TRUE) |>
+    dplyr::filter(cluster == args[2])
 cluster_crs <- st_crs(cluster_target)
 ###############################################################################################
 
-# This is all the CHM file names 
+# This is all the CHM file names
 # chms_file_list <- list.files("Data/CHMs/AWS/",
 #                              pattern = ".tif",
 #                              full.names = TRUE,
@@ -37,7 +45,7 @@ cluster_crs <- st_crs(cluster_target)
 #                              include.dirs = FALSE)
 # chms_file_list_limit <- chms_file_list[sapply(chms_file_list, file.size) > 100E3] # a lot of empty tiles
 # chms_file_list_limit_base <- sub(".*AWS//", "", chms_file_list_limit)
-# 
+#
 # saveRDS(chms_file_list, "Data/CHMs/chms_file_list.rds")
 # saveRDS(chms_file_list_limit, "Data/CHMs/chms_file_list_limit.rds")
 # saveRDS(chms_file_list_limit_base, "Data/CHMs/chms_file_list_limit_base.rds")
@@ -46,25 +54,38 @@ chms_file_list <- readRDS("Data/CHMs/chms_file_list.rds")
 chms_file_list_limit <- readRDS("Data/CHMs/chms_file_list_limit.rds")
 chms_file_list_limit_base <- readRDS("Data/CHMs/chms_file_list_limit_base.rds")
 
-print(paste0("this is the total list of chm indexes: ", length(chms_file_list)[[1]]))
-print(paste0("this is the limited list of chm indexes: ", length(chms_file_list_limit)[[1]]))
-print(paste0("this is the limited list of chm basenames: ", length(chms_file_list_limit_base)[[1]]))
+print(paste0(
+    "this is the total list of chm indexes: ",
+    length(chms_file_list)[[1]]
+))
+print(paste0(
+    "this is the limited list of chm indexes: ",
+    length(chms_file_list_limit)[[1]]
+))
+print(paste0(
+    "this is the limited list of chm basenames: ",
+    length(chms_file_list_limit_base)[[1]]
+))
 
-chms_gpkg_list <- list.files(args[3],
-                             pattern = ".gpkg$",
-                             full.names = TRUE,
-                             recursive = FALSE)
+chms_gpkg_list <- list.files(
+    args[3],
+    pattern = ".gpkg$",
+    full.names = TRUE,
+    recursive = FALSE
+)
 print(chms_gpkg_list)
 ###############################################################################################
 
 # This should make a list of all the CHM indexes that cross the area of the target cluster
 
-chm_ind_fun <- function(chms_gpkg_fn){
+chm_ind_fun <- function(chms_gpkg_fn) {
     message("Processing file ", chms_gpkg_fn)
-    
+
     features <- st_read(chms_gpkg_fn, quiet = TRUE)
     features_locs_base <- sub(".*AWS//", "", features$location)
-    features_filter <- features[(features_locs_base %in% chms_file_list_limit_base),]
+    features_filter <- features[
+        (features_locs_base %in% chms_file_list_limit_base),
+    ]
     # Transform to common CRS
     if (!st_crs(features_filter) == cluster_crs) {
         cat("  Transforming features to match polygon CRS...\n")
@@ -72,8 +93,12 @@ chm_ind_fun <- function(chms_gpkg_fn){
     } else {
         features_filter <- features_filter
     }
-    
-    features_in_cluster <- st_filter(features_filter, cluster_target, .predicate = st_intersects) 
+
+    features_in_cluster <- st_filter(
+        features_filter,
+        cluster_target,
+        .predicate = st_intersects
+    )
     return(features_in_cluster)
     # rm(features)
     # rm(features_in_cluster)
@@ -84,27 +109,27 @@ all_crossing_features <- lapply(chms_gpkg_list, chm_ind_fun)
 final_crossing_features <- dplyr::bind_rows(all_crossing_features)
 
 # final_crossing_features_rasts <- paste0(args[3], "/", final_crossing_features$location)
-# final_crossing_features_vrt <- vrt(final_crossing_features_rasts) |> 
+# final_crossing_features_vrt <- vrt(final_crossing_features_rasts) |>
 #                                 terra::project("EPSG:6347")
 # ###############################################################################################
-# 
+#
 # cluster_chm_extract <- terra::crop(final_crossing_features_vrt, cluster_target |> vect(),
 #                                    mask = TRUE)
 ###############################################################################################
 
-#### Simple for loop 
+#### Simple for loop
 # for(i in seq_along(cluster_target$huc12)){
 #     cluster_huc_name <- cluster_target$huc12[[i]]
 #     print(cluster_huc_name)
-#     
-#     huc_chms <- st_filter(final_crossing_features, cluster_target[i,], .predicate = st_intersects) 
+#
+#     huc_chms <- st_filter(final_crossing_features, cluster_target[i,], .predicate = st_intersects)
 #     huc_rasts <- paste0(args[3], "/",  huc_chms$location)
-#     
+#
 #     chm_filename <- paste0("Data/CHMs/HUC_CHMs", "/cluster_", args[2], "_huc_", cluster_huc_name, "_CHM.tif")
-#     
-#     huc_chm_vrt <- terra::vrt(huc_rasts) |> 
-#         terra::project("EPSG:6347", res = 1) |> 
-#         terra::crop(y = cluster_target[i,], mask = TRUE, 
+#
+#     huc_chm_vrt <- terra::vrt(huc_rasts) |>
+#         terra::project("EPSG:6347", res = 1) |>
+#         terra::crop(y = cluster_target[i,], mask = TRUE,
 #                     filename = chm_filename)
 # }
 
@@ -121,9 +146,12 @@ target_hucs <- unique(cluster_target$huc12)
 # workers (= SLURM_CPUS_PER_TASK) with ~15% headroom for R/GDAL outside terra.
 # Falls back to 32 GB off-SLURM (local runs).
 .task_mem_gb <- as.numeric(Sys.getenv("TASK_MEM_MB", "0")) / 1024
-.n_workers   <- max(1L, as.integer(Sys.getenv("SLURM_CPUS_PER_TASK", "1")))
-memmax_gb    <- if (.task_mem_gb > 0)
-                    max(4L, as.integer(floor(.task_mem_gb * 0.85 / .n_workers))) else 32L
+.n_workers <- max(1L, as.integer(Sys.getenv("SLURM_CPUS_PER_TASK", "1")))
+memmax_gb <- if (.task_mem_gb > 0) {
+    max(4L, as.integer(floor(.task_mem_gb * 0.85 / .n_workers)))
+} else {
+    32L
+}
 
 process_huc <- function(cluster_huc_name) {
     # Per-worker terra cap from the cgroup (see memmax_gb above).
@@ -131,21 +159,42 @@ process_huc <- function(cluster_huc_name) {
         tempdir = "/ibstorage/anthony/NYS_Wetlands_Data/Data/tmp",
         memmax = memmax_gb
     )
-    chm_filename <- paste0("Data/CHMs/HUC_CHMs", "/cluster_", args[2], "_huc_", cluster_huc_name, "_CHM.tif")
-    dem_filename <- paste0("Data/TerrainProcessed/HUC_DEMs", "/cluster_", args[2], "_huc_", cluster_huc_name, ".tif")
+    chm_filename <- paste0(
+        "Data/CHMs/HUC_CHMs",
+        "/cluster_",
+        args[2],
+        "_huc_",
+        cluster_huc_name,
+        "_CHM.tif"
+    )
+    dem_filename <- paste0(
+        "Data/TerrainProcessed/HUC_DEMs",
+        "/cluster_",
+        args[2],
+        "_huc_",
+        cluster_huc_name,
+        ".tif"
+    )
     message(chm_filename)
-    
+
     is_not_empty <- function(r) {
         !all(is.na(values(r)))
     }
 
-    if(!file.exists(chm_filename) & file.exists(dem_filename)){
+    if (!file.exists(chm_filename) & file.exists(dem_filename)) {
         dem_rast <- rast(dem_filename)
         huc_target <- cluster_target[cluster_target$huc12 == cluster_huc_name, ]
-        huc_chms <- st_filter(final_crossing_features, huc_target, .predicate = st_intersects)
-        huc_file_locs <- paste0(args[3], "/",  huc_chms$location)
+        huc_chms <- st_filter(
+            final_crossing_features,
+            huc_target,
+            .predicate = st_intersects
+        )
+        huc_file_locs <- paste0(args[3], "/", huc_chms$location)
         huc_rasts <- lapply(huc_file_locs, rast)
-        huc_file_locs_not_empty <- huc_file_locs[sapply(huc_rasts, is_not_empty)]
+        huc_file_locs_not_empty <- huc_file_locs[sapply(
+            huc_rasts,
+            is_not_empty
+        )]
 
         huc_chm_merge <- terra::sprc(huc_file_locs_not_empty) |>
             terra::mosaic(fun = "max") |>
@@ -153,21 +202,28 @@ process_huc <- function(cluster_huc_name) {
             terra::crop(y = huc_target, mask = TRUE) |>
             resample(y = dem_rast) |>
             tidyterra::rename("CHM" = 1)
-        terra::mask(huc_chm_merge, (!is.na(dem_rast) & is.na(huc_chm_merge)),
-                    maskvalues=TRUE, updatevalue = 0, filename = chm_filename,
-                    overwrite = TRUE)
-
-    } else if(file.exists(chm_filename) & file.exists(dem_filename)){
+        terra::mask(
+            huc_chm_merge,
+            (!is.na(dem_rast) & is.na(huc_chm_merge)),
+            maskvalues = TRUE,
+            updatevalue = 0,
+            filename = chm_filename,
+            overwrite = TRUE
+        )
+        # Return the path, never the SpatRaster: terra objects hold C++ external
+        # pointers that are invalid once serialized back from a callr worker
+        # ("external pointer is not valid" when the parent touches the result).
+        return(chm_filename)
+    } else if (file.exists(chm_filename) & file.exists(dem_filename)) {
         print(paste0("File already exists: ", chm_filename))
         return(chm_filename)
-    } else if(file.exists(chm_filename) & !file.exists(dem_filename)){
+    } else if (file.exists(chm_filename) & !file.exists(dem_filename)) {
         print(paste0("DEM does not exist?: ", dem_filename))
         return(dem_filename)
     } else {
         print("Error :^(")
         return(NULL)
     }
-    
 }
 
 # Honor SLURM allocation. availableCores() reads the *node*, not the cgroup,
@@ -179,20 +235,26 @@ if (nzchar(slurm_cpus)) {
     corenum <- min(future::availableCores(), 2)
 }
 print(corenum)
-options(future.globals.maxSize= 48.0 * 1e9)
+options(future.globals.maxSize = 48.0 * 1e9)
 plan(future.callr::callr, workers = corenum)
 
-future_lapply(
+chm_results <- future_lapply(
     target_hucs,
     process_huc,
     future.packages = c("terra", "sf", "dplyr", "tidyr", "stringr", "purrr"),
     future.globals = TRUE,
-    future.seed = TRUE  
+    future.seed = TRUE
+)
+
+message(
+    "Finished cluster ",
+    args[2],
+    ": ",
+    sum(file.exists(unlist(chm_results))),
+    "/",
+    length(target_hucs),
+    " HUC CHMs on disk"
 )
 
 # ### Non-parallel testing
 # lapply(target_hucs, process_huc)
-
-
-
-

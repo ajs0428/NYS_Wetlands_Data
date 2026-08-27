@@ -4,8 +4,10 @@
 # dependency graph, for a set of HUC12 clusters.
 #
 #   Usage:  bash step_combined_master.sh <clusters> [step]
-#           <clusters> is either a comma-separated list ("225" or "208,225,11")
-#           or a batch name from batch_config.sh ("batch1").
+#           <clusters> is a comma-separated list of cluster numbers ("225",
+#           "208,225,11"), batch names from batch_config.sh ("batch1",
+#           "batch7,batch8,batch9"), or a mix of both ("batch7,225").
+#           Duplicates are removed; an unrecognized token aborts the run.
 #           [step] (optional) runs only that one stage instead of the full graph.
 #             Valid steps: dem slp hydro chm naip lidar_ftp lidar
 #                          ortho_dl ortho_index ortho_huc check
@@ -19,6 +21,7 @@
 #     bash step_combined_master.sh batch2 hydro       # one stage only
 #     DRYRUN=1 bash step_combined_master.sh batch1    # print sbatch graph only
 #     DRYRUN=1 bash step_combined_master.sh batch2 hydro
+#     SKIP_LIDAR=1 SKIP_ORTHO=1 bash step_combined_master.sh batch1
 #
 #   Optional environment flags:
 #     DRYRUN=1          print the sbatch commands instead of submitting
@@ -27,6 +30,11 @@
 #     SKIP_ORTHO_DL=1   skip the ortho tile download stage (tiles in
 #                       Data/Ortho/Tiles already cover these clusters); the
 #                       footprint index is still rebuilt
+#     SKIP_LIDAR=1      drop the whole lidar branch (ftp + HUC merge); implies
+#                       SKIP_LIDAR_FTP. Lidar bands will be missing from the
+#                       stack, so step_check reports them.
+#     SKIP_ORTHO=1      drop the whole ortho branch (download + index +
+#                       HUC compositing); implies SKIP_ORTHO_DL. Same caveat.
 #     TERRAIN_PARTITION=R128C40
 #                       send ONLY the terrain (slp) stage to cbsuxu01-08
 #                       (125 GB/node) instead of the R256C128 default
@@ -46,6 +54,9 @@
 #   lidar_ftp ── lidar_huc         │   (afterany: ftp stage is resumable)
 #   ortho_dl ─── ortho_index ── ortho_huc   (needs index AND dem)
 #         (everything) ── check    (afterany; missing-output report)
+#
+#   SKIP_LIDAR=1 / SKIP_ORTHO=1 remove their whole branch from the graph;
+#   the check job then only waits on the stages that were submitted.
 #
 # Satellite (sat_gee) was removed 2026-06: its outputs are not in the
 # huc_stack.R band contract.
@@ -75,23 +86,53 @@ SCRIPTDIR="Shell_Scripts"
 # ── Resolve cluster selection from $1 ────────────────────────────────────────
 if [[ -z "${1:-}" ]]; then
     echo "Usage: bash $0 <clusters>"
-    echo "  <clusters> = comma-separated cluster numbers (e.g. \"208,225\")"
-    echo "               or a batch name from batch_config.sh (e.g. \"batch1\")"
+    echo "  <clusters> = comma-separated cluster numbers (e.g. \"208,225\"),"
+    echo "               batch names from batch_config.sh (e.g. \"batch1\"),"
+    echo "               or any mix of the two (e.g. \"batch7,batch8,225\")"
     exit 1
 fi
 
 SELECTOR="$1"   # original "batch2"/"208,225" token, reused in fix-it messages
 STEP="${2:-}"   # optional single stage to run instead of the full graph
 
-if [[ "$1" =~ ^batch[0-9]+$ ]]; then
-    ref="$1[@]"
-    include=("${!ref}")
-    if [[ ${#include[@]} -eq 0 ]]; then
-        echo "ERROR: '$1' is not defined in batch_config.sh"; exit 1
+# Each comma-separated token is either a batch name from batch_config.sh or a
+# bare cluster number; the two can be mixed ("batch7,batch8,225"). Unknown
+# tokens abort -- passing them through made every stage run on a nonexistent
+# cluster and exit "successfully" in seconds (2026-08-26).
+include=()
+IFS=',' read -ra selector_tokens <<< "$1"
+for tok in "${selector_tokens[@]}"; do
+    tok="${tok// /}"
+    [[ -z "$tok" ]] && continue
+    if [[ "$tok" =~ ^batch[0-9]+$ ]]; then
+        ref="$tok[@]"
+        expanded=("${!ref}")
+        if [[ ${#expanded[@]} -eq 0 ]]; then
+            echo "ERROR: '$tok' is not defined in batch_config.sh" >&2; exit 1
+        fi
+        include+=("${expanded[@]}")
+    elif [[ "$tok" =~ ^[0-9]+$ ]]; then
+        include+=("$tok")
+    else
+        echo "ERROR: '$tok' is neither a cluster number nor a batchN name" >&2
+        echo "       Selector was: '$1'" >&2
+        exit 1
     fi
-else
-    IFS=',' read -ra include <<< "$1"
+done
+
+if [[ ${#include[@]} -eq 0 ]]; then
+    echo "ERROR: no clusters resolved from '$1'" >&2; exit 1
 fi
+
+# De-duplicate (batches can overlap) while preserving order.
+declare -A seen=()
+deduped=()
+for c in "${include[@]}"; do
+    [[ -n "${seen[$c]:-}" ]] && continue
+    seen[$c]=1
+    deduped+=("$c")
+done
+include=("${deduped[@]}")
 
 INCLUDE_STR=$(IFS=,; echo "${include[*]}")
 echo "Clusters: $INCLUDE_STR"
@@ -289,7 +330,11 @@ jid_naip=$(submit "afterok:$jid_dem" "$SCRIPTDIR/step_naip.sh" "$INCLUDE_STR")
 echo "  Job $jid_naip"
 
 # ── Lidar: tile download+metrics, then HUC merge ─────────────────────────────
-if [[ "${SKIP_LIDAR_FTP:-0}" == "1" ]]; then
+# SKIP_LIDAR=1 drops the branch entirely and implies SKIP_LIDAR_FTP.
+if [[ "${SKIP_LIDAR:-0}" == "1" ]]; then
+    echo "Skipping lidar branch entirely (SKIP_LIDAR=1)..."
+    jid_lidar=""
+elif [[ "${SKIP_LIDAR_FTP:-0}" == "1" ]]; then
     echo "Skipping lidar FTP stage (SKIP_LIDAR_FTP=1)..."
     lidar_dep=""
 else
@@ -305,12 +350,19 @@ else
     lidar_dep="afterany:$jid_lftp"
 fi
 
-echo "Submitting lidar HUC merge${lidar_dep:+ (after lidar FTP)}..."
-jid_lidar=$(submit "$lidar_dep" "$SCRIPTDIR/step_lidar.sh" "$INCLUDE_STR")
-echo "  Job $jid_lidar"
+if [[ -n "${lidar_dep+x}" ]]; then
+    echo "Submitting lidar HUC merge${lidar_dep:+ (after lidar FTP)}..."
+    jid_lidar=$(submit "$lidar_dep" "$SCRIPTDIR/step_lidar.sh" "$INCLUDE_STR")
+    echo "  Job $jid_lidar"
+fi
 
 # ── Ortho: tile download, footprint index rebuild, then HUC compositing ──────
-if [[ "${SKIP_ORTHO_DL:-0}" == "1" ]]; then
+# SKIP_ORTHO=1 drops the branch entirely (including the index rebuild) and
+# implies SKIP_ORTHO_DL.
+if [[ "${SKIP_ORTHO:-0}" == "1" ]]; then
+    echo "Skipping ortho branch entirely (SKIP_ORTHO=1)..."
+    jid_ohuc=""
+elif [[ "${SKIP_ORTHO_DL:-0}" == "1" ]]; then
     echo "Skipping ortho download stage (SKIP_ORTHO_DL=1)..."
     oidx_dep=""
 else
@@ -320,20 +372,26 @@ else
     oidx_dep="afterok:$jid_odl"
 fi
 
-# Index rebuild always runs: it is cheap and must reflect the tiles on disk
-# before the HUC step reads it. Single job -- it rebuilds the shared gpkg.
-echo "Submitting ortho footprint index rebuild${oidx_dep:+ (after ortho download)}..."
-jid_oidx=$(submit "$oidx_dep" "$SCRIPTDIR/step_ortho_index.sh")
-echo "  Job $jid_oidx"
+# Index rebuild always runs unless the whole branch is skipped: it is cheap and
+# must reflect the tiles on disk before the HUC step reads it. Single job -- it
+# rebuilds the shared gpkg.
+if [[ -n "${oidx_dep+x}" ]]; then
+    echo "Submitting ortho footprint index rebuild${oidx_dep:+ (after ortho download)}..."
+    jid_oidx=$(submit "$oidx_dep" "$SCRIPTDIR/step_ortho_index.sh")
+    echo "  Job $jid_oidx"
 
-echo "Submitting ortho -> HUC compositing (after index + DEM)..."
-jid_ohuc=$(submit "afterok:$jid_oidx:$jid_dem" "$SCRIPTDIR/step_ortho_huc.sh" "$INCLUDE_STR" "$ORTHO_YEAR")
-echo "  Job $jid_ohuc"
+    echo "Submitting ortho -> HUC compositing (after index + DEM)..."
+    jid_ohuc=$(submit "afterok:$jid_oidx:$jid_dem" "$SCRIPTDIR/step_ortho_huc.sh" "$INCLUDE_STR" "$ORTHO_YEAR")
+    echo "  Job $jid_ohuc"
+fi
 
 # ── Final check: report missing per-HUC outputs across all 7 source dirs ─────
+check_dep="afterany:$jid_slp:$jid_hydro:$jid_chm:$jid_naip"
+[[ -n "$jid_lidar" ]] && check_dep+=":$jid_lidar"
+[[ -n "$jid_ohuc"  ]] && check_dep+=":$jid_ohuc"
+
 echo "Submitting pipeline output check (after everything)..."
-jid_check=$(submit "afterany:$jid_slp:$jid_hydro:$jid_chm:$jid_naip:$jid_lidar:$jid_ohuc" \
-    "$SCRIPTDIR/step_check.sh" "$INCLUDE_STR")
+jid_check=$(submit "$check_dep" "$SCRIPTDIR/step_check.sh" "$INCLUDE_STR")
 echo "  Job $jid_check"
 
 echo ""
