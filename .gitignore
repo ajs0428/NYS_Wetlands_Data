@@ -9,7 +9,9 @@
 # Don't ignore files directly in these directories
 !Python_Code_Analysis/*
 !R_Code_Analysis/*
-R_Code_Analysis/X*.R # ignore scripts that start with X
+# ignore scripts that start with X (gitignore has no trailing-comment syntax,
+# so this must be on its own line to match)
+R_Code_Analysis/X*.R
 !Shell_Scripts/*.sh
 Shell_Scripts/logs/
 

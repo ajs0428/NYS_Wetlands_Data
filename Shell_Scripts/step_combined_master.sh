@@ -199,9 +199,23 @@ submit() {  # submit <dependency-or-""> <script> [args...]
         for a in "$@"; do [[ "$a" == *.sh ]] && script="$a"; done
         echo "dry_$(basename "${script:-$1}" .sh)"
     else
-        sbatch "${flags[@]}" "$@"
+        # Capture stdout (the --parsable job id) but let sbatch's stderr through
+        # so its own diagnostic still reaches the terminal.
+        local out rc
+        out=$(sbatch "${flags[@]}" "$@"); rc=$?
+        if [[ $rc -ne 0 || -z "$out" ]]; then
+            echo "ERROR: sbatch failed (exit $rc): ${flags[*]} $*" >&2
+            return 1
+        fi
+        echo "$out"
     fi
 }
+# Every caller uses `jid=$(submit ...) || exit 1`. The `|| exit 1` is required,
+# not decorative: submit() runs in a command-substitution subshell, so a bare
+# `exit` inside it would only leave that subshell and the graph below would keep
+# submitting with an empty job id -- which is how a rejected step_naip.sh once
+# still printed "Submitted step 'naip' for clusters ..." and dropped silently
+# out of the dependency chain.
 
 # ── Single-step prerequisite checks (on-disk outputs) ───────────────────────
 # Each verifies the upstream products a stage reads. Globs are relative to the
@@ -264,36 +278,36 @@ if [[ -n "$STEP" ]]; then
     case "$STEP" in
         dem)
             check_dem_sources || exit 1
-            jid=$(submit "" "$SCRIPTDIR/step_dem.sh" "$INCLUDE_STR") ;;
+            jid=$(submit "" "$SCRIPTDIR/step_dem.sh" "$INCLUDE_STR") || exit 1 ;;
         slp|terrain)
             check_huc_dems || exit 1
-            jid=$(submit "" "${terrain_opts[@]}" "$SCRIPTDIR/step_terrain.sh" "$INCLUDE_STR" slp) ;;
+            jid=$(submit "" "${terrain_opts[@]}" "$SCRIPTDIR/step_terrain.sh" "$INCLUDE_STR" slp) || exit 1 ;;
         hydro)
             check_huc_dems || exit 1
-            jid=$(submit "" "$SCRIPTDIR/step_hydro.sh" "$INCLUDE_STR") ;;
+            jid=$(submit "" "$SCRIPTDIR/step_hydro.sh" "$INCLUDE_STR") || exit 1 ;;
         chm)
             check_huc_dems || exit 1
-            jid=$(submit "" "$SCRIPTDIR/step_chm.sh" "$INCLUDE_STR") ;;
+            jid=$(submit "" "$SCRIPTDIR/step_chm.sh" "$INCLUDE_STR") || exit 1 ;;
         naip)
             check_huc_dems || exit 1
-            jid=$(submit "" "$SCRIPTDIR/step_naip.sh" "$INCLUDE_STR") ;;
+            jid=$(submit "" "$SCRIPTDIR/step_naip.sh" "$INCLUDE_STR") || exit 1 ;;
         lidar_ftp)
             check_lidar_index || exit 1
-            jid=$(submit "" "$SCRIPTDIR/step_lidar_ftp.sh" "$INCLUDE_STR") ;;
+            jid=$(submit "" "$SCRIPTDIR/step_lidar_ftp.sh" "$INCLUDE_STR") || exit 1 ;;
         lidar)
             check_lidar_metrics || exit 1
-            jid=$(submit "" "$SCRIPTDIR/step_lidar.sh" "$INCLUDE_STR") ;;
+            jid=$(submit "" "$SCRIPTDIR/step_lidar.sh" "$INCLUDE_STR") || exit 1 ;;
         ortho_dl|ortho)
-            jid=$(submit "" "$SCRIPTDIR/step_ortho.sh" "$INCLUDE_STR" "$ORTHO_YEAR" "$ORTHO_BANDS") ;;
+            jid=$(submit "" "$SCRIPTDIR/step_ortho.sh" "$INCLUDE_STR" "$ORTHO_YEAR" "$ORTHO_BANDS") || exit 1 ;;
         ortho_index)
             check_ortho_tiles || exit 1
-            jid=$(submit "" "$SCRIPTDIR/step_ortho_index.sh") ;;
+            jid=$(submit "" "$SCRIPTDIR/step_ortho_index.sh") || exit 1 ;;
         ortho_huc)
             check_ortho_index || exit 1
             check_huc_dems || exit 1
-            jid=$(submit "" "$SCRIPTDIR/step_ortho_huc.sh" "$INCLUDE_STR" "$ORTHO_YEAR") ;;
+            jid=$(submit "" "$SCRIPTDIR/step_ortho_huc.sh" "$INCLUDE_STR" "$ORTHO_YEAR") || exit 1 ;;
         check)
-            jid=$(submit "" "$SCRIPTDIR/step_check.sh" "$INCLUDE_STR") ;;
+            jid=$(submit "" "$SCRIPTDIR/step_check.sh" "$INCLUDE_STR") || exit 1 ;;
         *)
             echo "ERROR: unknown step '$STEP'" >&2
             echo "Valid steps: dem slp hydro chm naip lidar_ftp lidar ortho_dl ortho_index ortho_huc check" >&2
@@ -308,25 +322,25 @@ fi
 
 # ── DEM (root of the terrain-aligned steps) ─────────────────────────────────
 echo "Submitting DEM extraction..."
-jid_dem=$(submit "" "$SCRIPTDIR/step_dem.sh" "$INCLUDE_STR")
+jid_dem=$(submit "" "$SCRIPTDIR/step_dem.sh" "$INCLUDE_STR") || exit 1
 echo "  Job $jid_dem"
 
 echo "Submitting terrain slope/geomorphons/meanc/dmv (after DEM)..."
-jid_slp=$(submit "afterok:$jid_dem" "${terrain_opts[@]}" "$SCRIPTDIR/step_terrain.sh" "$INCLUDE_STR" slp)
+jid_slp=$(submit "afterok:$jid_dem" "${terrain_opts[@]}" "$SCRIPTDIR/step_terrain.sh" "$INCLUDE_STR" slp) || exit 1
 echo "  Job $jid_slp"
 
 echo "Submitting hydro (after DEM)..."
-jid_hydro=$(submit "afterok:$jid_dem" "$SCRIPTDIR/step_hydro.sh" "$INCLUDE_STR")
+jid_hydro=$(submit "afterok:$jid_dem" "$SCRIPTDIR/step_hydro.sh" "$INCLUDE_STR") || exit 1
 echo "  Job $jid_hydro"
 
 # CHM and NAIP both resample onto Data/TerrainProcessed/HUC_DEMs/, so they
 # must wait for DEM (CHM silently skips HUCs whose DEM is missing).
 echo "Submitting CHM extraction (after DEM)..."
-jid_chm=$(submit "afterok:$jid_dem" "$SCRIPTDIR/step_chm.sh" "$INCLUDE_STR")
+jid_chm=$(submit "afterok:$jid_dem" "$SCRIPTDIR/step_chm.sh" "$INCLUDE_STR") || exit 1
 echo "  Job $jid_chm"
 
 echo "Submitting NAIP processing (after DEM)..."
-jid_naip=$(submit "afterok:$jid_dem" "$SCRIPTDIR/step_naip.sh" "$INCLUDE_STR")
+jid_naip=$(submit "afterok:$jid_dem" "$SCRIPTDIR/step_naip.sh" "$INCLUDE_STR") || exit 1
 echo "  Job $jid_naip"
 
 # ── Lidar: tile download+metrics, then HUC merge ─────────────────────────────
@@ -339,7 +353,7 @@ elif [[ "${SKIP_LIDAR_FTP:-0}" == "1" ]]; then
     lidar_dep=""
 else
     echo "Submitting lidar tile download + metrics..."
-    jid_lftp=$(submit "" "$SCRIPTDIR/step_lidar_ftp.sh" "$INCLUDE_STR")
+    jid_lftp=$(submit "" "$SCRIPTDIR/step_lidar_ftp.sh" "$INCLUDE_STR") || exit 1
     echo "  Job $jid_lftp"
     # afterany, NOT afterok. The FTP stage is resumable (tiles already on disk
     # are skipped) and can legitimately exit non-zero -- a wall-clock TIMEOUT,
@@ -352,7 +366,7 @@ fi
 
 if [[ -n "${lidar_dep+x}" ]]; then
     echo "Submitting lidar HUC merge${lidar_dep:+ (after lidar FTP)}..."
-    jid_lidar=$(submit "$lidar_dep" "$SCRIPTDIR/step_lidar.sh" "$INCLUDE_STR")
+    jid_lidar=$(submit "$lidar_dep" "$SCRIPTDIR/step_lidar.sh" "$INCLUDE_STR") || exit 1
     echo "  Job $jid_lidar"
 fi
 
@@ -367,7 +381,7 @@ elif [[ "${SKIP_ORTHO_DL:-0}" == "1" ]]; then
     oidx_dep=""
 else
     echo "Submitting ortho tile download..."
-    jid_odl=$(submit "" "$SCRIPTDIR/step_ortho.sh" "$INCLUDE_STR" "$ORTHO_YEAR" "$ORTHO_BANDS")
+    jid_odl=$(submit "" "$SCRIPTDIR/step_ortho.sh" "$INCLUDE_STR" "$ORTHO_YEAR" "$ORTHO_BANDS") || exit 1
     echo "  Job $jid_odl"
     oidx_dep="afterok:$jid_odl"
 fi
@@ -377,11 +391,11 @@ fi
 # rebuilds the shared gpkg.
 if [[ -n "${oidx_dep+x}" ]]; then
     echo "Submitting ortho footprint index rebuild${oidx_dep:+ (after ortho download)}..."
-    jid_oidx=$(submit "$oidx_dep" "$SCRIPTDIR/step_ortho_index.sh")
+    jid_oidx=$(submit "$oidx_dep" "$SCRIPTDIR/step_ortho_index.sh") || exit 1
     echo "  Job $jid_oidx"
 
     echo "Submitting ortho -> HUC compositing (after index + DEM)..."
-    jid_ohuc=$(submit "afterok:$jid_oidx:$jid_dem" "$SCRIPTDIR/step_ortho_huc.sh" "$INCLUDE_STR" "$ORTHO_YEAR")
+    jid_ohuc=$(submit "afterok:$jid_oidx:$jid_dem" "$SCRIPTDIR/step_ortho_huc.sh" "$INCLUDE_STR" "$ORTHO_YEAR") || exit 1
     echo "  Job $jid_ohuc"
 fi
 
@@ -391,7 +405,7 @@ check_dep="afterany:$jid_slp:$jid_hydro:$jid_chm:$jid_naip"
 [[ -n "$jid_ohuc"  ]] && check_dep+=":$jid_ohuc"
 
 echo "Submitting pipeline output check (after everything)..."
-jid_check=$(submit "$check_dep" "$SCRIPTDIR/step_check.sh" "$INCLUDE_STR")
+jid_check=$(submit "$check_dep" "$SCRIPTDIR/step_check.sh" "$INCLUDE_STR") || exit 1
 echo "  Job $jid_check"
 
 echo ""
