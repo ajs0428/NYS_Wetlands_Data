@@ -62,7 +62,11 @@ clean_patch_vector <- function(x) {
         x <- x[!st_is_empty(x), ]
     }
     if (nrow(x) == 0) {
-        return(list(sf = NULL, n_empty = n_empty, note = "0 features after dropping empties"))
+        return(list(
+            sf = NULL,
+            n_empty = n_empty,
+            note = "0 features after dropping empties"
+        ))
     }
     v <- tryCatch(
         {
@@ -82,17 +86,26 @@ clean_patch_vector <- function(x) {
             suppressWarnings(st_cast(st_cast(v, "MULTIPOLYGON"), "POLYGON"))
         },
         error = function(e) {
-            structure(list(), class = "patch_clean_error", msg = conditionMessage(e))
+            structure(
+                list(),
+                class = "patch_clean_error",
+                msg = conditionMessage(e)
+            )
         }
     )
     if (inherits(v, "patch_clean_error")) {
         return(list(
-            sf = NULL, n_empty = n_empty,
+            sf = NULL,
+            n_empty = n_empty,
             note = paste0("cleaning error: ", attr(v, "msg"))
         ))
     }
     if (nrow(v) == 0) {
-        return(list(sf = NULL, n_empty = n_empty, note = "0 polygons after cleaning"))
+        return(list(
+            sf = NULL,
+            n_empty = n_empty,
+            note = "0 polygons after cleaning"
+        ))
     }
     list(sf = v, n_empty = n_empty, note = "")
 }
@@ -107,17 +120,20 @@ clean_patch_vector <- function(x) {
 patch_group_summary <- function(v) {
     parea <- as.numeric(st_area(v))
     grp_idx <- split(seq_len(nrow(v)), as.character(v$PatchGroup))
-    do.call(rbind, lapply(names(grp_idx), function(g) {
-        i <- grp_idx[[g]]
-        bb <- st_bbox(v[i, ])
-        data.frame(
-            PatchGroup = g,
-            area = sum(parea[i]),
-            w = as.numeric(bb["xmax"] - bb["xmin"]),
-            h = as.numeric(bb["ymax"] - bb["ymin"]),
-            stringsAsFactors = FALSE
-        )
-    }))
+    do.call(
+        rbind,
+        lapply(names(grp_idx), function(g) {
+            i <- grp_idx[[g]]
+            bb <- st_bbox(v[i, ])
+            data.frame(
+                PatchGroup = g,
+                area = sum(parea[i]),
+                w = as.numeric(bb["xmax"] - bb["xmin"]),
+                h = as.numeric(bb["ymax"] - bb["ymin"]),
+                stringsAsFactors = FALSE
+            )
+        })
+    )
 }
 
 #' Remove polygons with an NA PatchGroup.
@@ -157,7 +173,9 @@ classify_patch_groups <- function(summary, side) {
 #' huc_source_paths() and abort the whole cluster.
 parse_patch_filename <- function(bn) {
     list(
-        cluster = regmatches(bn, regexpr("(?<=cluster_)\\d+", bn, perl = TRUE))[1],
+        cluster = regmatches(bn, regexpr("(?<=cluster_)\\d+", bn, perl = TRUE))[
+            1
+        ],
         huc = regmatches(bn, regexpr("(?<=huc_)\\d+", bn, perl = TRUE))[1]
     )
 }
@@ -181,6 +199,8 @@ patch_out_dir <- function(patch_path) {
         "Data/Training_Data/R_Patches_NWIextra/"
     } else if (grepl("R_Patches_Vector_NWI/?$", patch_path)) {
         "Data/Training_Data/R_Patches_NWI/"
+    } else if (grepl("R_Patches_Vector_Prod/?$", patch_path)) {
+        "Data/Training_Data/R_Patches_Prod/"
     } else {
         "Data/Training_Data/R_Patches/"
     }

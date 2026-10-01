@@ -65,8 +65,54 @@ export TASK_MEM_MB="${TASK_MEM_MB:-$(( ${SLURM_MEM_PER_CPU:-0} * ${SLURM_CPUS_PE
 unset SLURM_MEM_PER_CPU SLURM_MEM_PER_NODE SLURM_MEM_PER_GPU
 echo "terra budget: TASK_MEM_MB=${TASK_MEM_MB} (memmax ~$(( TASK_MEM_MB * 85 / 100 / 1024 )) GB)"
 
-echo "=== Terrain metric: $metric ==="
+# CONCURRENCY -- must not exceed the job's task budget, and there is no second
+# place to keep in sync: it tracks whatever --ntasks the job was submitted with
+# (4 on R256C128, 8 on the R128C40 override in step_combined_master.sh).
+#
+# Why the throttle below exists. sbatch JOBS queue durably; srun STEPS do not.
+# An srun that finds no free task slot is not queued -- it spins in a
+# client-side retry loop ("Requested nodes are busy") and eventually gives up:
+#
+#   srun: error: Unable to create step for job 786483: Step limit reached for this job
+#
+# The loop used to fire one backgrounded srun per cluster with no throttle, so
+# all of them launched at once against 4 slots. The surplus spun for ~27.5 h and
+# were then all rejected within three minutes of each other -- the R step never
+# started and those clusters were silently skipped. Job 786388 (2026-09-03) lost
+# 54 of 74 clusters this way; job 786483 (2026-09-09) lost 34 of 74. The 27
+# clusters that starved in BOTH runs were exactly the 27 still missing terrain.
+# Holding the line at NPAR outstanding sruns means each one is launched into a
+# slot that is already free, instead of into a 27-hour waiting room. Throughput
+# is unchanged (concurrency was already NPAR); nothing evaporates.
+NPAR="${TERRAIN_CONCURRENCY:-${SLURM_NTASKS:-4}}"
+
+declare -A running=()   # pid -> cluster number
+failed=()
+
+# Block until one srun finishes, then record it. wait -n -p needs bash >= 5.1.
+reap_one() {
+    local pid rc c
+    wait -n -p pid; rc=$?
+    if [[ -z "$pid" ]]; then
+        # wait -n returned without naming a child (signal, or nothing left).
+        # Harvest everything and reset rather than spin forever. Per-cluster
+        # status is lost on this path, but the check stage still catches gaps.
+        wait
+        running=()
+        return 0
+    fi
+    c="${running[$pid]}"
+    unset 'running[$pid]'
+    if (( rc != 0 )); then
+        failed+=("$c(rc=$rc)")
+        echo "  Cluster $c FAILED (rc=$rc)" >&2
+    fi
+}
+
+echo "=== Terrain metric: $metric (concurrency $NPAR) ==="
 for number in "${include[@]}"; do
+    while (( ${#running[@]} >= NPAR )); do reap_one; done
+
     echo "  Cluster $number – $metric"
     srun --nodes=1 --ntasks=1 --exclusive \
         Rscript R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.R \
@@ -75,7 +121,17 @@ for number in "${include[@]}"; do
         "$metric" \
         "Data/TerrainProcessed/HUC_TerrainMetrics/" \
         >> "Shell_Scripts/logs/terrain_${metric}_${number}_${DATE}.log" 2>&1 &
+    running[$!]=$number
 done
 
-wait
+while (( ${#running[@]} > 0 )); do reap_one; done
+
+# Exit non-zero so a lost cluster surfaces as mail + a red sacct line instead of
+# a silent COMPLETED. Safe: terrain is a LEAF in step_combined_master.sh --
+# hydro/chm/naip hang off jid_dem, not off jid_slp, and the check job depends on
+# it with afterany. A failure here cancels nothing downstream.
+if (( ${#failed[@]} > 0 )); then
+    echo "Terrain $metric FAILED for ${#failed[@]} cluster(s): ${failed[*]}" >&2
+    exit 1
+fi
 echo "Terrain $metric completed."

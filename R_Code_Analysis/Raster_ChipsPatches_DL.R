@@ -117,7 +117,8 @@ rast_chip_patch_create_one <- function(wetland_file) {
     # future_lapply down with it. Name the offending file and skip it instead.
     if (is.na(huc_num) || is.na(cluster_num)) {
         message(
-            "Cannot parse cluster/HUC from ", basename(wetland_file),
+            "Cannot parse cluster/HUC from ",
+            basename(wetland_file),
             " (expected <tag>_cluster_<N>_huc_<HUCID>_...) - skipping"
         )
         return(invisible(NULL))
@@ -160,13 +161,18 @@ rast_chip_patch_create_one <- function(wetland_file) {
     cleaned <- clean_patch_vector(tw)
     if (cleaned$n_empty > 0) {
         message(
-            "Dropping ", cleaned$n_empty, " empty geometry/geometries in ",
+            "Dropping ",
+            cleaned$n_empty,
+            " empty geometry/geometries in ",
             basename(wetland_file)
         )
     }
     if (is.null(cleaned$sf)) {
         message(
-            "Skipping ", basename(wetland_file), ": ", cleaned$note
+            "Skipping ",
+            basename(wetland_file),
+            ": ",
+            cleaned$note
         )
         return(invisible(NULL))
     }
@@ -193,14 +199,17 @@ rast_chip_patch_create_one <- function(wetland_file) {
     tw_valid <- na_drop$sf
     if (na_drop$n_na > 0) {
         message(
-            "Dropping ", na_drop$n_na, " polygon(s) with NA PatchGroup in ",
+            "Dropping ",
+            na_drop$n_na,
+            " polygon(s) with NA PatchGroup in ",
             basename(wetland_file)
         )
     }
     if (nrow(tw_valid) == 0) {
         message(
             "No polygons with a usable PatchGroup in ",
-            basename(wetland_file), " - skipping"
+            basename(wetland_file),
+            " - skipping"
         )
         return(invisible(NULL))
     }
@@ -213,20 +222,37 @@ rast_chip_patch_create_one <- function(wetland_file) {
     small <- cls$small
     if (nrow(small) > 0) {
         message(
-            "Dropping ", nrow(small), " PatchGroup(s) below area threshold in ",
-            basename(wetland_file), ": ",
-            paste0(small$PatchGroup, " (", round(small$area), " m2)", collapse = ", ")
+            "Dropping ",
+            nrow(small),
+            " PatchGroup(s) below area threshold in ",
+            basename(wetland_file),
+            ": ",
+            paste0(
+                small$PatchGroup,
+                " (",
+                round(small$area),
+                " m2)",
+                collapse = ", "
+            )
         )
     }
     oversize <- cls$oversize
     if (nrow(oversize) > 0) {
         message(
-            "Dropping ", nrow(oversize), " PatchGroup(s) whose bbox is not one ",
-            side, " m square in ", basename(wetland_file),
+            "Dropping ",
+            nrow(oversize),
+            " PatchGroup(s) whose bbox is not one ",
+            side,
+            " m square in ",
+            basename(wetland_file),
             " (id reused across separated patches?): ",
             paste0(
-                oversize$PatchGroup, " (", round(oversize$w), " x ",
-                round(oversize$h), " m)",
+                oversize$PatchGroup,
+                " (",
+                round(oversize$w),
+                " x ",
+                round(oversize$h),
+                " m)",
                 collapse = ", "
             )
         )
@@ -263,7 +289,12 @@ rast_chip_patch_create_one <- function(wetland_file) {
     # The literal _huc_ separator keeps cluster 12 from matching cluster 120;
     # scoping by file_tag keeps one gpkg from wiping a sibling gpkg's patches.
     fn_prefix <- paste0(
-        file_tag, "_cluster_", cluster_num, "_huc_", huc_num, "_patch_"
+        file_tag,
+        "_cluster_",
+        cluster_num,
+        "_huc_",
+        huc_num,
+        "_patch_"
     )
 
     # REMOVE_EXISTING: wipe this HUC's previously written patches so changed
@@ -279,8 +310,10 @@ rast_chip_patch_create_one <- function(wetland_file) {
         stale <- stale[startsWith(basename(stale), fn_prefix)]
         if (length(stale) > 0) {
             message(
-                "REMOVE_EXISTING: deleting ", length(stale),
-                " existing patch file(s) for ", fn_prefix
+                "REMOVE_EXISTING: deleting ",
+                length(stale),
+                " existing patch file(s) for ",
+                fn_prefix
             )
             file.remove(stale)
         }
@@ -351,7 +384,10 @@ rast_chip_patch_create_one <- function(wetland_file) {
                         },
                         error = function(e) {
                             message(
-                                "Excluding patch ", patch_group, " (", fn,
+                                "Excluding patch ",
+                                patch_group,
+                                " (",
+                                fn,
                                 "): failed to write stack: ",
                                 conditionMessage(e)
                             )
@@ -374,8 +410,12 @@ rast_chip_patch_create_one <- function(wetland_file) {
             # the patch, say which one, and keep going.
             error = function(e) {
                 message(
-                    "Excluding patch ", patch_group, " of ",
-                    basename(wetland_file), ": ", conditionMessage(e)
+                    "Excluding patch ",
+                    patch_group,
+                    " of ",
+                    basename(wetland_file),
+                    ": ",
+                    conditionMessage(e)
                 )
                 return(invisible(NULL))
             }
@@ -396,8 +436,10 @@ rast_chip_patch_create <- function(wetland_file) {
         rast_chip_patch_create_one(wetland_file),
         error = function(e) {
             message(
-                "SKIPPING ", basename(wetland_file),
-                " - unhandled error: ", conditionMessage(e)
+                "SKIPPING ",
+                basename(wetland_file),
+                " - unhandled error: ",
+                conditionMessage(e)
             )
             invisible(NULL)
         }
