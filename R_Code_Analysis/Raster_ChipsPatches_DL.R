@@ -269,6 +269,8 @@ rast_chip_patch_create_one <- function(wetland_file) {
         "Data/Training_Data/R_Patches_NWIextra/"
     } else if (str_detect(patchPath, pattern = "R_Patches_Vector_NWI/?$")) {
         "Data/Training_Data/R_Patches_NWI/"
+    } else if (str_detect(patchPath, pattern = "R_Patches_Vector_Prod/?$")) {
+        "Data/Training_Data/R_Patches_Prod/"
     } else {
         "Data/Training_Data/R_Patches/"
     }
