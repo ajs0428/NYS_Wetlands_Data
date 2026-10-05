@@ -24,6 +24,9 @@ export TASK_MEM_MB=$(( ${SLURM_MEM_PER_CPU:-0} * ${SLURM_CPUS_PER_TASK:-1} ))
 unset SLURM_MEM_PER_CPU SLURM_MEM_PER_NODE SLURM_MEM_PER_GPU
 
 echo "=== CHM extraction ==="
+# Track each srun's PID -> cluster so a failed Rscript is reported. A bare
+# `wait` returns 0 regardless, which made a failed cluster look like success.
+declare -A PID_CLUSTER=()
 for number in "${include[@]}"; do
     echo "  Cluster $number – CHM"
     srun --nodes=1 --ntasks=1 --exclusive \
@@ -32,7 +35,20 @@ for number in "${include[@]}"; do
         "$number" \
         "Data/CHMs/AWS" \
         >> "Shell_Scripts/logs/chm_${number}_${DATE}.log" 2>&1 &
+    PID_CLUSTER[$!]=$number
 done
 
-wait
+FAILED=()
+for pid in "${!PID_CLUSTER[@]}"; do
+    if ! wait "$pid"; then
+        c=${PID_CLUSTER[$pid]}
+        echo "FAILED: cluster $c (see Shell_Scripts/logs/chm_${c}_${DATE}.log)"
+        FAILED+=("$c")
+    fi
+done
+
+if [[ ${#FAILED[@]} -gt 0 ]]; then
+    echo "CHM extraction finished with ${#FAILED[@]} failed cluster(s): ${FAILED[*]}"
+    exit 1
+fi
 echo "CHM extraction completed."

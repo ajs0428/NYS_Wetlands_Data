@@ -34,6 +34,41 @@ huc_source_dirs <- function() {
   )
 }
 
+## --- Stack profiles ----------------------------------------------------------
+## A profile picks which source datasets go into the stack (in stack order) and
+## which NAIP bands are dropped. Every consumer gets the same profile machinery,
+## so a profile's band recipe still lives only in this file.
+##   factorial : the original 7-source stack (NYS_Wetlands_DL, factorial-v3).
+##               Default -- R_Patches, the NWI dirs, normalization stats and
+##               point extractions are unchanged.
+##   prod      : NYS_Wetlands_Prod. No leaf-off ortho and no lidar, so HUCs
+##               without those sources still stack; NAIP keeps ndvi/ndwi (the
+##               prod14 bandset uses both). DEM stays in as the reference grid
+##               even though the model does not use it as a channel.
+stack_profiles <- function() {
+  list(
+    factorial = list(sources   = c("dem", "terr", "hydro", "chm", "naip", "ortho", "lidar"),
+                     naip_drop = c("ndvi", "ndwi")),
+    prod      = list(sources   = c("dem", "terr", "hydro", "chm", "naip"),
+                     naip_drop = character())
+  )
+}
+
+## Resolve the active profile name. Precedence: the HUC_STACK_PROFILE env var,
+## then the patch vector folder (R_Patches_Vector_Prod/ -> "prod"), then
+## "factorial". Errors on an unknown name rather than silently falling back.
+stack_profile <- function(patch_path = NULL) {
+  p <- Sys.getenv("HUC_STACK_PROFILE", "")
+  if (!nzchar(p)) {
+    p <- if (!is.null(patch_path) && grepl("R_Patches_Vector_Prod/?$", patch_path)) "prod" else "factorial"
+  }
+  if (!p %in% names(stack_profiles())) {
+    stop("Unknown stack profile '", p, "'; expected one of: ",
+         paste(names(stack_profiles()), collapse = ", "))
+  }
+  p
+}
+
 ## --- Terrain band contract ---------------------------------------------------
 ## Band names, in order, of the combined per-HUC terrain raster written by
 ## R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.R
@@ -62,8 +97,12 @@ terr_bands_ok <- function(path) {
 ## Mirrors the file filtering in the original Raster_Stack.R clust_extract_fun:
 ##   DEM      -> exclude whitebox ("wbt") intermediates
 ##   terrain  -> the local slope file, excluding 10m / 1000m scales
-## Returns a named list of character vectors (length 0 = missing for this HUC).
-huc_source_paths <- function(huc_number, cluster_num, dirs = huc_source_dirs()) {
+## Returns a named list of character vectors (length 0 = missing for this HUC),
+## one element per source in the profile, in stack order. The profile name rides
+## along as attr(, "profile") so huc_layers() builds the matching recipe without
+## every caller having to pass it twice.
+huc_source_paths <- function(huc_number, cluster_num, dirs = huc_source_dirs(),
+                             profile = stack_profile()) {
   cid <- paste0("cluster_", cluster_num)
   match_one <- function(dir, extra = NULL) {
     f <- list.files(dir, pattern = "\\.tif$", full.names = TRUE)
@@ -71,21 +110,21 @@ huc_source_paths <- function(huc_number, cluster_num, dirs = huc_source_dirs()) 
     if (!is.null(extra)) f <- f[extra(f)]
     f
   }
-  list(
-    dem   = match_one(dirs$dem,   \(f) !str_detect(f, "wbt")),
-    terr  = match_one(dirs$terr,  \(f) str_detect(f, "slp") &
-                                        str_detect(f, "local") &
-                                        !str_detect(f, "10m|1000m")),
-    hydro = match_one(dirs$hydro),
-    chm   = match_one(dirs$chm),
-    naip  = match_one(dirs$naip),
-    ortho  = match_one(dirs$ortho),
-    lidar = match_one(dirs$lidar)
+  filters <- list(
+    dem  = \(f) !str_detect(f, "wbt"),
+    terr = \(f) str_detect(f, "slp") &
+                str_detect(f, "local") &
+                !str_detect(f, "10m|1000m")
   )
+  srcs <- stack_profiles()[[profile]]$sources
+  out <- setNames(lapply(srcs, \(k) match_one(dirs[[k]], filters[[k]])), srcs)
+  attr(out, "profile") <- profile
+  out
 }
 
 ## --- Presence check ----------------------------------------------------------
-## Returns TRUE only if every dataset has at least one file for this HUC.
+## Returns TRUE only if every dataset in the profile has at least one file for
+## this HUC (paths only holds the profile's sources).
 huc_sources_ready <- function(paths, huc_number) {
   missing <- names(paths)[lengths(paths) == 0]
   if (length(missing)) {
@@ -96,19 +135,26 @@ huc_sources_ready <- function(paths, huc_number) {
 }
 
 ## --- Read + transform each source into a lazy SpatRaster ---------------------
-## Order here defines the band order of the final stack (the contract):
-##   DEM, terrain(slope, TPI, Geomorph, meanc, dmv -- all bands kept),
-##   hydro(log flowacc), CHM, NAIP(ndvi/ndwi dropped), ortho, lidar
+## Band order of the final stack (the contract) is the profile's source order:
+##   factorial: DEM, terrain(slope, TPI, Geomorph, meanc, dmv -- all bands kept),
+##              hydro(log flowacc), CHM, NAIP(ndvi/ndwi dropped), ortho, lidar
+##   prod     : DEM, terrain, hydro(log flowacc), CHM, NAIP(ndvi/ndwi kept)
 ## rast() returns lazy file pointers; no pixels are read until a downstream
 ## crop / resample / minmax / extract forces it.
 huc_layers <- function(paths) {
+  profile <- attr(paths, "profile")
+  if (is.null(profile)) profile <- stack_profile()
+  prof <- stack_profiles()[[profile]]
+
   pick1 <- function(x, label) {
     if (length(x) > 1) message("Multiple ", label, " files; using first: ", basename(x[1]))
     x[1]
   }
 
+  out <- list()
   dem <- rast(pick1(paths$dem, "DEM"))
   set.names(dem, "DEM")
+  out$dem <- dem
 
   terr_path <- pick1(paths$terr, "terrain")
   terr <- rast(terr_path)
@@ -126,21 +172,30 @@ huc_layers <- function(paths) {
   # duplicated the old 3x3 dmv; DMV now runs at 21x21, so TPI (fine-scale
   # pit/peak roughness) and dmv (~20 m context) are independent predictors.
 
+  out$terr <- terr
+
   hydro <- rast(pick1(paths$hydro, "hydro"))
   hydro$flowacc <- log(hydro$flowacc)
+  out$hydro <- hydro
 
-  chm <- rast(pick1(paths$chm, "CHM"))
+  out$chm <- rast(pick1(paths$chm, "CHM"))
 
-  naip <- rast(pick1(paths$naip, "NAIP")) |>
-    terra::subset(c("ndvi", "ndwi"), negate = TRUE) 
-  
-  ortho <- rast(pick1(paths$ortho, "Ortho"))
-  names(ortho) <- paste0(names(ortho), "_lo")
+  naip <- rast(pick1(paths$naip, "NAIP"))
+  if (length(prof$naip_drop)) naip <- terra::subset(naip, prof$naip_drop, negate = TRUE)
+  out$naip <- naip
 
-  lidar <- rast(pick1(paths$lidar, "lidar"))
+  if ("ortho" %in% prof$sources) {
+    ortho <- rast(pick1(paths$ortho, "Ortho"))
+    names(ortho) <- paste0(names(ortho), "_lo")
+    out$ortho <- ortho
+  }
+
+  if ("lidar" %in% prof$sources) {
+    out$lidar <- rast(pick1(paths$lidar, "lidar"))
+  }
 
   # Named list, in stack order (DEM first = the reference grid).
-  list(dem = dem, terr = terr, hydro = hydro, chm = chm, naip = naip, ortho = ortho, lidar = lidar)
+  out[prof$sources]
 }
 
 ## --- Align one raster to a reference grid (resample only if needed) ----------

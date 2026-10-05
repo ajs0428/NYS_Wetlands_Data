@@ -195,6 +195,21 @@ process_huc <- function(cluster_huc_name) {
             huc_rasts,
             is_not_empty
         )]
+        # Every overlapping tile can be all-NA where the LiDAR collection has a
+        # gap (cluster 216 huc 020200031004/031006: 160 tiles, 0 with data).
+        # sprc(character(0)) |> mosaic() then dies with "missing value where
+        # TRUE/FALSE needed". Skip the HUC rather than writing an all-zero CHM --
+        # no LiDAR is not the same as no canopy.
+        if (length(huc_file_locs_not_empty) == 0) {
+            message(
+                "No CHM coverage for HUC ",
+                cluster_huc_name,
+                ": all ",
+                length(huc_file_locs),
+                " overlapping tile(s) are empty - skipping"
+            )
+            return(NULL)
+        }
 
         huc_chm_merge <- terra::sprc(huc_file_locs_not_empty) |>
             terra::mosaic(fun = "max") |>
@@ -238,9 +253,29 @@ print(corenum)
 options(future.globals.maxSize = 48.0 * 1e9)
 plan(future.callr::callr, workers = corenum)
 
+# future_lapply has no per-element error handling: an error escaping one worker
+# prints "Caught simpleError. Canceling all iterations ..." and halts the whole
+# Rscript, so every other HUC in the cluster is never written (2026-10-05:
+# cluster 216 lost all 10 HUCs to one empty-coverage HUC). Contain it to the one
+# HUC and name it in the log.
+process_huc_safe <- function(cluster_huc_name) {
+    tryCatch(
+        process_huc(cluster_huc_name),
+        error = function(e) {
+            message(
+                "FAILED HUC ",
+                cluster_huc_name,
+                " - unhandled error: ",
+                conditionMessage(e)
+            )
+            NULL
+        }
+    )
+}
+
 chm_results <- future_lapply(
     target_hucs,
-    process_huc,
+    process_huc_safe,
     future.packages = c("terra", "sf", "dplyr", "tidyr", "stringr", "purrr"),
     future.globals = TRUE,
     future.seed = TRUE

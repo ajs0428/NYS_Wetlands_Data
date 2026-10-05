@@ -42,6 +42,11 @@ removeExisting <- if (length(args) >= 4 && nzchar(args[4])) {
     parse_flag(Sys.getenv("REMOVE_EXISTING", ""))
 }
 
+# Band profile (see stack_profiles() in huc_stack.R): HUC_STACK_PROFILE env var,
+# else derived from the vector folder (R_Patches_Vector_Prod/ -> "prod"), else
+# "factorial". Resolved once here and handed to the workers as a global.
+stackProfile <- stack_profile(patchPath)
+
 message(
     "these are the arguments: \n",
     "1) path the reviewed training data :",
@@ -55,7 +60,12 @@ message(
     "\n",
     "4) remove existing patches :",
     removeExisting,
-    "\n"
+    "\n",
+    "stack profile :",
+    stackProfile,
+    " (",
+    paste(stack_profiles()[[stackProfile]]$sources, collapse = ", "),
+    ")\n"
 )
 
 
@@ -133,7 +143,7 @@ rast_chip_patch_create_one <- function(wetland_file) {
     ## Resolve the per-HUC source rasters (lazy pointers). The stack is built
     ## in memory per patch below via build_huc_stack_patch() -- no *_stack.tif
     ## is read or written, so source rasters are never duplicated on disk.
-    paths <- huc_source_paths(huc_num, cluster_num)
+    paths <- huc_source_paths(huc_num, cluster_num, profile = stackProfile)
     if (!huc_sources_ready(paths, huc_num)) {
         message(
             "Skipping HUC ",
@@ -323,7 +333,7 @@ rast_chip_patch_create_one <- function(wetland_file) {
 
     #### Each patch should be a separate file that is patchsize*2 x patchsize*2
     # Build the lazy source layers ONCE for this HUC and reuse them across every
-    # patch. build_huc_stack_patch() otherwise re-opens all 7 sources and
+    # patch. build_huc_stack_patch() otherwise re-opens every source and
     # recomputes log(flowacc) over the whole HUC per patch (18-31x on big HUCs),
     # accumulating full-HUC allocations that OOM-kill under the per-task cgroup.
     huc_lyrs <- if (length(tw_grouped_list) > 0) huc_layers(paths) else NULL

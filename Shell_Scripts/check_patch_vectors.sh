@@ -22,7 +22,11 @@
 #                 R_Patches_Vector_NWIextra/ -> R_Patches_NWIextra/
 #   CLUSTERS    which clusters to check (positional $2, or the env var of the
 #               same name; the positional wins). Comma-separated batch names
-#               from batch_config.sh and/or bare cluster numbers, or "all".
+#               from batch_config.sh and/or bare cluster numbers, "all", or
+#               "vectors" -- every cluster that has a gpkg in VECTOR_DIR
+#               (parsed from <tag>_cluster_<N>_huc_<HUCID>_... filenames).
+#               The batch(es) holding each selected cluster are printed, so
+#               "vectors" doubles as a which-batches-do-I-need lookup.
 #               Default "batch1,batch2,batch3" -- the batches whose upstream
 #               sources are fully built.
 #   REPORT      output .txt path (positional $3). Default
@@ -35,6 +39,7 @@
 #   bash Shell_Scripts/check_patch_vectors.sh Data/Training_Data/R_Patches_Vector_NWI/
 #   bash Shell_Scripts/check_patch_vectors.sh Data/Training_Data/R_Patches_Vector_NWI/ all
 #   bash Shell_Scripts/check_patch_vectors.sh Data/Training_Data/R_Patches_Vector_Reviewed/ 208,225
+#   bash Shell_Scripts/check_patch_vectors.sh Data/Training_Data/R_Patches_Vector_Prod/ vectors
 #   SKIP_RASTER_CHECK=1 bash Shell_Scripts/check_patch_vectors.sh
 #
 #   # one batch, report named after it (REPORT is $3, so $1 and $2 must be given):
@@ -76,7 +81,7 @@ source Shell_Scripts/batch_config.sh
 
 # Resolve the cluster selection: positional $2 beats the CLUSTERS env var, which
 # beats the batch1+batch2+batch3 default. Each comma-separated token is either
-# "all", a batch name from batch_config.sh, or a bare cluster number.
+# "all", "vectors", a batch name from batch_config.sh, or a bare cluster number.
 CLUSTERS="${2:-${CLUSTERS:-batch1,batch2,batch3}}"
 if [[ "${CLUSTERS,,}" == "all" ]]; then
     CLUSTER_LIST="all"
@@ -86,7 +91,15 @@ else
     for token in "${tokens[@]}"; do
         token="${token//[[:space:]]/}"
         [[ -z "$token" ]] && continue
-        if [[ "$token" =~ ^batch[0-9]+$ ]]; then
+        if [[ "${token,,}" == "vectors" ]]; then
+            mapfile -t expanded < <(ls "$VECTOR_DIR" | grep -E '\.gpkg$' \
+                | sed -nE 's/.*cluster_([0-9]+)_huc_.*/\1/p' | sort -un)
+            if [[ ${#expanded[@]} -eq 0 ]]; then
+                echo "ERROR: no <tag>_cluster_<N>_huc_... gpkgs in $VECTOR_DIR" >&2
+                exit 2
+            fi
+            include+=("${expanded[@]}")
+        elif [[ "$token" =~ ^batch[0-9]+$ ]]; then
             ref="$token[@]"
             expanded=("${!ref}")
             if [[ ${#expanded[@]} -eq 0 ]]; then
@@ -117,6 +130,25 @@ CHECK_RASTERS=1
 
 echo "Vector folder : $VECTOR_DIR"
 echo "Clusters      : $CLUSTERS"
+if [[ "$CLUSTER_LIST" != "all" ]]; then
+    echo "Resolved      : $CLUSTER_LIST"
+    # Which batchN array(s) in batch_config.sh hold each selected cluster.
+    declare -A in_sel=()
+    for c in ${CLUSTER_LIST//,/ }; do in_sel[$c]=1; done
+    declare -A seen=()
+    echo "Batches       :"
+    for bname in $(compgen -A variable | grep -E '^batch[0-9]+$' | sort -t h -k2 -n); do
+        ref="$bname[@]"
+        hits=()
+        for c in "${!ref}"; do
+            [[ -n "${in_sel[$c]:-}" ]] && { hits+=("$c"); seen[$c]=1; }
+        done
+        [[ ${#hits[@]} -gt 0 ]] && printf '    %-8s %s\n' "$bname" "${hits[*]}"
+    done
+    orphans=()
+    for c in ${CLUSTER_LIST//,/ }; do [[ -z "${seen[$c]:-}" ]] && orphans+=("$c"); done
+    [[ ${#orphans[@]} -gt 0 ]] && printf '    %-8s %s\n' "(none)" "${orphans[*]}"
+fi
 echo "Report        : $REPORT"
 echo
 
