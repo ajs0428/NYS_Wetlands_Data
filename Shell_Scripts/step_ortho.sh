@@ -47,6 +47,9 @@ DATE=$(date +%Y%m%d)
 unset SLURM_MEM_PER_CPU SLURM_MEM_PER_NODE SLURM_MEM_PER_GPU
 
 echo "=== Ortho download (year $YEAR, $BANDS) ==="
+# Track each srun's PID -> cluster so a failed Rscript is reported. A bare
+# `wait` returns 0 regardless, which made a failed cluster look like success.
+declare -A PID_CLUSTER=()
 for number in "${include[@]}"; do
     echo "  Cluster $number – ortho"
     srun --nodes=1 --ntasks=1 --exclusive \
@@ -57,7 +60,25 @@ for number in "${include[@]}"; do
         "$OUTDIR" \
         "$BANDS" \
         >> "Shell_Scripts/logs/ortho_${number}_${YEAR}_${DATE}.log" 2>&1 &
+    PID_CLUSTER[$!]=$number
 done
 
-wait
+FAILED=()
+for pid in "${!PID_CLUSTER[@]}"; do
+    if ! wait "$pid"; then
+        number=${PID_CLUSTER[$pid]}
+        echo "FAILED: cluster $number (see Shell_Scripts/logs/ortho_${number}_${YEAR}_${DATE}.log)"
+        FAILED+=("$number")
+    fi
+done
+
+if [[ ${#FAILED[@]} -gt 0 ]]; then
+    # Not exit 1: ortho_index depends on this stage with afterok in step_combined_master.sh,
+    # and ortho_huc on ortho_index; a non-zero exit would cancel the whole ortho
+    # branch over one bad cluster. The index rebuild just reflects the tiles on
+    # disk, so report loudly and exit 0.
+    echo "ortho finished with ${#FAILED[@]} failed cluster(s): ${FAILED[*]}"
+    echo "(exiting 0 so downstream stages still run for the other clusters)"
+    exit 0
+fi
 echo "Ortho download completed."

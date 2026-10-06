@@ -130,16 +130,37 @@ for number in "${include[@]}"; do
 done
 
 # Wait only on the work; the watchdogs exit by themselves once their step does.
-for p in "${srun_pids[@]}"; do wait "$p"; done
+# Record each step's exit status: a bare wait discarded it, so a crashed
+# cluster looked like success. A non-zero step whose log has R's '=== Done.'
+# banner was the watchdog killing the known post-completion hang -- everything
+# was already written, so that one counts as success.
+FAILED=()
+for i in "${!srun_pids[@]}"; do
+    if ! wait "${srun_pids[$i]}"; then
+        number=${include[$i]}
+        log="Shell_Scripts/logs/lidar_ftp_${number}_${DATE}.log"
+        if ! grep -aq '=== Done\.' "$log" 2>/dev/null; then
+            echo "FAILED: cluster $number (see $log)"
+            FAILED+=("$number")
+        fi
+    fi
+done
 for p in "${wd_pids[@]}"; do kill "$p" 2>/dev/null; done
 wait 2>/dev/null
 
 rm -f "$HBDIR"/lidar_ftp_*.hb
-echo "Lidar tile download + metrics completed."
 
 # Surface any per-cluster failure lists this run produced.
 for number in "${include[@]}"; do
     ff="Shell_Scripts/logs/lidar_ftp_${number}_failed_tiles.txt"
     [[ -s "$ff" ]] && echo "  Cluster $number: $(wc -l < "$ff") tiles with no output -> $ff"
 done
+
+# exit 1 is safe here: the lidar HUC merge depends on this stage with afterany
+# (see step_combined_master.sh), so a failure cancels nothing downstream.
+if [[ ${#FAILED[@]} -gt 0 ]]; then
+    echo "lidar_ftp finished with ${#FAILED[@]} failed cluster(s): ${FAILED[*]}"
+    exit 1
+fi
+echo "Lidar tile download + metrics completed."
 exit 0

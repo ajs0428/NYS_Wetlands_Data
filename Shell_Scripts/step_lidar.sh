@@ -25,6 +25,9 @@ export TASK_MEM_MB=$(( ${SLURM_MEM_PER_CPU:-0} * ${SLURM_CPUS_PER_TASK:-1} ))
 unset SLURM_MEM_PER_CPU SLURM_MEM_PER_NODE SLURM_MEM_PER_GPU
 
 echo "=== Lidar metrics ==="
+# Track each srun's PID -> cluster so a failed Rscript is reported. A bare
+# `wait` returns 0 regardless, which made a failed cluster look like success.
+declare -A PID_CLUSTER=()
 for number in "${include[@]}"; do
         echo "Cluster $number"
         srun --nodes=1 --ntasks=1 --exclusive \
@@ -33,7 +36,20 @@ for number in "${include[@]}"; do
             "$number" \
             "$OUTDIR" \
             >> "Shell_Scripts/logs/lidar_huc_${number}_$(date +%Y%m%d).log" 2>&1 &
+        PID_CLUSTER[$!]=$number
 done
 
-wait
+FAILED=()
+for pid in "${!PID_CLUSTER[@]}"; do
+    if ! wait "$pid"; then
+        number=${PID_CLUSTER[$pid]}
+        echo "FAILED: cluster $number (see Shell_Scripts/logs/lidar_huc_${number}_$(date +%Y%m%d).log)"
+        FAILED+=("$number")
+    fi
+done
+
+if [[ ${#FAILED[@]} -gt 0 ]]; then
+    echo "lidar_huc finished with ${#FAILED[@]} failed cluster(s): ${FAILED[*]}"
+    exit 1
+fi
 echo "Lidar metrics completed."

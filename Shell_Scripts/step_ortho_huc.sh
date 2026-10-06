@@ -53,6 +53,9 @@ export TASK_MEM_MB=$(( ${SLURM_MEM_PER_CPU:-0} * ${SLURM_CPUS_PER_TASK:-1} ))
 unset SLURM_MEM_PER_CPU SLURM_MEM_PER_NODE SLURM_MEM_PER_GPU
 
 echo "=== Ortho -> HUC12 (year $YEAR) ==="
+# Track each srun's PID -> cluster so a failed Rscript is reported. A bare
+# `wait` returns 0 regardless, which made a failed cluster look like success.
+declare -A PID_CLUSTER=()
 for number in "${include[@]}"; do
     echo "  Cluster $number – ortho/HUC"
     srun --nodes=1 --ntasks=1 --exclusive \
@@ -64,7 +67,20 @@ for number in "${include[@]}"; do
         "$DEM_DIR" \
         "$OUTDIR" \
         >> "Shell_Scripts/logs/ortho_huc_${number}_${YEAR}_${DATE}.log" 2>&1 &
+    PID_CLUSTER[$!]=$number
 done
 
-wait
+FAILED=()
+for pid in "${!PID_CLUSTER[@]}"; do
+    if ! wait "$pid"; then
+        number=${PID_CLUSTER[$pid]}
+        echo "FAILED: cluster $number (see Shell_Scripts/logs/ortho_huc_${number}_${YEAR}_${DATE}.log)"
+        FAILED+=("$number")
+    fi
+done
+
+if [[ ${#FAILED[@]} -gt 0 ]]; then
+    echo "ortho_huc finished with ${#FAILED[@]} failed cluster(s): ${FAILED[*]}"
+    exit 1
+fi
 echo "Ortho -> HUC12 processing completed."

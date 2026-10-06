@@ -41,6 +41,9 @@ export TASK_MEM_MB=$(( ${SLURM_MEM_PER_CPU:-0} * ${SLURM_CPUS_PER_TASK:-1} ))
 # sizes memmax from TASK_MEM_MB rather than node RAM.
 
 echo "=== NAIP processing ==="
+# Track each srun's PID -> cluster so a failed Rscript is reported. A bare
+# `wait` returns 0 regardless, which made a failed cluster look like success.
+declare -A PID_CLUSTER=()
 for number in "${include[@]}"; do
     echo "  Cluster $number – NAIP"
     srun --nodes=1 --ntasks=1 --exclusive --mem-per-cpu=48G --cpus-per-task=1 \
@@ -50,7 +53,20 @@ for number in "${include[@]}"; do
         "$number" \
         "Data/NAIP/HUC_NAIP_Processed/" \
         >> "Shell_Scripts/logs/naip_${number}_${DATE}.log" 2>&1 &
+    PID_CLUSTER[$!]=$number
 done
 
-wait
+FAILED=()
+for pid in "${!PID_CLUSTER[@]}"; do
+    if ! wait "$pid"; then
+        number=${PID_CLUSTER[$pid]}
+        echo "FAILED: cluster $number (see Shell_Scripts/logs/naip_${number}_${DATE}.log)"
+        FAILED+=("$number")
+    fi
+done
+
+if [[ ${#FAILED[@]} -gt 0 ]]; then
+    echo "naip finished with ${#FAILED[@]} failed cluster(s): ${FAILED[*]}"
+    exit 1
+fi
 echo "NAIP processing completed."

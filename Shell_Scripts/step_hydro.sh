@@ -29,6 +29,9 @@ DATE=$(date +%Y%m%d)
 export TASK_MEM_MB=$(( ${SLURM_MEM_PER_CPU:-0} * ${SLURM_CPUS_PER_TASK:-1} ))
 unset SLURM_MEM_PER_CPU SLURM_MEM_PER_NODE SLURM_MEM_PER_GPU
 
+# Track each srun's PID -> cluster so a failed Rscript is reported. A bare
+# `wait` returns 0 regardless, which made a failed cluster look like success.
+declare -A PID_CLUSTER=()
 for number in "${include[@]}"; do
     echo "  Cluster $number – Hydro"
     srun --nodes=1 --ntasks=1 --cpus-per-task="${SLURM_CPUS_PER_TASK:-2}" --exclusive \
@@ -38,9 +41,22 @@ for number in "${include[@]}"; do
         "Data/TerrainProcessed/HUC_DEMs/" \
         "Data/TerrainProcessed/HUC_Hydro/" \
         >> "Shell_Scripts/logs/hydro_${number}_${DATE}.log" 2>&1 &
+    PID_CLUSTER[$!]=$number
 done
 
-wait
+FAILED=()
+for pid in "${!PID_CLUSTER[@]}"; do
+    if ! wait "$pid"; then
+        number=${PID_CLUSTER[$pid]}
+        echo "FAILED: cluster $number (see Shell_Scripts/logs/hydro_${number}_${DATE}.log)"
+        FAILED+=("$number")
+    fi
+done
+
+if [[ ${#FAILED[@]} -gt 0 ]]; then
+    echo "hydro finished with ${#FAILED[@]} failed cluster(s): ${FAILED[*]}"
+    exit 1
+fi
 echo "Hydro processing completed."
 
 
