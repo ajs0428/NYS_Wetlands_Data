@@ -1,0 +1,452 @@
+---
+title: "Patch band distributions"
+subtitle: "Band values in training patches, by MOD_CLASS and WET/UPL"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    page-layout: full
+    embed-resources: true
+    code-fold: true
+execute:
+  warning: false
+  message: false
+params:
+  patch_dir: "Data/Training_Data/R_Patches_Prod"   # or Data/Training_Data/R_Patches
+  px_per_class: 200     # pixels sampled per class per patch (distributions)
+  n_scatter: 1500       # points per class in the band-vs-band scatter
+  cores: 8
+  seed: 42
+  na_flag_frac: 0.01   # flag patches with more NA than this in any band
+---
+
+Render from the project root, switching folders with a parameter:
+
+```bash
+QUARTO=/usr/lib/rstudio-server/bin/quarto/bin/quarto
+$QUARTO render R_Code_Analysis/Patch_Explore.qmd
+$QUARTO render R_Code_Analysis/Patch_Explore.qmd -P patch_dir:Data/Training_Data/R_Patches
+```
+
+Every patch `.tif` is a 256 x 256 stack of predictor bands plus a `MOD_CLASS`
+label band (`0 = EMW, 1 = FSW, 2 = SSW, 3 = UPL`, from `fct_df` in
+`Raster_ChipsPatches_DL.R`). The binary label lumps EMW/FSW/SSW into **WET**.
+
+**Sampling.** Each patch contributes up to `px_per_class` random pixels *per class
+present*, so the distributions below weight patches roughly equally and keep
+minority classes (SSW) visible. They are not pixel-proportional. Per-patch QA
+stats (last section) use every pixel.
+
+```{r}
+#| label: setup
+
+library(terra)
+library(data.table)
+library(plotly)
+library(DT)
+
+proj <- "/ibstorage/anthony/NYS_Wetlands_Data"
+patch_dir <- file.path(proj, params$patch_dir)
+
+class_lut  <- c(`0` = "EMW", `1` = "FSW", `2` = "SSW", `3` = "UPL")
+class_lvls <- c("EMW", "FSW", "SSW", "UPL")
+bin_lvls   <- c("WET", "UPL")
+class_cols <- c(EMW = "#4daf4a", FSW = "#1b7837", SSW = "#a6611a", UPL = "#bababa")
+bin_cols   <- c(WET = "#2166ac", UPL = "#bababa")
+
+files <- list.files(patch_dir, pattern = "\\.tif$", full.names = TRUE)
+bands <- setdiff(names(rast(files[1])), "MOD_CLASS")
+```
+
+**Folder:** `r params$patch_dir` — **`r length(files)` patches**, `r length(bands)` predictor bands:
+`r paste(bands, collapse = ", ")`.
+
+```{r}
+#| label: read-patches
+
+read_patch <- function(f, k) {
+  r <- rast(f)
+  v <- values(r)
+  cls <- v[, "MOD_CLASS"]
+  keep <- !is.na(cls)
+  v <- v[keep, , drop = FALSE]
+  cls <- cls[keep]
+  vb <- v[, bands, drop = FALSE]
+
+  # Per-patch QA over all labelled pixels
+  qa <- data.table(
+    file   = basename(f),
+    n_px   = nrow(vb),
+    band   = bands,
+    mean   = colMeans(vb, na.rm = TRUE),
+    sd     = apply(vb, 2, sd, na.rm = TRUE),
+    na_frac = colMeans(is.na(vb))
+  )
+  cf <- table(factor(class_lut[as.character(cls)], levels = class_lvls)) / length(cls)
+
+  # Class-stratified pixel sample
+  idx <- unlist(lapply(split(seq_along(cls), cls), \(i) i[sample.int(length(i), min(k, length(i)))]))
+  smp <- as.data.table(vb[idx, , drop = FALSE])
+  smp[, MOD_CLASS := class_lut[as.character(cls[idx])]]
+  smp[, file := basename(f)]
+
+  list(sample = smp, qa = qa, cls_frac = as.data.table(as.list(cf))[, file := basename(f)])
+}
+
+set.seed(params$seed)
+RNGkind("L'Ecuyer-CMRG")
+res <- parallel::mclapply(files, read_patch, k = params$px_per_class,
+                          mc.cores = params$cores, mc.set.seed = TRUE)
+bad <- vapply(res, inherits, logical(1), "try-error")
+if (any(bad)) warning("Failed to read: ", paste(basename(files[bad]), collapse = ", "))
+res <- res[!bad]
+
+smp      <- rbindlist(lapply(res, `[[`, "sample"))
+qa       <- rbindlist(lapply(res, `[[`, "qa"))
+cls_frac <- rbindlist(lapply(res, `[[`, "cls_frac"))
+rm(res)
+```
+
+```{r}
+#| label: tidy
+
+parse_name <- function(f) {
+  data.table(
+    file    = f,
+    source  = sub("_cluster_.*", "", f),
+    cluster = as.integer(sub(".*_cluster_([0-9]+)_huc_.*", "\\1", f)),
+    huc     = sub(".*_huc_([0-9]+)_patch_.*", "\\1", f)
+  )
+}
+meta <- parse_name(basename(files))
+
+smp[, MOD_CLASS := factor(MOD_CLASS, levels = class_lvls)]
+smp[, BINARY := factor(fifelse(MOD_CLASS == "UPL", "UPL", "WET"), levels = bin_lvls)]
+smp <- merge(smp, meta[, .(file, source)], by = "file")
+
+long <- melt(smp, id.vars = c("file", "source", "MOD_CLASS", "BINARY"),
+             measure.vars = bands, variable.name = "band", variable.factor = FALSE,
+             na.rm = TRUE)
+
+# Bands with few integer values (e.g. geomorphons) are shown as bars, not densities
+discrete_bands <- long[, .(disc = all(value == round(value)) && uniqueN(value) <= 20), by = band][disc == TRUE, band]
+```
+
+Sampled `r format(nrow(smp), big.mark = ",")` pixels. Discrete bands (plotted as
+proportions): `r if (length(discrete_bands)) paste(discrete_bands, collapse = ", ") else "none"`.
+
+# Inventory
+
+```{r}
+#| label: class-composition
+
+comp <- merge(cls_frac, meta[, .(file, source)], by = "file")
+comp_src <- melt(comp, id.vars = c("file", "source"), measure.vars = class_lvls,
+                 variable.name = "MOD_CLASS")[, .(frac = mean(value)), by = .(source, MOD_CLASS)]
+src_n <- comp[, .N, by = source]
+comp_src <- merge(comp_src, src_n, by = "source")
+comp_src[, src_lab := sprintf("%s (n=%d)", source, N)]
+
+plot_ly(comp_src, y = ~src_lab, x = ~frac, color = ~MOD_CLASS, colors = class_cols,
+        type = "bar", orientation = "h",
+        hovertemplate = "%{y}<br>%{fullData.name}: %{x:.1%}<extra></extra>") |>
+  layout(barmode = "stack", title = "Mean class fraction per patch, by source",
+         xaxis = list(title = "Fraction of labelled pixels", tickformat = ".0%"),
+         yaxis = list(title = "", categoryorder = "category descending"))
+```
+
+```{r}
+#| label: class-totals
+
+tot <- comp[, lapply(.SD, \(x) sum(x * 65536)), .SDcols = class_lvls] |>
+  melt(measure.vars = class_lvls, variable.name = "MOD_CLASS", value.name = "pixels")
+tot[, share := pixels / sum(pixels)]
+tot[, patches_with_class := vapply(class_lvls, \(cl) sum(comp[[cl]] > 0), numeric(1))]
+datatable(tot, rownames = FALSE, options = list(dom = "t")) |>
+  formatRound("pixels", 0) |> formatPercentage("share", 1)
+```
+
+# Band distributions
+
+Pick a band from the dropdown. Continuous bands show kernel densities (trimmed to
+the 0.5–99.5 % range across all classes); discrete bands show class proportions.
+
+```{r}
+#| label: plot-helpers
+
+# Long table of density curves / discrete proportions per band x group
+dist_tbl <- function(long, grp) {
+  long[, {
+    lo <- quantile(value, 0.005); hi <- quantile(value, 0.995)
+    if (band[1] %in% discrete_bands) {
+      .SD[, .(n = .N), by = c(grp, "value")][, .(x = value, y = n / sum(n)), by = grp]
+    } else {
+      .SD[value >= lo & value <= hi,
+          { d <- density(value, n = 256, from = lo, to = hi); .(x = d$x, y = d$y) },
+          by = grp]
+    }
+  }, by = band, .SDcols = c(grp, "value")]
+}
+
+# One trace per band x group; the dropdown toggles which band's traces are visible
+band_dropdown <- function(dt, grp, cols, title) {
+  p <- plot_ly()
+  tr_band <- character()
+  for (bnd in bands) {
+    for (cl in names(cols)) {
+      d <- dt[band == bnd & get(grp) == cl]
+      if (!nrow(d)) next
+      vis <- bnd == bands[1]
+      if (bnd %in% discrete_bands) {
+        p <- add_bars(p, x = d$x, y = d$y, name = cl, legendgroup = cl, visible = vis,
+                      marker = list(color = cols[[cl]]), showlegend = TRUE,
+                      hovertemplate = paste0(cl, ": %{x} — %{y:.1%}<extra></extra>"))
+      } else {
+        p <- add_lines(p, x = d$x, y = d$y, name = cl, legendgroup = cl, visible = vis,
+                       line = list(color = cols[[cl]], width = 2),
+                       fill = "tozeroy", fillcolor = paste0(cols[[cl]], "33"),
+                       hovertemplate = paste0(cl, ": %{x:.3g}<extra></extra>"))
+      }
+      tr_band <- c(tr_band, bnd)
+    }
+  }
+  buttons <- lapply(bands, \(bnd) list(
+    method = "update", label = bnd,
+    args = list(list(visible = tr_band == bnd),
+                list(xaxis = list(title = bnd),
+                     yaxis = list(title = if (bnd %in% discrete_bands) "Proportion" else "Density")))))
+  p |> layout(
+    title = title, barmode = "group", hovermode = "x unified",
+    xaxis = list(title = bands[1]), yaxis = list(title = "Density"),
+    updatemenus = list(list(buttons = buttons, x = 1, xanchor = "right", y = 1.15,
+                            active = 0, showactive = TRUE)))
+}
+
+# Box plots from precomputed quantiles (keeps the HTML small)
+box_dropdown <- function(long, grp, cols, title) {
+  q <- long[, .(q1 = quantile(value, .25), med = median(value), q3 = quantile(value, .75),
+                lo = quantile(value, .01), hi = quantile(value, .99), mu = mean(value)),
+            by = c("band", grp)]
+  p <- plot_ly()
+  tr_band <- character()
+  for (bnd in bands) for (cl in names(cols)) {
+    d <- q[band == bnd & get(grp) == cl]
+    if (!nrow(d)) next
+    p <- add_trace(p, type = "box", x = list(cl), q1 = list(d$q1), median = list(d$med),
+                   q3 = list(d$q3), lowerfence = list(d$lo), upperfence = list(d$hi),
+                   mean = list(d$mu), name = cl, visible = bnd == bands[1],
+                   marker = list(color = cols[[cl]]), line = list(color = cols[[cl]]),
+                   fillcolor = paste0(cols[[cl]], "66"))
+    tr_band <- c(tr_band, bnd)
+  }
+  buttons <- lapply(bands, \(bnd) list(method = "update", label = bnd,
+    args = list(list(visible = tr_band == bnd), list(yaxis = list(title = bnd)))))
+  p |> layout(title = title, showlegend = FALSE, yaxis = list(title = bands[1]),
+              updatemenus = list(list(buttons = buttons, x = 1, xanchor = "right",
+                                      y = 1.15, active = 0)))
+}
+```
+
+## By MOD_CLASS
+
+```{r}
+#| label: dens-class
+band_dropdown(dist_tbl(long, "MOD_CLASS"), "MOD_CLASS", class_cols, "Band distribution by MOD_CLASS")
+```
+
+```{r}
+#| label: box-class
+box_dropdown(long, "MOD_CLASS", class_cols, "Quartiles by MOD_CLASS (whiskers = 1st/99th pct, dashed = mean)")
+```
+
+## By WET / UPL
+
+```{r}
+#| label: dens-bin
+band_dropdown(dist_tbl(long, "BINARY"), "BINARY", bin_cols, "Band distribution, WET vs UPL")
+```
+
+```{r}
+#| label: box-bin
+box_dropdown(long, "BINARY", bin_cols, "Quartiles, WET vs UPL (whiskers = 1st/99th pct, dashed = mean)")
+```
+
+## All bands at a glance
+
+Medians with interquartile ranges, each band z-scored on the pooled sample so they
+share an axis. Bands where the class ranges separate are the most informative.
+
+```{r}
+#| label: glance
+#| fig-height: 8
+
+zs <- long[, z := (value - mean(value)) / sd(value), by = band][
+  , .(med = median(z), q1 = quantile(z, .25), q3 = quantile(z, .75)), by = .(band, MOD_CLASS)]
+zs[, band := factor(band, levels = rev(bands))]
+
+plot_ly(zs, height = 700, y = ~band, x = ~med, color = ~MOD_CLASS, colors = class_cols,
+        type = "scatter", mode = "markers",
+        error_x = ~list(type = "data", symmetric = FALSE, array = q3 - med, arrayminus = med - q1),
+        hovertemplate = "%{y} %{fullData.name}: median z %{x:.2f}<extra></extra>") |>
+  layout(xaxis = list(title = "z-score (median, IQR)"), yaxis = list(title = ""),
+         scattermode = "group")
+```
+
+## Summary table
+
+```{r}
+#| label: summary-table
+
+summ <- rbind(
+  long[, .(n = .N, mean = mean(value), sd = sd(value), p01 = quantile(value, .01),
+           p25 = quantile(value, .25), median = median(value), p75 = quantile(value, .75),
+           p99 = quantile(value, .99)), by = .(band, group = MOD_CLASS)],
+  long[, .(n = .N, mean = mean(value), sd = sd(value), p01 = quantile(value, .01),
+           p25 = quantile(value, .25), median = median(value), p75 = quantile(value, .75),
+           p99 = quantile(value, .99)), by = .(band, group = BINARY)][group == "WET"]
+)
+summ[, group := factor(group, levels = c(class_lvls, "WET"))]
+setorder(summ, band, group)
+datatable(summ, rownames = FALSE, filter = "top", extensions = "Buttons",
+          options = list(pageLength = 25, dom = "Bfrtip", buttons = c("csv", "copy"))) |>
+  formatSignif(c("mean", "sd", "p01", "p25", "median", "p75", "p99"), 4)
+```
+
+# Class separability
+
+Per band: Kolmogorov–Smirnov *D* (0 = identical distributions, 1 = no overlap) and
+Cohen's *d* (standardized mean difference) for each wetland class and for WET
+against UPL. A rough guide to which bands carry signal — it ignores spatial
+context, which is what the U-Net actually uses.
+
+```{r}
+#| label: separability
+
+sep_stats <- function(x, y) {
+  d  <- (mean(x) - mean(y)) / sqrt((var(x) + var(y)) / 2)
+  ks <- suppressWarnings(ks.test(x, y)$statistic)
+  c(KS = unname(ks), d = d)
+}
+comparisons <- list(`EMW vs UPL` = quote(MOD_CLASS == "EMW"),
+                    `FSW vs UPL` = quote(MOD_CLASS == "FSW"),
+                    `SSW vs UPL` = quote(MOD_CLASS == "SSW"),
+                    `WET vs UPL` = quote(BINARY == "WET"))
+sep <- rbindlist(lapply(names(comparisons), \(nm) {
+  long[, { s <- sep_stats(value[eval(comparisons[[nm]])], value[MOD_CLASS == "UPL"])
+           .(comparison = nm, KS = s[["KS"]], d = s[["d"]]) }, by = band]
+}))
+ord <- sep[comparison == "WET vs UPL"][order(KS), band]
+sep[, band := factor(band, levels = ord)]
+sep_cols <- c(`EMW vs UPL` = class_cols[["EMW"]], `FSW vs UPL` = class_cols[["FSW"]],
+              `SSW vs UPL` = class_cols[["SSW"]], `WET vs UPL` = bin_cols[["WET"]])
+
+subplot(
+  plot_ly(sep, height = 750, y = ~band, x = ~KS, color = ~comparison, colors = sep_cols, type = "bar",
+          orientation = "h", legendgroup = ~comparison,
+          hovertemplate = "%{y}<br>%{fullData.name}: KS %{x:.2f}<extra></extra>"),
+  plot_ly(sep, y = ~band, x = ~d, color = ~comparison, colors = sep_cols, type = "bar",
+          orientation = "h", legendgroup = ~comparison, showlegend = FALSE,
+          hovertemplate = "%{y}<br>%{fullData.name}: d %{x:.2f}<extra></extra>"),
+  shareY = TRUE, titleX = TRUE
+) |> layout(barmode = "group",
+            xaxis = list(title = "KS D"), xaxis2 = list(title = "Cohen's d (class − UPL)"),
+            yaxis = list(title = ""))
+```
+
+# Band vs band
+
+Choose the X and Y bands independently. `r params$n_scatter` random sampled pixels
+per class; click legend entries to hide classes, drag to zoom.
+
+```{r}
+#| label: scatter
+
+set.seed(params$seed)
+sc <- smp[, .SD[sample.int(.N, min(.N, params$n_scatter))], by = MOD_CLASS]
+x0 <- bands[1]; y0 <- if ("twi" %in% bands) "twi" else bands[2]
+
+p <- plot_ly(height = 600)
+for (cl in class_lvls) {
+  d <- sc[MOD_CLASS == cl]
+  p <- add_markers(p, x = d[[x0]], y = d[[y0]], name = cl, text = d$file,
+                   marker = list(color = class_cols[[cl]], size = 4, opacity = 0.5),
+                   hovertemplate = "%{text}<br>x %{x:.3g}, y %{y:.3g}<extra>%{fullData.name}</extra>")
+}
+axis_menu <- function(ax, xpos, sel) list(
+  x = xpos, xanchor = "left", y = 1.15, active = match(sel, bands) - 1,
+  buttons = lapply(bands, \(bnd) {
+    vals <- lapply(class_lvls, \(cl) sc[MOD_CLASS == cl][[bnd]])
+    data_args <- setNames(list(vals), ax)
+    lay_args  <- setNames(list(list(title = bnd)), paste0(ax, "axis"))
+    list(method = "update", label = paste(toupper(ax), ":", bnd), args = list(data_args, lay_args))
+  }))
+p |> layout(xaxis = list(title = x0), yaxis = list(title = y0),
+            updatemenus = list(axis_menu("x", 0, x0), axis_menu("y", 0.25, y0)))
+```
+
+# Per-patch QA
+
+Every patch's mean vs standard deviation for the chosen band, coloured by its
+dominant class. Hover for the file name. Constant bands (sd = 0) or patches far
+from the cloud usually point to a source-raster problem (missing DEM/CHM coverage,
+nodata filled with a constant, etc.).
+
+```{r}
+#| label: patch-qa
+
+dom <- melt(cls_frac, id.vars = "file", variable.name = "cls")[, .SD[which.max(value)], by = file]
+setnames(dom, c("cls", "value"), c("dominant", "dom_frac"))
+qw <- dcast(qa, file + n_px ~ band, value.var = c("mean", "sd", "na_frac"))
+qw <- merge(merge(qw, dom, by = "file"), meta, by = "file")
+
+p <- plot_ly(height = 600)
+for (cl in class_lvls) {
+  d <- qw[dominant == cl]
+  if (!nrow(d)) next
+  p <- add_markers(p, x = d[[paste0("mean_", bands[1])]], y = d[[paste0("sd_", bands[1])]],
+                   name = cl, text = sprintf("%s<br>%s %.0f%%", d$file, cl, 100 * d$dom_frac),
+                   marker = list(color = class_cols[[cl]], size = 6, opacity = 0.7),
+                   hovertemplate = "%{text}<br>mean %{x:.3g}, sd %{y:.3g}<extra></extra>")
+}
+present <- intersect(class_lvls, unique(qw$dominant))
+buttons <- lapply(bands, \(bnd) list(method = "update", label = bnd, args = list(
+  list(x = lapply(present, \(cl) qw[dominant == cl][[paste0("mean_", bnd)]]),
+       y = lapply(present, \(cl) qw[dominant == cl][[paste0("sd_", bnd)]])),
+  list(xaxis = list(title = paste("patch mean:", bnd)), yaxis = list(title = paste("patch sd:", bnd))))))
+p |> layout(xaxis = list(title = paste("patch mean:", bands[1])),
+            yaxis = list(title = paste("patch sd:", bands[1])),
+            updatemenus = list(list(buttons = buttons, x = 1, xanchor = "right", y = 1.15)))
+```
+
+## Flagged patches
+
+Patches with a constant continuous band (discrete bands like geomorphons are
+legitimately constant on flats), more than `na_flag_frac` NA pixels in any
+predictor band, or fewer than the full 256 × 256 labelled pixels. Constant
+DEM/terrain over open water is expected; constant NAIP/CHM is not.
+
+```{r}
+#| label: flagged
+
+cont <- setdiff(bands, discrete_bands)
+flags <- qa[, .(constant_bands = paste(band[band %in% cont & !is.na(sd) & sd == 0], collapse = ", "),
+                max_na = max(na_frac),
+                na_bands = paste(sprintf("%s (%.1f%%)", band[na_frac > params$na_flag_frac],
+                                         100 * na_frac[na_frac > params$na_flag_frac]), collapse = ", "),
+                n_px = n_px[1]), by = file]
+any_na <- qa[na_frac > 0, .(n = uniqueN(file), med_px = median(na_frac) * 65536), by = band][order(-n)]
+flags <- flags[constant_bands != "" | na_bands != "" | n_px < 256 * 256]
+flags <- merge(flags, meta, by = "file")[order(-max_na),
+                                         .(file, source, cluster, huc, n_px, constant_bands, na_bands)]
+```
+
+**`r nrow(flags)`** of `r length(files)` patches flagged. Patches with *any* NA
+pixels, per band (most are a handful of pixels, e.g. undefined TWI where slope = 0):
+`r paste(sprintf("%s %d (median %.0f px)", any_na$band, any_na$n, any_na$med_px), collapse = "; ")`.
+
+```{r}
+#| label: flagged-table
+datatable(flags, rownames = FALSE, filter = "top", extensions = "Buttons",
+          options = list(pageLength = 15, dom = "Bfrtip", buttons = c("csv", "copy"),
+                         scrollX = TRUE))
+```

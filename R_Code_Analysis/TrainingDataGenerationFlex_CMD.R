@@ -1,4 +1,77 @@
 #!/usr/bin/env Rscript
+###############################################################################################
+# TrainingDataGenerationFlex_CMD.R
+#
+# PURPOSE
+#   Generate labelled training POINTS (not patches) for wetland classification by sampling
+#   inside wetland polygons (NWI or NY DEC Natural Heritage Program) and in the surrounding
+#   uplands, one output file per zone/study area (e.g. per cluster of HUC12s).
+#
+# USAGE  (run from the project root; all paths are relative)
+#   module load R/4.4.3
+#   Rscript R_Code_Analysis/TrainingDataGenerationFlex_CMD.R \
+#       <wetlands.gpkg> <zones.gpkg> <label_field> <zone_id_field>
+#
+#   e.g. Rscript R_Code_Analysis/TrainingDataGenerationFlex_CMD.R \
+#       Data/NWI/NY_NWI_6347.gpkg Data/NY_HUCS/NY_Cluster_Zones_250_NAomit_6347.gpkg \
+#       WETLAND_TY cluster
+#
+# ARGUMENTS (positional; the args <- c(...) block below is only for interactive runs and is
+#            overwritten by commandArgs())
+#   1) wetlands    Wetland polygon layer to sample from (NWI or DEC NHP).
+#   2) zones       Polygon layer of zones / study areas (e.g. the 250 HUC12 clusters).
+#   3) label_field Field name that identifies the wetland SOURCE, not just the label column:
+#                    "WETLAND_TY" or "ATTRIBUTE"  -> NWI     (uses the ATTRIBUTE, WETLAND_TY,
+#                                                            Shape_Area columns, hard-coded)
+#                    "cowardin" or "comm"         -> DEC_NHP (uses the system, cowardin columns)
+#                  Anything else leaves `wetlands_name` undefined and the zone errors out.
+#   4) zone_id_field  Column in the zones layer holding zone IDs (e.g. "cluster"). Every
+#                  unique non-NA value is processed; the script does NOT take a single ID.
+#                  NOTE: Shell_Scripts/training_data_gen.sh passes a cluster NUMBER here,
+#                  which is not a column name -- the wrapper and this script disagree.
+#
+# PROCESSING (per zone, in parallel via future_lapply)
+#   0. Reproject both inputs to EPSG:6347 if needed. A reprojected wetlands layer is written
+#      next to the input as <name>_6347.gpkg; the zones layer is reprojected in memory only.
+#   1. Subset wetlands: polygons fully WITHIN the zone are sampled; polygons that INTERSECT
+#      the zone are used only as the upland exclusion mask (NWI).
+#   2. Reclassify to WetClass:
+#        NWI    - drop riverine (R1-R5), Marine/Estuarine/Other, and L1 lakes < 2e5 m^2;
+#                 PFO -> Forested, PEM -> Emergent, PSS -> ScrubShrub (PSS+PFO -> Forested,
+#                 PSS+PEM -> Emergent), L1/L2/PUB/PUS/PAB -> OpenWater, else raw ATTRIBUTE.
+#        DEC_NHP- drop Marine/Estuarine/Subterranean/Riverine; Palustrine-SS/EM/FO/AB,
+#                 Lacustrine/Open water -> classes above; Terrestrial -> UPL.
+#   3. Wetland points: negative-buffer polygons (-10 m if > 3000 m^2, -30 m for OpenWater)
+#      to keep points off boundaries, then sample 1.5 x (number of wetland polygons).
+#   4. Upland points:
+#        NWI    - sample 10 x (number of wetland polygons) randomly across the zone, then
+#                 drop any within 100 m of an NWI polygon.
+#        DEC_NHP- sample 2 x (number of Terrestrial polygons) inside Terrestrial polygons.
+#   5. Class balancing:
+#        - If EMW AND SSW points are both < 50% of FSW points, add ~50% more EMW and SSW
+#          points from small (< 5000 m^2) polygons of those classes.
+#        - If EMW+FSW+SSW points < 50% of OWW points, add ceiling(OWW/2) points from
+#          non-OpenWater polygons.
+#          CAVEAT: this branch joins to wetlands_pts_all[, "WetClass"], a column that no
+#          longer exists, so it errors and the zone writes NO output (logged as
+#          "Error, probably 0 wetland polygons").
+#
+# OUTPUT
+#   Data/Training_Data/<zone_id_field>_<zone_id>_<NWI|DEC_NHP>_training_pts.gpkg
+#   Point layer with:
+#     MOD_CLASS    EMW | FSW | SSW | OWW | UPL | Other   (multi-class modelling)
+#     COARSE_CLASS WET | UPL                             (binary modelling)
+#   Existing files are overwritten. Point counts per class are printed to stdout.
+#
+# NOTES
+#   - Any error inside a zone is caught and the zone is skipped (returns NA); the message
+#     usually says "probably 0 wetland polygons" but may be another cause (see caveat above).
+#   - Parallelism: 8 future.callr workers if > 16 cores are available, else all cores;
+#     future.globals.maxSize = 16 GB because the full wetland layer is shipped to workers.
+#   - Reproducible: set.seed(11) + future.seed = TRUE.
+#   - Downstream: *_training_pts.gpkg files are read by training_pts_extract.R
+#     (Shell_Scripts/training_pts_extract.sh) to extract predictor values at the points.
+###############################################################################################
 
 args <- c(
     "Data/NWI/NY_NWI_6347.gpkg", 
