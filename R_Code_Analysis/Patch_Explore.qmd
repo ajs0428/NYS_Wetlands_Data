@@ -232,7 +232,8 @@ box_dropdown <- function(long, grp, cols, title) {
   for (bnd in bands) for (cl in names(cols)) {
     d <- q[band == bnd & get(grp) == cl]
     if (!nrow(d)) next
-    p <- add_trace(p, type = "box", x = list(cl), q1 = list(d$q1), median = list(d$med),
+    p <- add_trace(p, type = "box", orientation = "v", x = list(cl),
+                   q1 = list(d$q1), median = list(d$med),
                    q3 = list(d$q3), lowerfence = list(d$lo), upperfence = list(d$hi),
                    mean = list(d$mu), name = cl, visible = bnd == bands[1],
                    marker = list(color = cols[[cl]]), line = list(color = cols[[cl]]),
@@ -240,8 +241,12 @@ box_dropdown <- function(long, grp, cols, title) {
     tr_band <- c(tr_band, bnd)
   }
   buttons <- lapply(bands, \(bnd) list(method = "update", label = bnd,
-    args = list(list(visible = tr_band == bnd), list(yaxis = list(title = bnd)))))
-  p |> layout(title = title, showlegend = FALSE, yaxis = list(title = bands[1]),
+    args = list(list(visible = tr_band == bnd),
+                list(yaxis = list(title = bnd, tickformat = "~g", hoverformat = ".4~g")))))
+  p |> layout(title = title, showlegend = FALSE,
+              xaxis = list(title = "", type = "category", categoryorder = "array",
+                           categoryarray = names(cols)),
+              yaxis = list(title = bands[1], tickformat = "~g", hoverformat = ".4~g"),
               updatemenus = list(list(buttons = buttons, x = 1, xanchor = "right",
                                       y = 1.15, active = 0)))
 }
@@ -282,14 +287,23 @@ share an axis. Bands where the class ranges separate are the most informative.
 
 zs <- long[, z := (value - mean(value)) / sd(value), by = band][
   , .(med = median(z), q1 = quantile(z, .25), q3 = quantile(z, .75)), by = .(band, MOD_CLASS)]
-zs[, band := factor(band, levels = rev(bands))]
+# Dodge the classes vertically within each band row so the IQR bars don't overlap
+dodge <- setNames(seq(0.27, -0.27, length.out = length(class_lvls)), class_lvls)
+zs[, ypos := match(band, rev(bands)) + dodge[as.character(MOD_CLASS)]]
 
-plot_ly(zs, height = 700, y = ~band, x = ~med, color = ~MOD_CLASS, colors = class_cols,
-        type = "scatter", mode = "markers",
-        error_x = ~list(type = "data", symmetric = FALSE, array = q3 - med, arrayminus = med - q1),
-        hovertemplate = "%{y} %{fullData.name}: median z %{x:.2f}<extra></extra>") |>
-  layout(xaxis = list(title = "z-score (median, IQR)"), yaxis = list(title = ""),
-         scattermode = "group")
+plot_ly(zs, height = 900, y = ~ypos, x = ~med, color = ~MOD_CLASS, colors = class_cols,
+        type = "scatter", mode = "markers", marker = list(size = 7),
+        text = ~band,
+        error_x = ~list(type = "data", symmetric = FALSE, array = q3 - med, arrayminus = med - q1,
+                        thickness = 2, width = 0),
+        hovertemplate = paste0("%{text} %{fullData.name}<br>median z %{x:.2f}",
+                               "<extra></extra>")) |>
+  layout(xaxis = list(title = "z-score (median, IQR)", zeroline = TRUE),
+         yaxis = list(title = "", tickvals = seq_along(bands), ticktext = rev(bands),
+                      range = c(0.5, length(bands) + 0.5), showgrid = FALSE),
+         shapes = lapply(seq(1.5, length(bands) - 0.5), \(y) list(
+           type = "line", xref = "paper", x0 = 0, x1 = 1, y0 = y, y1 = y,
+           line = list(color = "rgba(128,128,128,0.25)", width = 1))))
 ```
 
 ## Summary table
@@ -315,9 +329,11 @@ datatable(summ, rownames = FALSE, filter = "top", extensions = "Buttons",
 # Class separability
 
 Per band: Kolmogorov–Smirnov *D* (0 = identical distributions, 1 = no overlap) and
-Cohen's *d* (standardized mean difference) for each wetland class and for WET
-against UPL. A rough guide to which bands carry signal — it ignores spatial
-context, which is what the U-Net actually uses.
+Cohen's *d* (standardized mean difference, *A − B*) for every pair of classes plus
+WET vs UPL. Use the dropdown to switch between comparison sets; bands are re-sorted
+by the mean KS of the shown set, and legend entries toggle individual pairs. A
+rough guide to which bands carry signal — it ignores spatial context, which is
+what the U-Net actually uses.
 
 ```{r}
 #| label: separability
@@ -327,30 +343,54 @@ sep_stats <- function(x, y) {
   ks <- suppressWarnings(ks.test(x, y)$statistic)
   c(KS = unname(ks), d = d)
 }
-comparisons <- list(`EMW vs UPL` = quote(MOD_CLASS == "EMW"),
-                    `FSW vs UPL` = quote(MOD_CLASS == "FSW"),
-                    `SSW vs UPL` = quote(MOD_CLASS == "SSW"),
-                    `WET vs UPL` = quote(BINARY == "WET"))
-sep <- rbindlist(lapply(names(comparisons), \(nm) {
-  long[, { s <- sep_stats(value[eval(comparisons[[nm]])], value[MOD_CLASS == "UPL"])
-           .(comparison = nm, KS = s[["KS"]], d = s[["d"]]) }, by = band]
-}))
-ord <- sep[comparison == "WET vs UPL"][order(KS), band]
-sep[, band := factor(band, levels = ord)]
-sep_cols <- c(`EMW vs UPL` = class_cols[["EMW"]], `FSW vs UPL` = class_cols[["FSW"]],
-              `SSW vs UPL` = class_cols[["SSW"]], `WET vs UPL` = bin_cols[["WET"]])
+# Pairs as (A, B); d is A - B. WET is the binary lump.
+pairs <- c(combn(class_lvls, 2, simplify = FALSE), list(c("WET", "UPL")))
+pair_name <- vapply(pairs, \(pr) paste(pr[1], "vs", pr[2]), "")
+sel <- function(lbl) if (lbl == "WET") quote(BINARY == "WET") else bquote(MOD_CLASS == .(lbl))
 
-subplot(
-  plot_ly(sep, height = 750, y = ~band, x = ~KS, color = ~comparison, colors = sep_cols, type = "bar",
-          orientation = "h", legendgroup = ~comparison,
-          hovertemplate = "%{y}<br>%{fullData.name}: KS %{x:.2f}<extra></extra>"),
-  plot_ly(sep, y = ~band, x = ~d, color = ~comparison, colors = sep_cols, type = "bar",
-          orientation = "h", legendgroup = ~comparison, showlegend = FALSE,
-          hovertemplate = "%{y}<br>%{fullData.name}: d %{x:.2f}<extra></extra>"),
-  shareY = TRUE, titleX = TRUE
-) |> layout(barmode = "group",
-            xaxis = list(title = "KS D"), xaxis2 = list(title = "Cohen's d (class − UPL)"),
-            yaxis = list(title = ""))
+sep <- rbindlist(Map(\(pr, nm) {
+  long[, { s <- sep_stats(value[eval(sel(pr[1]))], value[eval(sel(pr[2]))])
+           .(comparison = nm, KS = s[["KS"]], d = s[["d"]]) }, by = band]
+}, pairs, pair_name))
+
+views <- list(
+  `Classes vs UPL`        = c("EMW vs UPL", "FSW vs UPL", "SSW vs UPL", "WET vs UPL"),
+  `Among wetland classes` = c("EMW vs FSW", "EMW vs SSW", "FSW vs SSW"),
+  `All pairs`             = pair_name
+)
+sep_cols <- setNames(c("#4daf4a", "#1b7837", "#a6611a", "#e41a1c", "#984ea3", "#ff7f00", "#2166ac"),
+                     c("EMW vs UPL", "FSW vs UPL", "SSW vs UPL", "EMW vs FSW", "EMW vs SSW",
+                       "FSW vs SSW", "WET vs UPL"))[pair_name]
+band_order <- \(v) sep[comparison %in% v, .(m = mean(KS)), by = band][order(m), band]
+
+# KS bars on x, d bars on x2, sharing the band axis
+p <- plot_ly(height = 750)
+tr_cmp <- character()
+for (nm in pair_name) {
+  d <- sep[comparison == nm]
+  vis <- nm %in% views[[1]]
+  p <- p |>
+    add_bars(x = d$KS, y = d$band, orientation = "h", name = nm, legendgroup = nm,
+             marker = list(color = sep_cols[[nm]]), visible = vis,
+             hovertemplate = paste0("%{y}<br>", nm, ": KS %{x:.2f}<extra></extra>")) |>
+    add_bars(x = d$d, y = d$band, orientation = "h", name = nm, legendgroup = nm,
+             xaxis = "x2", showlegend = FALSE, marker = list(color = sep_cols[[nm]]),
+             visible = vis,
+             hovertemplate = paste0("%{y}<br>", nm, ": d %{x:.2f}<extra></extra>"))
+  tr_cmp <- c(tr_cmp, nm, nm)
+}
+buttons <- lapply(names(views), \(v) list(
+  method = "update", label = v,
+  args = list(list(visible = tr_cmp %in% views[[v]]),
+              list(yaxis = list(title = "", categoryorder = "array",
+                                categoryarray = band_order(views[[v]]))))))
+p |> layout(
+  barmode = "group",
+  xaxis  = list(title = "KS D", domain = c(0, 0.47), range = c(0, 1)),
+  xaxis2 = list(title = "Cohen's d (A − B)", domain = c(0.53, 1), anchor = "y",
+                zeroline = TRUE),
+  yaxis  = list(title = "", categoryorder = "array", categoryarray = band_order(views[[1]])),
+  updatemenus = list(list(buttons = buttons, x = 0, xanchor = "left", y = 1.08, active = 0)))
 ```
 
 # Band vs band
