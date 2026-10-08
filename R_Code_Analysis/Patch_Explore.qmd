@@ -232,7 +232,7 @@ box_dropdown <- function(long, grp, cols, title) {
   for (bnd in bands) for (cl in names(cols)) {
     d <- q[band == bnd & get(grp) == cl]
     if (!nrow(d)) next
-    p <- add_trace(p, type = "box", orientation = "v", x = list(cl),
+    p <- add_trace(p, type = "box", x = list(cl),
                    q1 = list(d$q1), median = list(d$med),
                    q3 = list(d$q3), lowerfence = list(d$lo), upperfence = list(d$hi),
                    mean = list(d$mu), name = cl, visible = bnd == bands[1],
@@ -243,12 +243,17 @@ box_dropdown <- function(long, grp, cols, title) {
   buttons <- lapply(bands, \(bnd) list(method = "update", label = bnd,
     args = list(list(visible = tr_band == bnd),
                 list(yaxis = list(title = bnd, tickformat = "~g", hoverformat = ".4~g")))))
-  p |> layout(title = title, showlegend = FALSE,
+  p <- p |> layout(title = title, showlegend = FALSE,
               xaxis = list(title = "", type = "category", categoryorder = "array",
                            categoryarray = names(cols)),
               yaxis = list(title = bands[1], tickformat = "~g", hoverformat = ".4~g"),
               updatemenus = list(list(buttons = buttons, x = 1, xanchor = "right",
                                       y = 1.15, active = 0)))
+  # plotly R forces orientation = "h" on box traces given x but no y, which
+  # drops the precomputed quartiles onto the x axis. Override after building.
+  p <- plotly_build(p)
+  p$x$data <- lapply(p$x$data, \(tr) { tr$orientation <- "v"; tr })
+  p
 }
 ```
 
