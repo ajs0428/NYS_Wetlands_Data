@@ -38,14 +38,16 @@ clusterSubset <- args[1]
 output_json <- args[2]
 
 cat("Cluster:", clusterSubset, "\n")
-cat("Output :", output_json, "\n\n")
+cat("Output :", output_json, "\n")
+cat("Profile:", stack_profile(), "\n\n")
 
 setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
 
 # --- Band configuration ------------------------------------------------------
 # Bands that use min_max normalization (need global stats).
-# shift_scale (NDVI, MNDWI, NDYI) and one_hot (Geomorph_local) are
-# analytically defined in dl_band_config.json -- skip them here.
+# shift_scale (NDVI, MNDWI, NDYI; lowercase ndvi/ndwi in the prod profile,
+# which keeps them in NAIP) and one_hot (Geomorph_local) are analytically
+# defined in dl_band_config.json -- skip them here.
 # MOD_CLASS is the label band -- also skip (and it is not in the predictor
 # stack anyway; kept here for safety).
 skip_bands <- c(
@@ -57,6 +59,8 @@ skip_bands <- c(
   "GDVI",
   "n_ndvi",
   "n_ndwi",
+  "ndvi",
+  "ndwi",
   "Geomorph_local"
 )
 

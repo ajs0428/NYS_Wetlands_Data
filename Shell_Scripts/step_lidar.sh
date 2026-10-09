@@ -30,7 +30,8 @@ echo "=== Lidar metrics ==="
 declare -A PID_CLUSTER=()
 for number in "${include[@]}"; do
         echo "Cluster $number"
-        srun --nodes=1 --ntasks=1 --exclusive \
+        # Slurm 22.05: srun no longer inherits --cpus-per-task from sbatch.
+        srun --nodes=1 --ntasks=1 --cpus-per-task="${SLURM_CPUS_PER_TASK:-1}" --exclusive \
             Rscript R_Code_Analysis/Lidar_HUC_Processing.R \
             "$GPKG" \
             "$number" \

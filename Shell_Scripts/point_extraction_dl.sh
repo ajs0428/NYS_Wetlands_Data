@@ -37,7 +37,8 @@ include=(11 22 46 50 64 67 82 95 123 168 208 218 225 250)
 # Loop through each cluster number
 for number in "${include[@]}"; do
     echo "Running point extraction for cluster: $number"
-    srun --nodes=1 --ntasks=1 --exclusive \
+    # Slurm 22.05: srun no longer inherits --cpus-per-task from sbatch.
+    srun --nodes=1 --ntasks=1 --cpus-per-task="${SLURM_CPUS_PER_TASK:-1}" --exclusive \
         Rscript R_Code_Analysis/Point_Extraction_DL.R \
         "Data/Training_Data/R_Patches_Vector/" \
         10 \

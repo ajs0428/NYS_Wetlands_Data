@@ -39,7 +39,8 @@ include=(11 22 46 50 64 67 82 95 123 168 208 218 225 250)
 # Loop through each number in the list
 for number in "${include[@]}"; do
     echo "Running Rscript with argument: $number"
-    srun --nodes=1 --ntasks=1 --exclusive \
+    # Slurm 22.05: srun no longer inherits --cpus-per-task from sbatch.
+    srun --nodes=1 --ntasks=1 --cpus-per-task="${SLURM_CPUS_PER_TASK:-1}" --exclusive \
         Rscript R_Code_Analysis/Raster_Stack.R \
         "$number" \
         "Data/HUC_Raster_Stacks/HUC_DL_Stacks/" >> "Shell_Scripts/logs/stack_${number}_$(date +%Y%m%d).log" 2>&1 &

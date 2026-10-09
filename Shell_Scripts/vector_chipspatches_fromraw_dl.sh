@@ -127,7 +127,8 @@ for number in "${include[@]}"; do
         continue
     fi
     echo "Running Rscript with argument: $number"
-    srun --nodes=1 --ntasks=1 --exclusive "${cmd[@]}" >> "$log" 2>&1 &
+    # Slurm 22.05: srun no longer inherits --cpus-per-task from sbatch.
+    srun --nodes=1 --ntasks=1 --cpus-per-task="${SLURM_CPUS_PER_TASK:-1}" --exclusive "${cmd[@]}" >> "$log" 2>&1 &
     PID_CLUSTER[$!]=$number
 done
 

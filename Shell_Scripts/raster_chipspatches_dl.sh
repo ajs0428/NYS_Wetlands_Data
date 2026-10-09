@@ -136,7 +136,8 @@ echo "${include[@]}"
 # Loop through each number in the list
 for number in "${include[@]}"; do
     echo "Running Rscript with argument: $number"
-    srun --nodes=1 --ntasks=1 --exclusive \
+    # Slurm 22.05: srun no longer inherits --cpus-per-task from sbatch.
+    srun --nodes=1 --ntasks=1 --cpus-per-task="${SLURM_CPUS_PER_TASK:-1}" --exclusive \
         Rscript R_Code_Analysis/Raster_ChipsPatches_DL.R \
         "$VECTOR_DIR" \
         128 \

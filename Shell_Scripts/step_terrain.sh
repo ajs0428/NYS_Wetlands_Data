@@ -114,7 +114,8 @@ for number in "${include[@]}"; do
     while (( ${#running[@]} >= NPAR )); do reap_one; done
 
     echo "  Cluster $number – $metric"
-    srun --nodes=1 --ntasks=1 --exclusive \
+    # Slurm 22.05: srun no longer inherits --cpus-per-task from sbatch.
+    srun --nodes=1 --ntasks=1 --cpus-per-task="${SLURM_CPUS_PER_TASK:-1}" --exclusive \
         Rscript R_Code_Analysis/terrain_metrics_filter_singleVect_CMD.R \
         "$number" \
         "Data/TerrainProcessed/HUC_DEMs" \

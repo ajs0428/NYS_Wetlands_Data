@@ -115,7 +115,8 @@ for number in "${include[@]}"; do
     log="Shell_Scripts/logs/lidar_ftp_${number}_${DATE}.log"
     hb="$HBDIR/lidar_ftp_${number}.hb"
     rm -f "$hb"
-    srun --nodes=1 --ntasks=1 --exclusive \
+    # Slurm 22.05: srun no longer inherits --cpus-per-task from sbatch.
+    srun --nodes=1 --ntasks=1 --cpus-per-task="${SLURM_CPUS_PER_TASK:-1}" --exclusive \
         Rscript R_Code_Analysis/LIDAR_ftp.R \
         "$GPKG" \
         "$number" \
