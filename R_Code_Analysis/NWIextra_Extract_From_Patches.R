@@ -55,6 +55,59 @@ removeExisting <- if (length(args) >= 5 && nzchar(args[5])) {
 }
 message("5) remove existing NWIextra patches: ", removeExisting, "\n")
 
+# Knobs for building a LARGER extra set (e.g. the 10x NWI arm). All come from
+# env vars exported by nwiextra_in_patch_extract.sh; the defaults reproduce the
+# original 1x NWIextra build exactly (same seed stream, same filenames).
+#   MULTIPLIER   new patches per HUC = MULTIPLIER x reviewed patch count
+#   FILE_PREFIX  output filename prefix (NWIextra -> NWIextra_cluster_..gpkg)
+#   AVOID_DIRS   comma-separated extra vector folders whose patch footprints the
+#                new boxes must not overlap (reviewed footprints always are)
+#   MIN_GAP      metres of clearance required from every blocked footprint and
+#                between new boxes (0 = merely non-touching)
+#   SEED         RNG seed
+#   PER_HUC_SEED 1 = reseed per HUC (SEED + HUC rank) so a resumed run
+#                reproduces a full one; 0 = one stream across HUCs (original)
+#   MAX_ITER     rejection-sampling rounds per HUC before logging a shortfall
+#   ONLY_HUCS    comma-separated HUC12 ids to restrict the run to (testing)
+env_num <- function(name, default) {
+  v <- Sys.getenv(name, "")
+  if (nzchar(v)) as.numeric(v) else default
+}
+env_list <- function(name) {
+  v <- trimws(strsplit(Sys.getenv(name, ""), ",")[[1]])
+  v[nzchar(v)]
+}
+multiplier <- env_num("MULTIPLIER", 1)
+filePrefix <- Sys.getenv("FILE_PREFIX", "NWIextra")
+avoidDirs <- env_list("AVOID_DIRS")
+minGap <- env_num("MIN_GAP", 0)
+seed <- env_num("SEED", 11)
+perHucSeed <- parse_flag(Sys.getenv("PER_HUC_SEED", "0"))
+maxIter <- env_num("MAX_ITER", 25)
+onlyHucs <- env_list("ONLY_HUCS")
+# Spill mode (the 10x build): see the SPILL section at the bottom.
+#   SPILL        1 = place each HUC's shortfall in other stack-ready HUCs
+#   READY_PAIRS  cluster:huc list of HUCs with the full factorial stack
+#                (check_stack_ready.sh *_valid_pairs.txt); required for SPILL
+#   COUNT_DIR    raster patch folder whose per-HUC file count (x MULTIPLIER)
+#                sets the target, e.g. R_Patches/ -- counts only patches that
+#                actually made it into the training set
+#   STALL_LIMIT  give up on a HUC after this many rounds that add no box
+spill <- parse_flag(Sys.getenv("SPILL", "0"))
+readyPairs <- Sys.getenv("READY_PAIRS", "")
+countDir <- Sys.getenv("COUNT_DIR", "")
+stallLimit <- env_num("STALL_LIMIT", Inf)
+message(
+  "multiplier: ", multiplier, " | prefix: ", filePrefix,
+  " | avoid dirs: ", if (length(avoidDirs)) paste(avoidDirs, collapse = ", ") else "none",
+  " | min gap: ", minGap, " m | seed: ", seed, " (per-HUC: ", perHucSeed, ")",
+  " | max iter: ", maxIter,
+  if (length(onlyHucs)) paste0(" | only HUCs: ", paste(onlyHucs, collapse = ", ")) else "",
+  " | spill: ", spill,
+  if (spill) paste0(" (ready pairs: ", readyPairs, ", count dir: ", countDir, ", stall limit: ", stallLimit, ")") else "",
+  "\n"
+)
+
 if (!dir.exists(wetlandSavePath)) {
   dir.create(wetlandSavePath, recursive = TRUE)
 }
@@ -68,7 +121,7 @@ library(dplyr)
 library(tidyr)
 library(stringr)
 
-set.seed(11)
+set.seed(seed)
 
 PATCH_HALF <- 128 # 256 m patches, same as FieldGPS_to_PatchVectors.R
 
@@ -148,6 +201,19 @@ print(huc_table, n = Inf)
 #### boxes must not overlap any of them.
 all_footprints <- do.call(c, lapply(reviewed, `[[`, "footprint"))
 
+#### Footprints of previously generated extra sets (AVOID_DIRS, e.g. the 1x
+#### NWIextra when building the 10x set) so the new boxes are new ground and
+#### the label-quantity pools nest without duplicate locations.
+for (d in avoidDirs) {
+  fs <- list.files(d, pattern = "\\.gpkg$", full.names = TRUE)
+  if (length(fs) == 0) {
+    stop("AVOID_DIRS folder has no .gpkg files: ", d, call. = FALSE)
+  }
+  fp <- do.call(c, lapply(fs, \(f) st_union(st_geometry(st_read(f, quiet = TRUE)))))
+  message("Avoiding ", length(fs), " footprint files from ", d)
+  all_footprints <- c(all_footprints, fp)
+}
+
 ########################################################################################
 
 #### Read the NWI clipped to a bounding geometry, with the same reliability
@@ -172,7 +238,17 @@ read_nwi_filtered <- function(bound_geom) {
 #### existing reviewed-patch footprints. Box centers are drawn from the
 #### filtered NWI wetland polygons, so every patch is guaranteed to contain
 #### NWI wetland.
-sample_patch_boxes <- function(huc_poly, n, avoid, nwi, max_iter = 25) {
+sample_patch_boxes <- function(huc_poly, n, avoid, nwi, max_iter = 25, gap = 0,
+                               stall_limit = Inf) {
+  # Clearance test: plain intersection (touching counts) when gap = 0.
+  hits <- function(x, y) {
+    if (gap > 0) st_is_within_distance(x, y, gap) else st_intersects(x, y)
+  }
+  # Only footprints near this HUC matter; pre-filtering keeps the per-round
+  # tests cheap when the kept set grows into the hundreds.
+  if (length(avoid) > 0) {
+    avoid <- avoid[lengths(st_is_within_distance(avoid, huc_poly, gap + 1)) > 0]
+  }
   # Shrink the HUC so sampled boxes stay fully inside it; small/narrow HUCs
   # that vanish under the negative buffer fall back to the full polygon.
   inner <- st_buffer(huc_poly, -PATCH_HALF)
@@ -202,11 +278,18 @@ sample_patch_boxes <- function(huc_poly, n, avoid, nwi, max_iter = 25) {
     return(kept)
   }
 
+  stalled <- 0
   for (i in seq_len(max_iter)) {
     need <- n - length(kept)
     if (need <= 0) {
       break
     }
+    # A HUC that is packed full stops yielding boxes; give up after
+    # stall_limit empty rounds instead of burning all max_iter rounds.
+    if (stalled >= stall_limit) {
+      break
+    }
+    n_before <- length(kept)
     pts <- st_sample(wet_src, size = need * 4, type = "random")
     if (length(pts) == 0) {
       next
@@ -221,7 +304,7 @@ sample_patch_boxes <- function(huc_poly, n, avoid, nwi, max_iter = 25) {
     # Drop candidates that touch existing patches or already-kept boxes
     blocked <- c(avoid, kept)
     if (length(blocked) > 0) {
-      boxes <- boxes[lengths(st_intersects(boxes, blocked)) == 0]
+      boxes <- boxes[lengths(hits(boxes, blocked)) == 0]
     }
     # Greedy de-overlap among the remaining candidates
     for (j in seq_along(boxes)) {
@@ -230,11 +313,12 @@ sample_patch_boxes <- function(huc_poly, n, avoid, nwi, max_iter = 25) {
       }
       if (
         length(kept) == 0 ||
-          lengths(st_intersects(boxes[j], kept)) == 0
+          lengths(hits(boxes[j], kept)) == 0
       ) {
         kept <- c(kept, boxes[j])
       }
     }
+    stalled <- if (length(kept) > n_before) 0 else stalled + 1
   }
   if (length(kept) < n) {
     message("Only placed ", length(kept), " of ", n, " random patches")
@@ -313,16 +397,50 @@ classify_nwi_boxes <- function(p_boxes, nwi) {
 
 ########################################################################################
 
+#### Label the boxes with NWI and write one HUC's file. The metadata columns
+#### are set to the original-creation defaults -- these are NWI-derived
+#### delineations and must not inherit the field-review provenance.
+write_boxes <- function(boxes, nwi, p_path) {
+  p_boxes <- st_sf(geom = boxes) |>
+    dplyr::mutate(
+      PatchGroup = dplyr::row_number(),
+      ReviewerName = "TBD",
+      Confidence = -999,
+      BoundariesAltered = NA,
+      Comments = "NoComment"
+    )
+
+  p_nwi_p <- classify_nwi_boxes(p_boxes, nwi)
+
+  st_write(p_nwi_p, dsn = p_path)
+
+  message("Done writing file at: ", p_path)
+}
+
+out_path <- function(huc_id) {
+  paste0(
+    wetlandSavePath,
+    filePrefix,
+    "_cluster_",
+    zones$cluster[match(huc_id, zones$huc12)],
+    "_huc_",
+    huc_id,
+    "_256m.gpkg"
+  )
+}
+
 #### One output file per HUC12: as many random NWI patches as there are
-#### reviewed patches across all files in that HUC (so patch count doubles).
+#### reviewed patches across all files in that HUC (so patch count doubles),
+#### times MULTIPLIER.
 extractNWIrandom <- function(huc_id) {
   files_here <- huc_table |> filter(huc12 == huc_id)
   cluster_id <- zones$cluster[match(huc_id, zones$huc12)]
-  n <- sum(files_here$n_patches, na.rm = TRUE)
+  n <- round(multiplier * sum(files_here$n_patches, na.rm = TRUE))
 
   p_path <- paste0(
     wetlandSavePath,
-    "NWIextra_cluster_",
+    filePrefix,
+    "_cluster_",
     cluster_id,
     "_huc_",
     huc_id,
@@ -359,37 +477,182 @@ extractNWIrandom <- function(huc_id) {
     return(invisible(NULL))
   }
 
-  boxes <- sample_patch_boxes(huc_poly, n, all_footprints, nwi)
+  if (perHucSeed) {
+    set.seed(seed + match(huc_id, sort(unique(huc_table$huc12))))
+  }
+  boxes <- sample_patch_boxes(
+    huc_poly, n, all_footprints, nwi,
+    max_iter = maxIter, gap = minGap, stall_limit = stallLimit
+  )
+  message("Placed ", length(boxes), " of ", n, " patches in HUC ", huc_id)
   if (length(boxes) == 0) {
     message("Could not place any random patches in HUC ", huc_id, " - skipping")
     return(invisible(NULL))
   }
 
-  # One square box per patch. The metadata columns are set to the
-  # original-creation defaults -- these are NWI-derived delineations and must
-  # not inherit the field-review provenance.
-  p_boxes <- st_sf(geom = boxes) |>
-    dplyr::mutate(
-      PatchGroup = dplyr::row_number(),
-      ReviewerName = "TBD",
-      Confidence = -999,
-      BoundariesAltered = NA,
-      Comments = "NoComment"
-    )
-
-  p_nwi_p <- classify_nwi_boxes(p_boxes, nwi)
-
-  st_write(p_nwi_p, dsn = p_path)
-
-  message("Done writing file at: ", p_path)
+  write_boxes(boxes, nwi, p_path)
 }
 
 ####################################################################################
 
-lapply(
-  unique(na.omit(huc_table$huc12[!is.na(huc_table$n_patches)])),
-  extractNWIrandom
-)
+if (!spill) {
+  run_hucs <- unique(na.omit(huc_table$huc12[!is.na(huc_table$n_patches)]))
+  if (length(onlyHucs)) {
+    run_hucs <- intersect(run_hucs, onlyHucs)
+  }
+  lapply(run_hucs, extractNWIrandom)
+}
+
+####################################################################################
+#### SPILL mode (the 10x build). Some reviewed HUCs cannot hold MULTIPLIER x
+#### their patch count -- there is not enough vegetated NWI to center that many
+#### non-overlapping boxes on. Each reviewed HUC is filled to capacity, then its
+#### shortfall is placed, in order, in
+####   1. stack-ready HUCs in the SAME cluster, nearest first, then
+####   2. the nearest stack-ready HUCs anywhere else,
+#### skipping HUCs already packed full. "Stack-ready" = the full factorial
+#### source suite (lidar + leaf-off ortho), from READY_PAIRS, so every box
+#### rasterizes. Reviewed HUCs are never spill targets: they hold field TEST
+#### patches, and the DL huc12 leakage guard would drop extras placed there.
+#### Every box still lies wholly inside one HUC12 and each HUC gets one file.
+#### Boxes placed for one source HUC block the next, so this is all-or-nothing
+#### (one seeded stream, fixed order): it refuses to run over existing outputs
+#### unless REMOVE_EXISTING. <prefix>_spill_manifest.csv records which source
+#### HUC each target HUC's boxes were placed for.
+if (spill) {
+  if (!nzchar(readyPairs) || !file.exists(readyPairs)) {
+    stop("SPILL needs READY_PAIRS (check_stack_ready.sh *_valid_pairs.txt)", call. = FALSE)
+  }
+  ready <- unique(sub("^.*:", "", trimws(readLines(readyPairs))))
+  ready <- ready[nzchar(ready) & ready %in% zones$huc12]
+  message("Stack-ready HUCs: ", length(ready))
+
+  # Per-HUC targets: MULTIPLIER x patch count, from the rasters in COUNT_DIR if
+  # given (patches that are actually in the training set), else the vectors.
+  if (nzchar(countDir)) {
+    cnt <- table(str_match(list.files(countDir, pattern = "\\.tif$"), "_huc_(\\d+)_")[, 2])
+    targets <- tibble(huc12 = names(cnt), n_src = as.integer(cnt))
+  } else {
+    targets <- huc_table |>
+      filter(!is.na(n_patches), !is.na(huc12)) |>
+      group_by(huc12) |>
+      summarise(n_src = sum(n_patches))
+  }
+  targets <- targets |>
+    filter(huc12 %in% zones$huc12) |>
+    mutate(target = round(multiplier * n_src)) |>
+    arrange(huc12)
+  if (length(onlyHucs)) {
+    targets <- targets |> filter(huc12 %in% onlyHucs)
+  }
+  message("Spill targets: ", nrow(targets), " source HUCs, ", sum(targets$target), " patches")
+
+  existing <- list.files(wetlandSavePath, pattern = paste0("^", filePrefix, "_.*\\.gpkg$"), full.names = TRUE)
+  if (length(existing) > 0) {
+    if (!removeExisting) {
+      stop(
+        length(existing), " ", filePrefix, " files already in ", wetlandSavePath,
+        "; spill mode is all-or-nothing -- rerun with REMOVE_EXISTING=1",
+        call. = FALSE
+      )
+    }
+    message("REMOVE_EXISTING: deleting ", length(existing), " existing files")
+    file.remove(existing)
+  }
+
+  reviewed_hucs <- unique(na.omit(huc_table$huc12))
+  spill_pool <- setdiff(ready, reviewed_hucs)
+  centroids <- zones |>
+    group_by(huc12) |>
+    summarise(cluster = first(cluster)) |>
+    st_centroid()
+
+  placed <- list() # huc -> sfc of boxes
+  nwi_cache <- list()
+  saturated <- character()
+  manifest <- list()
+
+  place <- function(huc_id, n, source_huc) {
+    huc_poly <- zones |> filter(huc12 == huc_id) |> st_union()
+    if (is.null(nwi_cache[[huc_id]])) {
+      nwi_cache[[huc_id]] <<- read_nwi_filtered(huc_poly)
+    }
+    nwi <- nwi_cache[[huc_id]]
+    b <- if (nrow(nwi) == 0) {
+      st_sfc(crs = st_crs(huc_poly))
+    } else {
+      sample_patch_boxes(
+        huc_poly, n, all_footprints, nwi,
+        max_iter = maxIter, gap = minGap, stall_limit = stallLimit
+      )
+    }
+    if (length(b) < n) {
+      saturated <<- c(saturated, huc_id)
+    }
+    if (length(b) > 0) {
+      # c(NULL, sfc) would drop the sfc class, so start from the first batch
+      placed[[huc_id]] <<- if (is.null(placed[[huc_id]])) b else c(placed[[huc_id]], b)
+      all_footprints <<- c(all_footprints, b)
+    }
+    manifest[[length(manifest) + 1]] <<- tibble(
+      huc12 = huc_id,
+      cluster = zones$cluster[match(huc_id, zones$huc12)],
+      source_huc12 = source_huc,
+      requested = n,
+      placed = length(b)
+    )
+    message("  ", huc_id, " (for ", source_huc, "): placed ", length(b), " of ", n)
+    length(b)
+  }
+
+  # Phase 1: every source HUC fills itself (if stack-ready).
+  targets$need <- targets$target
+  for (k in seq_len(nrow(targets))) {
+    h <- targets$huc12[k]
+    if (h %in% ready) {
+      message("Own HUC ", h, ": target ", targets$target[k])
+      targets$need[k] <- targets$need[k] - place(h, targets$target[k], h)
+    } else {
+      message("Own HUC ", h, " not stack-ready; all ", targets$target[k], " spill")
+    }
+  }
+  message("Phase 1 placed ", sum(targets$target - targets$need), "; shortfall ", sum(targets$need))
+
+  # Phase 2: spill each shortfall, same cluster first, then nearest anywhere.
+  for (k in which(targets$need > 0)) {
+    h <- targets$huc12[k]
+    src <- centroids[centroids$huc12 == h, ]
+    cand <- centroids[centroids$huc12 %in% setdiff(spill_pool, saturated), ]
+    cand$same <- cand$cluster == src$cluster
+    cand$dist <- as.numeric(st_distance(cand, src))
+    cand <- cand[order(!cand$same, cand$dist), ]
+    message("Spilling ", targets$need[k], " for ", h, " (cluster ", src$cluster, ")")
+    for (c_huc in cand$huc12) {
+      if (targets$need[k] <= 0) {
+        break
+      }
+      if (c_huc %in% saturated) {
+        next
+      }
+      targets$need[k] <- targets$need[k] - place(c_huc, targets$need[k], h)
+    }
+    if (targets$need[k] > 0) {
+      message("UNMET: ", targets$need[k], " patches for ", h)
+    }
+  }
+
+  for (h in names(placed)) {
+    write_boxes(placed[[h]], nwi_cache[[h]], out_path(h))
+  }
+  man <- bind_rows(manifest)
+  write.csv(man, paste0(wetlandSavePath, filePrefix, "_spill_manifest.csv"), row.names = FALSE)
+  message(
+    "SPILL DONE: ", sum(man$placed), " of ", sum(targets$target), " patches in ",
+    length(placed), " HUC files (", sum(man$placed[man$huc12 == man$source_huc12]),
+    " in source HUCs, ", sum(man$placed[man$huc12 != man$source_huc12]), " spilled); unmet ",
+    sum(pmax(targets$need, 0))
+  )
+}
 
 #### count patches
 # l <- list.files(wetlandSavePath, full.names = TRUE)

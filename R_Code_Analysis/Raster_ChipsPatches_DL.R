@@ -272,18 +272,10 @@ rast_chip_patch_create_one <- function(wetland_file) {
         dplyr::filter(st_is_valid(.)) |>
         dplyr::group_split(PatchGroup)
 
-    # Output folder mirrors the vector source folder (see the fn build below).
-    out_dir <- if (
-        str_detect(patchPath, pattern = "R_Patches_Vector_NWIextra/?$")
-    ) {
-        "Data/Training_Data/R_Patches_NWIextra/"
-    } else if (str_detect(patchPath, pattern = "R_Patches_Vector_NWI/?$")) {
-        "Data/Training_Data/R_Patches_NWI/"
-    } else if (str_detect(patchPath, pattern = "R_Patches_Vector_Prod/?$")) {
-        "Data/Training_Data/R_Patches_Prod/"
-    } else {
-        "Data/Training_Data/R_Patches/"
-    }
+    # Output folder mirrors the vector source folder (see the fn build below);
+    # mapping lives in patch_groups.R so Check_Patch_Vectors.R agrees.
+    out_dir <- patch_out_dir(patchPath)
+    dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
 
     # Label by the full source-file prefix (text before _cluster_), used for
     # BOTH outputs so names line up: the NWI vector file is named
