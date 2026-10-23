@@ -17,6 +17,9 @@
 #   Sources without a class column (e.g. NYS Informational wetlands) are BINARY only;
 #   leave out class_field (or pass NONE) and every polygon becomes WET:
 #       64 Data/Laba_NYS_Info_Wetlands/Informational_Freshwater_Wetland_Mapping_-4832045112583547805.gpkg 128 BINARY
+#   NYC wetlands (clusters 62, 79, 201) are multiclass on `classname`; patches are
+#   kept inside the NYC extent and Estuarine polygons are tagged for GIS review:
+#       79 Data/NYC_Wetlands/NYC_Wetlands_20261022.geojson 128 MULTICLASS classname
 
 library(sf)
 library(dplyr)
@@ -88,6 +91,8 @@ boundarySpacing <- boxSide # m between candidate points along polygon edges
 interiorSpacing <- boxSide # m between candidate grid points inside polygons
 
 hucPath <- "Data/NY_HUCS/NY_Cluster_Zones_250_CROP_NAomit_6347.gpkg"
+# NYC borough boundaries (shoreline-clipped) for sources that only map the city
+nycBoroughPath <- "Data/NYC_Wetlands/nybb_26c/nybb.shp"
 outDir <- "Data/Training_Data/R_Patches_Vector_fromRAW/"
 dir.create(outDir, showWarnings = FALSE, recursive = TRUE)
 
@@ -108,13 +113,17 @@ if (grepl("NWI", basename(wetlandPath))) {
 }
 message("Wetland source: ", sourceWetlands)
 
-# Multiclass needs a class column and a reclass scheme (only NWI so far)
+# Multiclass needs a class column and a reclass scheme (NWI and NYC so far)
 if (classScheme == "MULTICLASS" && is.na(classField)) {
   stop("MULTICLASS needs a class field (arg 5); use BINARY for unclassed sources")
 }
-if (classScheme == "MULTICLASS" && sourceWetlands != "NWI") {
+if (classScheme == "MULTICLASS" && !sourceWetlands %in% c("NWI", "NYC")) {
   stop("No multiclass reclass scheme for source '", sourceWetlands, "' yet")
 }
+
+# Polygons smaller than this (m^2) still label the patches but don't seed a patch
+# center. NYC has ~1,500 sub-10 m^2 slivers; its real small wetlands are > 50 m^2.
+minCenterArea <- if (sourceWetlands == "NYC") 50 else 0
 
 ########################################################################################
 ## Reclassification
@@ -148,14 +157,38 @@ reclass_nwi <- function(wet) {
     select(-.code, -.type, -.area)
 }
 
-# NWI with a class field gets the NWI filters in both schemes; any source without
-# one (or non-NWI in BINARY) keeps every polygon as WET.
+# NYC wetlands (NYC Parks/DEP) `classname`. Water and Water-Estuarine become OWW
+# (dropped -> UPL, as for NWI). Estuarine is mostly tidal marsh fringing the
+# harbor, so it is called EMW but tagged so GIS review can relabel unvegetated
+# flats/beaches. Unknown names become "Other" for GIS review.
+reclass_nyc <- function(wet) {
+  code <- wet[[classField]]
+  wet |>
+    mutate(
+      MOD_CLASS = case_when(
+        code %in% c("Emergent", "Estuarine") ~ "EMW",
+        code == "Forested" ~ "FSW",
+        code == "Scrub/Shrub" ~ "SSW",
+        code %in% c("Water", "Water-Estuarine") ~ "OWW",
+        .default = "Other"
+      ),
+      Comments = if_else(code == "Estuarine", "NYC_Estuarine", "NoComment")
+    )
+}
+
+# NWI/NYC with a class field get their filters in both schemes; any source without
+# one (or other sources in BINARY) keeps every polygon as WET.
 reclass_wetlands <- function(wet) {
   if (sourceWetlands == "NWI" && !is.na(classField)) {
     wet <- reclass_nwi(wet) |> filter(MOD_CLASS != "OWW")
+  } else if (sourceWetlands == "NYC" && !is.na(classField)) {
+    wet <- reclass_nyc(wet) |> filter(MOD_CLASS != "OWW")
   }
   if (classScheme == "BINARY") {
     wet <- wet |> mutate(MOD_CLASS = "WET")
+  }
+  if (!"Comments" %in% names(wet)) {
+    wet <- wet |> mutate(Comments = "NoComment")
   }
   wet
 }
@@ -214,6 +247,22 @@ wet_cluster <- wet_cluster[!st_is_empty(wet_cluster), ] |>
   st_make_valid()
 message("Raw wetland polygons in cluster bbox: ", nrow(wet_cluster))
 
+# Area the source actually maps; patches must fall inside it, otherwise unmapped
+# land (e.g. Nassau/Westchester next to NYC) would be labeled UPL. NULL = the
+# whole HUC. NYC: the shoreline-clipped boroughs plus every NYC polygon (tidal
+# marsh and harbor water lie past the shoreline), grown 5 m to close the slivers
+# between them; this keeps ~98% of candidate boxes vs ~83% for the boroughs alone.
+source_extent <- NULL
+if (sourceWetlands == "NYC") {
+  boroughs <- st_read(nycBoroughPath, quiet = TRUE) |>
+    st_transform(st_crs(huc_cluster)) |>
+    st_geometry()
+  source_extent <- c(boroughs, st_geometry(wet_cluster)) |>
+    st_buffer(5) |>
+    st_union() |>
+    st_intersection(st_as_sfc(st_bbox(huc_cluster)))
+}
+
 ########################################################################################
 # Greedy non-overlap thinning of square boxes: two boxes of side `side` centered at
 # p and q do not overlap when max(|dx|, |dy|) >= side. Earlier rows win.
@@ -267,7 +316,9 @@ vect_chip_patch_create <- function(huc_num) {
   tw_geom <- st_geometry(target_wetlands)
 
   ## 1. one guaranteed-interior point per polygon (centroids can fall outside)
-  pt_surface <- st_point_on_surface(tw_geom)
+  pt_surface <- st_point_on_surface(
+    tw_geom[as.numeric(st_area(tw_geom)) >= minCenterArea]
+  )
 
   ## 2. points along every ring; rings shorter than the spacing are covered by 1.
   tw_rings <- st_boundary(tw_geom) |>
@@ -292,6 +343,9 @@ vect_chip_patch_create <- function(huc_num) {
   cand <- c(shuffle(pt_surface), shuffle(pt_boundary), shuffle(pt_grid))
   cand_box <- st_buffer(cand, dist = patchSize, endCapStyle = "SQUARE")
   in_huc <- lengths(st_within(cand_box, huc_geom)) > 0
+  if (!is.null(source_extent)) {
+    in_huc <- in_huc & lengths(st_within(cand_box, source_extent)) > 0
+  }
   cand <- cand[in_huc]
   keep <- thin_boxes(st_coordinates(cand), boxSide)
 
@@ -306,7 +360,7 @@ vect_chip_patch_create <- function(huc_num) {
     length(pt_boundary),
     "/",
     length(pt_grid),
-    "; inside HUC = ",
+    if (is.null(source_extent)) "; inside HUC = " else "; inside HUC + extent = ",
     length(cand),
     "; kept patches = ",
     sum(keep)
@@ -320,24 +374,28 @@ vect_chip_patch_create <- function(huc_num) {
   patch_boxes <- st_sf(
     geom = st_buffer(cand[keep], dist = patchSize, endCapStyle = "SQUARE")
   ) |>
-    dplyr::mutate(MOD_CLASS = "UPL", PatchGroup = dplyr::row_number())
+    dplyr::mutate(
+      MOD_CLASS = "UPL",
+      Comments = "NoComment",
+      PatchGroup = dplyr::row_number()
+    )
+  # Comments carries per-polygon review flags from the reclass (e.g. NYC_Estuarine)
   tw_intersection <- st_intersection(
-    target_wetlands |> dplyr::select(MOD_CLASS),
+    target_wetlands |> dplyr::select(MOD_CLASS, Comments),
     patch_boxes |> dplyr::select(PatchGroup)
   ) |>
-    dplyr::select(MOD_CLASS, PatchGroup, geom)
+    dplyr::select(MOD_CLASS, Comments, PatchGroup, geom)
   tu_intersection <- st_difference(
     patch_boxes,
     st_union(target_wetlands)
   ) |>
-    dplyr::select(MOD_CLASS, PatchGroup, geom)
+    dplyr::select(MOD_CLASS, Comments, PatchGroup, geom)
   cmb_tutw <- bind_rows(tw_intersection, tu_intersection) |>
     st_collection_extract("POLYGON") |>
     mutate(
       ReviewerName = "TBD",
       Confidence = -999,
-      BoundariesAltered = NA,
-      Comments = "NoComment"
+      BoundariesAltered = NA
     ) |>
     st_cast(to = "MULTIPOLYGON") |>
     dplyr::select(

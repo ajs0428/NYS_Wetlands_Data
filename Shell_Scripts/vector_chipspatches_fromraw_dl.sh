@@ -40,6 +40,8 @@
 #   sbatch Shell_Scripts/vector_chipspatches_fromraw_dl.sh \
 #       Data/Laba_NYS_Info_Wetlands/Informational_Freshwater_Wetland_Mapping_-4832045112583547805.gpkg \
 #       BINARY NONE batch1,batch2                                                 # Info wetlands
+#   sbatch Shell_Scripts/vector_chipspatches_fromraw_dl.sh \
+#       Data/NYC_Wetlands/NYC_Wetlands_20261022.geojson MULTICLASS classname 62,79,201  # NYC wetlands
 #   CLUSTERS=64 DRYRUN=1 bash Shell_Scripts/vector_chipspatches_fromraw_dl.sh      # preview
 #
 # Sizing: cluster 64 (8 HUCs) peaked at ~0.4 GB in ~15 s run sequentially, so
