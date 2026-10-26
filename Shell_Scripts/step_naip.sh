@@ -46,7 +46,9 @@ echo "=== NAIP processing ==="
 declare -A PID_CLUSTER=()
 for number in "${include[@]}"; do
     echo "  Cluster $number – NAIP"
-    srun --nodes=1 --ntasks=1 --exclusive --mem-per-cpu=48G --cpus-per-task=1 \
+    # Step memory follows the job's --mem-per-cpu (MB), so an sbatch override
+    # like `sbatch --mem-per-cpu=64G` actually reaches the R step.
+    srun --nodes=1 --ntasks=1 --exclusive --mem-per-cpu="${SLURM_MEM_PER_CPU:-49152}" --cpus-per-task=1 \
         env -u SLURM_MEM_PER_CPU -u SLURM_MEM_PER_NODE -u SLURM_MEM_PER_GPU \
         Rscript R_Code_Analysis/NAIP_Processing_CMD.R \
         "$GPKG" \
