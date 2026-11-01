@@ -225,7 +225,8 @@ process_huc <- function(huc_num) {
     terra::metags(o) <- c(ortho_years = paste(sel$years, collapse = ","),
                           ortho_preferred_year = as.character(year))
 
-    writeRaster(o, filename = target_file, overwrite = TRUE)
+    # BIGTIFF: large HUCs exceed the classic-TIFF 4 GiB ceiling (largest so far 3.0 GB).
+    writeRaster(o, filename = target_file, overwrite = TRUE, gdal = "BIGTIFF=IF_SAFER")
     rm(o)
     gc()
     return(NULL)

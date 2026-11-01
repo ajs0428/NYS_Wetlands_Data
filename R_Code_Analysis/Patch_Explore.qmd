@@ -18,6 +18,9 @@ params:
   cores: 8
   seed: 42
   na_flag_frac: 0.01   # flag patches with more NA than this in any band
+  chm_max: 5           # suspect-pixel rules (last section): EMW/SSW CHM above this (m)
+  slope_max: 3         #   wetland slope_local above this
+  twi_min: 6           #   wetland twi below this
 ---
 
 Render from the project root, switching folders with a parameter:
@@ -56,6 +59,17 @@ bin_cols   <- c(WET = "#2166ac", UPL = "#bababa")
 
 files <- list.files(patch_dir, pattern = "\\.tif$", full.names = TRUE)
 bands <- setdiff(names(rast(files[1])), "MOD_CLASS")
+
+# Suspect-pixel rules, counted over every labelled pixel in read_patch().
+# Groups are MOD_CLASS levels or "WET" (EMW + FSW + SSW).
+wet_grps <- c("WET", "EMW", "FSW", "SSW")
+rules <- setNames(list(
+  list(band = "CHM",         test = \(x) x > params$chm_max,   groups = c("EMW", "SSW")),
+  list(band = "slope_local", test = \(x) x > params$slope_max, groups = wet_grps),
+  list(band = "twi",         test = \(x) x < params$twi_min,   groups = wet_grps)
+), c(sprintf("CHM>%g", params$chm_max), sprintf("slope>%g", params$slope_max),
+     sprintf("twi<%g", params$twi_min)))
+stopifnot(all(vapply(rules, `[[`, "", "band") %in% bands))
 ```
 
 **Folder:** `r params$patch_dir` — **`r length(files)` patches**, `r length(bands)` predictor bands:
@@ -84,13 +98,25 @@ read_patch <- function(f, k) {
   )
   cf <- table(factor(class_lut[as.character(cls)], levels = class_lvls)) / length(cls)
 
+  # Suspect-pixel counts per rule x group (NA band values never count as hits)
+  lab <- class_lut[as.character(cls)]
+  susp <- rbindlist(lapply(names(rules), \(nm) {
+    ru <- rules[[nm]]
+    hit <- ru$test(vb[, ru$band]) %in% TRUE
+    rbindlist(lapply(ru$groups, \(g) {
+      inn <- if (g == "WET") lab != "UPL" else lab == g
+      data.table(group = g, rule = nm, n_class = sum(inn), n_hit = sum(hit & inn))
+    }))
+  }))[, file := basename(f)]
+
   # Class-stratified pixel sample
   idx <- unlist(lapply(split(seq_along(cls), cls), \(i) i[sample.int(length(i), min(k, length(i)))]))
   smp <- as.data.table(vb[idx, , drop = FALSE])
   smp[, MOD_CLASS := class_lut[as.character(cls[idx])]]
   smp[, file := basename(f)]
 
-  list(sample = smp, qa = qa, cls_frac = as.data.table(as.list(cf))[, file := basename(f)])
+  list(sample = smp, qa = qa, cls_frac = as.data.table(as.list(cf))[, file := basename(f)],
+       susp = susp)
 }
 
 set.seed(params$seed)
@@ -104,6 +130,7 @@ res <- res[!bad]
 smp      <- rbindlist(lapply(res, `[[`, "sample"))
 qa       <- rbindlist(lapply(res, `[[`, "qa"))
 cls_frac <- rbindlist(lapply(res, `[[`, "cls_frac"))
+susp     <- rbindlist(lapply(res, `[[`, "susp"))
 rm(res)
 ```
 
@@ -494,4 +521,60 @@ pixels, per band (most are a handful of pixels, e.g. undefined TWI where slope =
 datatable(flags, rownames = FALSE, filter = "top", extensions = "Buttons",
           options = list(pageLength = 15, dom = "Bfrtip", buttons = c("csv", "copy"),
                          scrollX = TRUE))
+```
+
+# Suspect label pixels
+
+Wetland pixels whose predictor values contradict their label, counted over
+**every** labelled pixel in the patch (not the sample): `r names(rules)[1]` in
+EMW/SSW, `r names(rules)[2]` and `r names(rules)[3]` in WET and each wetland
+class. Thresholds are the `chm_max`, `slope_max`, `twi_min` params. A few hits at
+a polygon edge are expected; high percentages point to a polygon to revise in QGIS.
+
+```{r}
+#| label: suspect
+
+susp_any <- susp[n_class > 0]
+susp_sum <- susp_any[, .(patches_with_class = .N,
+                         patches_flagged = sum(n_hit > 0),
+                         `flagged_>5%` = sum(n_hit / n_class > 0.05),
+                         flagged_px = sum(n_hit),
+                         pct_of_class_px = sum(n_hit) / sum(n_class)),
+                     by = .(rule, group)]
+susp_sum[, group := factor(group, levels = wet_grps)]
+setorder(susp_sum, rule, group)
+
+# One row per patch x group; per rule: hit count and % of that group's pixels.
+# Rules that don't apply to a group (CHM for FSW/WET) are blank.
+susp_any[, pct := 100 * n_hit / n_class]
+sw <- dcast(susp_any, file + group + n_class ~ rule, value.var = c("n_hit", "pct"))
+rule_cols <- unlist(lapply(names(rules), \(nm) paste0(c("n_hit_", "pct_"), nm)))
+setnames(sw, rule_cols, sub("^n_hit_(.*)", "\\1 px", sub("^pct_(.*)", "\\1 %", rule_cols)))
+hit_cols <- paste(names(rules), "px")
+sw <- sw[rowSums(sw[, ..hit_cols], na.rm = TRUE) > 0]
+sw <- merge(sw, meta, by = "file")
+sw[, group := factor(group, levels = wet_grps)]
+setcolorder(sw, c("file", "source", "cluster", "huc", "group", "n_class"))
+setnames(sw, "n_class", "class_px")
+setorderv(sw, paste(names(rules)[1], "%"), -1, na.last = TRUE)
+```
+
+**`r uniqueN(sw$file)`** of `r length(files)` patches have at least one suspect
+wetland pixel.
+
+```{r}
+#| label: suspect-summary
+datatable(susp_sum, rownames = FALSE, options = list(dom = "t", pageLength = 50)) |>
+  formatRound("flagged_px", 0) |> formatPercentage("pct_of_class_px", 2)
+```
+
+Filter `group` to one class (or WET) and sort/range-filter the `%` columns to
+build a revision list; **CSV** / **Copy** export the filtered rows.
+
+```{r}
+#| label: suspect-table
+datatable(sw, rownames = FALSE, filter = "top", extensions = "Buttons",
+          options = list(pageLength = 25, dom = "Bfrtip", buttons = c("csv", "copy"),
+                         scrollX = TRUE)) |>
+  formatRound(grep(" %$", names(sw), value = TRUE), 1)
 ```

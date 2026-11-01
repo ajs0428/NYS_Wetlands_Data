@@ -3,10 +3,10 @@
 #SBATCH --nodelist=cbsuxu09,cbsuxu10
 #SBATCH --mail-user=ajs544@cornell.edu
 #SBATCH --mail-type=ALL
-#SBATCH --mem-per-cpu=64G
+#SBATCH --mem-per-cpu=4G
 #SBATCH --job-name=ortho
 #SBATCH --cpus-per-task=1
-#SBATCH --ntasks=5
+#SBATCH --ntasks=10
 #SBATCH --output=Shell_Scripts/SLURM/slurm-ortho-%j.out
 
 # =============================================================================
@@ -25,7 +25,8 @@
 # NO `conda activate` is needed: the ORTHO_GDALWARP wrapper activates the conda
 # 'ortho' env inside its own subprocess for the JP2 decode/reproject only. This
 # job just needs `module load R`. mem is lighter than the other steps because
-# that gdalwarp streams the warp outside of R.
+# that gdalwarp streams the warp outside of R (sacct peak ~0.42 GB/task, so
+# 4G is ample; 64G reserved most of the partition for a network-bound job).
 # =============================================================================
 
 cd /ibstorage/anthony/NYS_Wetlands_Data/
