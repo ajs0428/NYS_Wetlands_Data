@@ -120,7 +120,12 @@ query_ortho_year <- function(yr_layers, bbox_4326) {
                             warning("Query failed for layer ", id, ": ", e$message)
                             NULL
                         })
-        if (!is.null(res)) message("    layer ", id, ": ", nrow(res), " bbox hits")
+        if (is.null(res)) return(NULL)
+        message("    layer ", id, ": ", nrow(res), " bbox hits")
+        # Some index layers spell the area field SHAPE_Area (e.g. 2018) instead of
+        # Shape_Area; normalize it or rbind() fails on mismatched names
+        # (cluster 24, 2026-11 run).
+        names(res)[toupper(names(res)) == "SHAPE_AREA"] <- "Shape_Area"
         res
     })
     parts <- parts[!sapply(parts, is.null)]

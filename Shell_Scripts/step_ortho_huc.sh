@@ -55,8 +55,34 @@ unset SLURM_MEM_PER_CPU SLURM_MEM_PER_NODE SLURM_MEM_PER_GPU
 echo "=== Ortho -> HUC12 (year $YEAR) ==="
 # Track each srun's PID -> cluster so a failed Rscript is reported. A bare
 # `wait` returns 0 regardless, which made a failed cluster look like success.
+# Keep at most SLURM_NTASKS sruns alive: launching one srun per cluster up
+# front leaves the excess retrying step creation, and every retry burns a step
+# id; a 250-cluster run hit MaxStepCount (40000) and 180 clusters never ran.
 declare -A PID_CLUSTER=()
+FAILED=()
+MAXPAR=${SLURM_NTASKS:-1}
+# Collect sruns that have exited. bash reaps children itself, so `kill -0`
+# fails once one is done and `wait $pid` returns its saved status. (Not
+# `wait -n`: on bash 5.1 it can miss children that exit before it is called
+# and block forever.)
+reap_done() {
+    local pid number
+    for pid in "${!PID_CLUSTER[@]}"; do
+        kill -0 "$pid" 2>/dev/null && continue
+        number=${PID_CLUSTER[$pid]}
+        if ! wait "$pid"; then
+            echo "FAILED: cluster $number (see Shell_Scripts/logs/ortho_huc_${number}_${YEAR}_${DATE}.log)"
+            FAILED+=("$number")
+        fi
+        unset "PID_CLUSTER[$pid]"
+    done
+}
+throttle() {  # block until fewer than $1 sruns are alive
+    reap_done
+    while (( ${#PID_CLUSTER[@]} >= $1 )); do sleep 10; reap_done; done
+}
 for number in "${include[@]}"; do
+    throttle "$MAXPAR"
     echo "  Cluster $number – ortho/HUC"
     # Slurm 22.05: srun no longer inherits --cpus-per-task from sbatch.
     srun --nodes=1 --ntasks=1 --cpus-per-task="${SLURM_CPUS_PER_TASK:-1}" --exclusive \
@@ -71,14 +97,7 @@ for number in "${include[@]}"; do
     PID_CLUSTER[$!]=$number
 done
 
-FAILED=()
-for pid in "${!PID_CLUSTER[@]}"; do
-    if ! wait "$pid"; then
-        number=${PID_CLUSTER[$pid]}
-        echo "FAILED: cluster $number (see Shell_Scripts/logs/ortho_huc_${number}_${YEAR}_${DATE}.log)"
-        FAILED+=("$number")
-    fi
-done
+throttle 1
 
 if [[ ${#FAILED[@]} -gt 0 ]]; then
     echo "ortho_huc finished with ${#FAILED[@]} failed cluster(s): ${FAILED[*]}"
