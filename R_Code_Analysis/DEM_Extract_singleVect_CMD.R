@@ -104,10 +104,11 @@ print(paste0(
 ))
 
 
-ind_names <- tools::file_path_sans_ext(basename(dem_ind_full$FilenameCmb))
-dem_names <- tools::file_path_sans_ext(basename(dems_file_list))
+ind_names <- tools::file_path_sans_ext(basename(dem_ind_full$FilenameCmb)) |>
+    sort()
+dem_names <- tools::file_path_sans_ext(basename(dems_file_list)) |> sort()
 
-# (dem_ind_full$FilenameCmb[!ind_names %in% dem_names])
+dem_not_in_ind <- setdiff(dem_names, ind_names)
 ###############################################################################################
 
 # This takes the vector file of all HUC watersheds, projects them, and filters for the cluster

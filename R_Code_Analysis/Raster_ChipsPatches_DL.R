@@ -79,7 +79,13 @@ print(l_wet_cluster)
 
 ########################################################################################
 # fct_df <- data.frame(ID = 0:4, MOD_CLASS = c("EMW", "FSW", "OWW", "SSW", "UPL"))
-fct_df <- data.frame(ID = 0:3, MOD_CLASS = c("EMW", "FSW", "SSW", "UPL"))
+# Label integer codes are shared by every patch source. WET is the class of
+# binary (WET/UPL) vectors, e.g. DLprod_* from Inference_ChipsPatches_DL.R. It
+# is appended as ID 4 so UPL stays 3 everywhere: NYS_Wetlands_Prod decodes
+# labels by these integers and collapses them via dl_band_config binary_mapping,
+# so WET must be added there to WET = ["EMW", "FSW", "SSW", "WET"]. WET patches
+# carry no EMW/FSW/SSW detail, so they are usable for binary models only.
+fct_df <- data.frame(ID = 0:4, MOD_CLASS = c("EMW", "FSW", "SSW", "UPL", "WET"))
 patchsize <- as.numeric(patchSize)
 ########################################################################################
 set.seed(420)
@@ -191,6 +197,28 @@ rast_chip_patch_create_one <- function(wetland_file) {
     if (any(grepl(pattern = "OWW", unique(tw_valid$MOD_CLASS)))) {
         message("OWW Detected, exiting")
         return(invisible(NULL))
+    }
+    # Unknown classes used to be silently mis-coded by the level subst below.
+    bad_cls <- setdiff(unique(tw_valid$MOD_CLASS), fct_df$MOD_CLASS)
+    if (length(bad_cls) > 0) {
+        message(
+            "Skipping ",
+            basename(wetland_file),
+            ": unknown MOD_CLASS value(s) ",
+            paste(bad_cls, collapse = ", "),
+            " (expected ",
+            paste(fct_df$MOD_CLASS, collapse = "/"),
+            ")"
+        )
+        return(invisible(NULL))
+    }
+    if ("WET" %in% tw_valid$MOD_CLASS &&
+        any(c("EMW", "FSW", "SSW") %in% tw_valid$MOD_CLASS)) {
+        message(
+            "Note: ",
+            basename(wetland_file),
+            " mixes WET with EMW/FSW/SSW (reviewer relabels?) - keeping both"
+        )
     }
     # Patches without PatchGroup (e.g. the skipped overlapping gps_jc HUCs) can't
     # be split per-patch into shared-named outputs, so skip the whole file.
@@ -364,14 +392,21 @@ rast_chip_patch_create_one <- function(wetland_file) {
                         )
                     tw_rast_lc <- levels(tw_rast)[[1]][[2]] #character vector of levels present
                     tw_rast_ln <- levels(tw_rast)[[1]][[1]] #numbers/integers of levels present
-                    fct_n <- fct_df[fct_df$MOD_CLASS %in% tw_rast_lc, ][, 1] # subset the levels present from the full factor dataframe
+                    # map each present level to its fixed code by NAME (not by
+                    # position, which only worked while both tables were sorted)
+                    fct_n <- fct_df$ID[match(tw_rast_lc, fct_df$MOD_CLASS)]
                     tw_rast_sub <- subst(
                         tw_rast,
                         from = tw_rast_ln,
                         to = fct_n,
                         raw = TRUE
                     )
-                    levels(tw_rast_sub) <- fct_df
+                    # multiclass patches keep the original 4-class table
+                    levels(tw_rast_sub) <- if ("WET" %in% tw_rast_lc) {
+                        fct_df
+                    } else {
+                        fct_df[fct_df$MOD_CLASS != "WET", ]
+                    }
 
                     # fn_labels <- paste0("Data/Training_Data/R_Patches_Labels/", "labels_only_", sourceWetlands, "_cluster_", cluster_num, "_huc_", huc_num, "_patch_", i, "_", patchsize*2, "m.tif" )
 

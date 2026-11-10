@@ -65,6 +65,12 @@ ortho_index <- st_read(orthoIndex, quiet = TRUE) |>
 # part the preferred year doesn't cover (see select_tiles_for_huc).
 ortho_index$tile_year <- sub(".*_(\\d{4})\\.tif$", "\\1", ortho_index$location)
 ortho_index <- ortho_index[grepl("_\\d{4}\\.tif$", ortho_index$location), ]
+# Leaf-OFF product: never use summer (leaf-on) tiles, e.g. the 2025 Delaware
+# summer flight (u_*_4bd_sum_2025.tif). They are still on disk and in the index
+# but would otherwise compete as ordinary 2025 tiles (2026-11).
+n_summer <- sum(grepl("_sum_\\d{4}\\.tif$", ortho_index$location))
+ortho_index <- ortho_index[!grepl("_sum_\\d{4}\\.tif$", ortho_index$location), ]
+message("Excluded ", n_summer, " summer (leaf-on) tiles from the index")
 years_available <- sort(unique(ortho_index$tile_year))
 message("Ortho tile years available in index: ", paste(years_available, collapse = ", "))
 if (!year %in% years_available) {

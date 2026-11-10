@@ -18,8 +18,18 @@ ortho_mapserver <- "https://orthos.its.ny.gov/arcgis/rest/services/vector/ortho_
 # FILENAME carries its extension and has inconsistent case across zones
 # (e.g. "..._2020.jp2" vs "..._2020.jP2"); lowercase + strip extension so that
 # dedup, skip-if-exists, and output naming all agree.
-normalize_tile_name <- function(filename) {
-    tools::file_path_sans_ext(tolower(as.character(filename)))
+normalize_tile_name <- function(filename, year = NULL) {
+    nm <- tools::file_path_sans_ext(tolower(as.character(filename)))
+    # Ortho_HUC_Processing.R reads each tile's year from a trailing _YYYY and
+    # DROPS tiles without one. Most layers' FILENAMEs already end in the year
+    # (..._4bd_2024), but the NYC layers use bare numeric names ("042217"), so
+    # 1,670 NYC 2024 tiles were silently ignored (2026-11). Append the year
+    # whenever the name doesn't already end in _YYYY.
+    if (!is.null(year)) {
+        no_year <- !grepl("_\\d{4}$", nm)
+        nm[no_year] <- paste0(nm[no_year], "_", year[no_year])
+    }
+    nm
 }
 
 ### Resolve ALL index layers for a band type, with their imagery year.
@@ -35,6 +45,11 @@ get_ortho_layer_index <- function(bands = "4bd") {
     # Match "ind{YY}...._4bd" but require the band suffix to be the trailing token
     pat <- paste0("^ind(\\d{2})[a-z]+_.*", bands, "($|_)")
     keep <- str_detect(layers$name, pat)
+    # Leaf-OFF product: drop summer (leaf-on) collections such as
+    # ind25u_summer_half_ft_4bd (2025 Delaware summer flight). Treated as a
+    # normal 2025 layer it got equal priority with the leaf-off 2025 tiles and
+    # mixed leaf-on imagery into ~130 HUCs (2026-11).
+    keep <- keep & !str_detect(layers$name, "summer")
     yy <- as.integer(str_match(layers$name[keep], "^ind(\\d{2})")[, 2])
     out <- tibble(
         layer_id   = layers$id[keep],
@@ -210,7 +225,7 @@ get_overlapping_ortho_tiles <- function(huc12_sf, year, bands = "4bd",
 
     selected |>
         mutate(
-            tile_name = normalize_tile_name(FILENAME),
+            tile_name = normalize_tile_name(FILENAME, tile_year),
             # Prefer the authoritative DIRECT_DL HTTPS url; FTP fallback derived
             # by swapping the host (same convention as Lidar_ftp.R).
             dl_url  = as.character(DIRECT_DL),

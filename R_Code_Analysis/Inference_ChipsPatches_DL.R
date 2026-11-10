@@ -70,20 +70,53 @@ minMappingUnit <- 25 # m2; predicted clumps smaller than this join their neighbo
 # polygonizing resolution in pixels (1 = native 1 m). 2 = 2 m modal: half the
 # boundary vertices, coarser edges. Optional 7th arg.
 polyRes <- if (length(args) >= 7 && nzchar(args[7])) as.integer(args[7]) else 1L
-sourceTag <- "DLv3" # filename prefix -> Raster_ChipsPatches_DL.R source tag
-
-fct_df <- data.frame(ID = 0:3, MOD_CLASS = c("EMW", "FSW", "SSW", "UPL"))
-wet_ids <- 0:2
+########################################################################################
+l_pred <- list.files(
+    predDir,
+    pattern = "^DLpred_(multiclass|binary)_cluster_\\d+_huc_\\d+\\.tif$",
+    full.names = TRUE
+)
+# Prediction type: multiclass (v3 DL: 0 EMW, 1 FSW, 2 SSW, 3 UPL) or binary
+# (Prod: 0 WET, 1 UPL). _probs.tif files don't match the pattern above.
+predType <- unique(str_extract(basename(l_pred), "(?<=^DLpred_)[a-z]+"))
+if (length(predType) > 1) {
+    stop("predDir mixes multiclass and binary predictions: ", predDir)
+}
+if (length(predType) == 1 && predType == "binary") {
+    sourceTag <- "DLprod" # filename prefix -> Raster_ChipsPatches_DL.R source tag
+    fct_df <- data.frame(ID = 0:1, MOD_CLASS = c("WET", "UPL"))
+    wet_ids <- 0L
+} else {
+    sourceTag <- "DLv3"
+    fct_df <- data.frame(ID = 0:3, MOD_CLASS = c("EMW", "FSW", "SSW", "UPL"))
+    wet_ids <- 0:2
+}
+cls_ids <- fct_df$ID
+fcols_all <- paste0("f", cls_ids)
 
 cat(
     "these are the arguments:\n",
-    "1) prediction folder:", predDir, "\n",
-    "2) patch radius:", patchSize, "\n",
-    "3) max patches per HUC:", maxPatches, "\n",
-    "4) clusters:", clusterSubset, "\n",
-    "5) overwrite:", overwrite, "\n",
-    "6) output folder:", outDir, "\n",
-    "7) polygonizing resolution (pixels):", polyRes, "\n"
+    "1) prediction folder:",
+    predDir,
+    "\n",
+    "2) patch radius:",
+    patchSize,
+    "\n",
+    "3) max patches per HUC:",
+    maxPatches,
+    "\n",
+    "4) clusters:",
+    clusterSubset,
+    "\n",
+    "5) overwrite:",
+    overwrite,
+    "\n",
+    "6) output folder:",
+    outDir,
+    "\n",
+    "7) polygonizing resolution (pixels):",
+    polyRes,
+    "\n"
 )
 stopifnot(polyRes >= 1, (patchSize * 2) %% polyRes == 0)
 
@@ -94,20 +127,21 @@ nCoarse <- boxSide / coarseRes
 setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
 dir.create(outDir, showWarnings = FALSE, recursive = TRUE)
 
-########################################################################################
-l_pred <- list.files(
-    predDir,
-    pattern = "^DLpred_multiclass_cluster_\\d+_huc_\\d+\\.tif$",
-    full.names = TRUE
-)
 if (clusterSubset != "all") {
     cl <- trimws(strsplit(clusterSubset, ",")[[1]])
     l_pred <- l_pred[
         str_extract(basename(l_pred), "(?<=cluster_)\\d+") %in% cl
     ]
 }
-message(length(l_pred), " multiclass prediction raster(s) to process")
-if (length(l_pred) == 0) quit(save = "no")
+message(
+    length(l_pred),
+    " ",
+    paste(predType, collapse = "/"),
+    " prediction raster(s) to process"
+)
+if (length(l_pred) == 0) {
+    quit(save = "no")
+}
 
 ########################################################################################
 # Greedy round-robin pick of non-overlapping squares, rarest class first.
@@ -117,7 +151,9 @@ pick_boxes <- function(cand, side, n_max) {
     # Weighted random order per class (Efraimidis-Spirakis keys u^(1/w)).
     queues <- lapply(fcols, function(fc) {
         idx <- which(cand[[fc]] >= minClassFrac)
-        if (length(idx) == 0) return(integer(0))
+        if (length(idx) == 0) {
+            return(integer(0))
+        }
         key <- runif(length(idx))^(1 / cand[[fc]][idx])
         idx[order(key, decreasing = TRUE)]
     })
@@ -131,14 +167,19 @@ pick_boxes <- function(cand, side, n_max) {
     repeat {
         progressed <- FALSE
         for (q in names(queues)) {
-            if (length(kept) >= n_max) break
+            if (length(kept) >= n_max) {
+                break
+            }
             qq <- queues[[q]]
             while (ptr[q] <= length(qq)) {
                 i <- qq[ptr[q]]
                 ptr[q] <- ptr[q] + 1L
                 if (
                     length(kx) == 0 ||
-                        all(pmax(abs(kx - cand$x[i]), abs(ky - cand$y[i])) >= side)
+                        all(
+                            pmax(abs(kx - cand$x[i]), abs(ky - cand$y[i])) >=
+                                side
+                        )
                 ) {
                     kept <- c(kept, i)
                     seed_class <- c(seed_class, q)
@@ -160,7 +201,16 @@ inference_patch_create <- function(pred_file) {
     cluster_num <- str_extract(basename(pred_file), "(?<=cluster_)\\d+")
     fn_out <- file.path(
         outDir,
-        paste0(sourceTag, "_cluster_", cluster_num, "_huc_", huc_num, "_", boxSide, "m.gpkg")
+        paste0(
+            sourceTag,
+            "_cluster_",
+            cluster_num,
+            "_huc_",
+            huc_num,
+            "_",
+            boxSide,
+            "m.gpkg"
+        )
     )
     if (file.exists(fn_out) && !overwrite) {
         message("Already file ", fn_out)
@@ -172,7 +222,8 @@ inference_patch_create <- function(pred_file) {
         quiet = TRUE,
         query = paste0(
             "SELECT * FROM NY_Cluster_Zones_250_CROP_NAomit_6347 WHERE huc12 = '",
-            huc_num, "'"
+            huc_num,
+            "'"
         )
     )
     if (nrow(huc_poly) == 0) {
@@ -184,12 +235,14 @@ inference_patch_create <- function(pred_file) {
     set.seed(as.numeric(huc_num) %% .Machine$integer.max)
 
     r <- rast(pred_file)
-    if (abs(res(r)[1] - 1) > 1e-6) stop("expected a 1 m raster: ", pred_file)
+    if (abs(res(r)[1] - 1) > 1e-6) {
+        stop("expected a 1 m raster: ", pred_file)
+    }
     fact <- round(coarseRes / res(r)[1])
 
     ## 1. per-class cell counts on the coarse grid (one streamed pass)
     cnt <- aggregate(
-        segregate(r, classes = 0:3, other = 0),
+        segregate(r, classes = cls_ids, other = 0),
         fact = fact,
         fun = "sum",
         na.rm = TRUE
@@ -204,11 +257,11 @@ inference_patch_create <- function(pred_file) {
     w[1:nCoarse, 1:nCoarse] <- 1
     box_cnt <- focal(cnt, w = w, fun = "sum", na.rm = FALSE, fillvalue = NA)
     df <- as.data.frame(box_cnt, xy = TRUE, na.rm = TRUE)
-    names(df) <- c("x", "y", paste0("f", 0:3))
+    names(df) <- c("x", "y", fcols_all)
     ncell_box <- (boxSide / res(r)[1])^2
-    valid <- rowSums(df[, paste0("f", 0:3)]) / ncell_box
+    valid <- rowSums(df[, fcols_all, drop = FALSE]) / ncell_box
     df <- df[valid >= 1 - 1e-9, ] # fully inside the HUC mask
-    df[, paste0("f", 0:3)] <- df[, paste0("f", 0:3)] / ncell_box
+    df[, fcols_all] <- df[, fcols_all, drop = FALSE] / ncell_box
     # cell centre -> top-left corner of that coarse cell = square centre
     df$x <- df$x - coarseRes / 2
     df$y <- df$y + coarseRes / 2
@@ -216,8 +269,12 @@ inference_patch_create <- function(pred_file) {
     ## 3-4. balanced non-overlapping pick
     picks <- pick_boxes(df, boxSide, maxPatches)
     if (nrow(picks) == 0) {
-        message(basename(pred_file), ": no square with >= ", minClassFrac,
-                " wetland cover fully inside the HUC")
+        message(
+            basename(pred_file),
+            ": no square with >= ",
+            minClassFrac,
+            " wetland cover fully inside the HUC"
+        )
         return(invisible(NULL))
     }
     sel <- df[picks$idx, ]
@@ -246,8 +303,11 @@ inference_patch_create <- function(pred_file) {
         # 4-connected, matching GDAL polygonize: every resulting polygon part is
         # then >= minMappingUnit (an 8-connected clump can split into smaller
         # diagonal-only parts once polygonized)
-        rc <- sieve(rc, threshold = ceiling(minMappingUnit / polyRes^2),
-                    directions = 4)
+        rc <- sieve(
+            rc,
+            threshold = ceiling(minMappingUnit / polyRes^2),
+            directions = 4
+        )
         pv <- as.polygons(rc, dissolve = TRUE)
         names(pv) <- "ID"
         out <- st_as_sf(pv) |>
@@ -266,8 +326,14 @@ inference_patch_create <- function(pred_file) {
             Comments = "NoComment"
         ) |>
         st_cast("MULTIPOLYGON") |> # dissolve=TRUE: already one row per class
-        dplyr::select(ReviewerName, Confidence, BoundariesAltered, Comments,
-                      MOD_CLASS, PatchGroup) |>
+        dplyr::select(
+            ReviewerName,
+            Confidence,
+            BoundariesAltered,
+            Comments,
+            MOD_CLASS,
+            PatchGroup
+        ) |>
         arrange(PatchGroup, MOD_CLASS)
     st_geometry(cmb) <- "geom"
     cmb$PatchGroup <- as.integer(cmb$PatchGroup)
@@ -276,21 +342,37 @@ inference_patch_create <- function(pred_file) {
     ga <- tapply(as.numeric(st_area(cmb)), cmb$PatchGroup, sum)
     bad <- names(ga)[abs(ga - boxSide^2) > 0.002 * boxSide^2]
     if (length(bad) > 0) {
-        warning(basename(pred_file), ": PatchGroup(s) not partitioning the square: ",
-                paste(bad, collapse = ","))
+        warning(
+            basename(pred_file),
+            ": PatchGroup(s) not partitioning the square: ",
+            paste(bad, collapse = ",")
+        )
     }
 
     st_write(cmb, dsn = fn_out, append = FALSE, quiet = TRUE)
 
-    seed_tab <- table(factor(picks$seed, levels = paste0("f", wet_ids),
-                             labels = fct_df$MOD_CLASS[wet_ids + 1]))
+    seed_tab <- table(factor(
+        picks$seed,
+        levels = paste0("f", wet_ids),
+        labels = fct_df$MOD_CLASS[wet_ids + 1]
+    ))
     message(
-        basename(pred_file), ": candidate squares inside HUC = ", nrow(df),
-        "; kept = ", nrow(boxes),
-        " (seeded by ", paste(names(seed_tab), seed_tab, sep = "=", collapse = " "),
-        "); mean cover EMW/FSW/SSW/UPL = ",
-        paste(sprintf("%.2f", colMeans(sel[, paste0("f", 0:3)])), collapse = "/"),
-        " -> ", basename(fn_out)
+        basename(pred_file),
+        ": candidate squares inside HUC = ",
+        nrow(df),
+        "; kept = ",
+        nrow(boxes),
+        " (seeded by ",
+        paste(names(seed_tab), seed_tab, sep = "=", collapse = " "),
+        "); mean cover ",
+        paste(fct_df$MOD_CLASS, collapse = "/"),
+        " = ",
+        paste(
+            sprintf("%.2f", colMeans(sel[, fcols_all, drop = FALSE])),
+            collapse = "/"
+        ),
+        " -> ",
+        basename(fn_out)
     )
     invisible(fn_out)
 }
@@ -306,11 +388,20 @@ corenum <- if (nzchar(slurm_cpus)) {
 corenum <- max(1L, min(corenum, length(l_pred)))
 task_mem_mb <- as.numeric(Sys.getenv("TASK_MEM_MB", unset = "16000"))
 worker_mem_gb <- task_mem_mb / 1024 / corenum
-message("workers = ", corenum, "; terra memmax per worker = ",
-        round(worker_mem_gb * 0.6, 1), " GB")
+message(
+    "workers = ",
+    corenum,
+    "; terra memmax per worker = ",
+    round(worker_mem_gb * 0.6, 1),
+    " GB"
+)
 
 options(future.globals.maxSize = 4e9)
-if (corenum > 1) plan(future.callr::callr, workers = corenum) else plan(sequential)
+if (corenum > 1) {
+    plan(future.callr::callr, workers = corenum)
+} else {
+    plan(sequential)
+}
 
 set.seed(420)
 res_files <- future_lapply(
@@ -328,5 +419,11 @@ res_files <- future_lapply(
     future.seed = TRUE,
     future.packages = c("terra", "sf", "dplyr", "stringr")
 )
-message("Done: ", sum(!vapply(res_files, is.null, logical(1))), "/", length(l_pred),
-        " HUC(s) written to ", outDir)
+message(
+    "Done: ",
+    sum(!vapply(res_files, is.null, logical(1))),
+    "/",
+    length(l_pred),
+    " HUC(s) written to ",
+    outDir
+)
