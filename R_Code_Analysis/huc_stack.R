@@ -60,7 +60,7 @@ stack_profiles <- function() {
 stack_profile <- function(patch_path = NULL) {
   p <- Sys.getenv("HUC_STACK_PROFILE", "")
   if (!nzchar(p)) {
-    p <- if (!is.null(patch_path) && grepl("R_Patches_Vector_Prod/?$", patch_path)) "prod" else "factorial"
+    p <- if (!is.null(patch_path) && grepl("R_Patches_Vector_(Prod|Inference)/?$", patch_path)) "prod" else "factorial"
   }
   if (!p %in% names(stack_profiles())) {
     stop("Unknown stack profile '", p, "'; expected one of: ",

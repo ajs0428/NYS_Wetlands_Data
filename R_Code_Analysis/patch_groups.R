@@ -195,6 +195,7 @@ patch_file_prefix <- function(bn) {
 
 #' Raster output folder for a given patch vector folder, matching the rasterizer.
 #' R_Patches_Vector_NWIextra<N>/ (NWIextra, NWIextra10, ...) -> R_Patches_NWIextra<N>/.
+#' R_Patches_Vector_Inference/ (DL-prediction patches, Inference_ChipsPatches_DL.R) -> R_Patches_Inference/.
 patch_out_dir <- function(patch_path) {
     m <- regmatches(patch_path, regexec("R_Patches_Vector_(NWIextra[0-9]*)/?$", patch_path))[[1]]
     if (length(m) == 2) {
@@ -203,6 +204,8 @@ patch_out_dir <- function(patch_path) {
         "Data/Training_Data/R_Patches_NWI/"
     } else if (grepl("R_Patches_Vector_Prod/?$", patch_path)) {
         "Data/Training_Data/R_Patches_Prod/"
+    } else if (grepl("R_Patches_Vector_Inference/?$", patch_path)) {
+        "Data/Training_Data/R_Patches_Inference/"
     } else {
         "Data/Training_Data/R_Patches/"
     }
