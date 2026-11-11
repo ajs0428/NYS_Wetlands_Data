@@ -42,10 +42,10 @@ suppressPackageStartupMessages({
 
 ########################################################################################
 args <- c(
-    "../NYS_Wetlands_DL/Data/HUC_DL_Predictions_v3_masked/", # prediction rasters
+    "../NYS_Wetlands_Prod/Data/HUC_DL_Predictions_Prod/p025_focal_bin_pp_wiou/ensemble_cal/", # prediction rasters
     128, # patch size radius (m) -> 256 m squares
     25, # max patches per HUC
-    "11", # clusters: "all" or comma list
+    "168", # clusters: "all" or comma list
     "FALSE", # overwrite existing gpkg
     "Data/Training_Data/R_Patches_Vector_Inference/" # output folder
 )
