@@ -50,6 +50,11 @@ setGDALconfig("GDAL_PAM_ENABLED", "FALSE")
 # defined in dl_band_config.json -- skip them here.
 # MOD_CLASS is the label band -- also skip (and it is not in the predictor
 # stack anyway; kept here for safety).
+#
+# No percentile clipping here, by design: this JSON is the RAW global min/max
+# (NYS_Wetlands_Prod data.norm = global_minmax). Skewed bands such as "hand" are
+# handled by Prod's data.norm = p1p99, which rescales every min_max band to the
+# 1st..99th percentile of the non-test training patches (prod_make_stats.py).
 skip_bands <- c(
   "MOD_CLASS",
   "NDVI",
@@ -61,6 +66,8 @@ skip_bands <- c(
   "n_ndwi",
   "ndvi",
   "ndwi",
+  "ndvi_lo", # prod profile: derived per patch window, never in huc_minmax()'s
+  "ndwi_lo", # layers; listed so a future on-disk version is still skipped
   "Geomorph_local"
 )
 

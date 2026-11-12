@@ -27,6 +27,7 @@ huc_source_dirs <- function() {
     dem   = "Data/TerrainProcessed/HUC_DEMs/",
     terr  = "Data/TerrainProcessed/HUC_TerrainMetrics/",
     hydro = "Data/TerrainProcessed/HUC_Hydro/",
+    hand  = "Data/TerrainProcessed/HUC_HAND/",
     chm   = "Data/CHMs/HUC_CHMs/",
     naip  = "Data/NAIP/HUC_NAIP_Processed/",
     ortho = "Data/Ortho/HUC_Ortho/",
@@ -41,17 +42,40 @@ huc_source_dirs <- function() {
 ##   factorial : the original 7-source stack (NYS_Wetlands_DL, factorial-v3).
 ##               Default -- R_Patches, the NWI dirs, normalization stats and
 ##               point extractions are unchanged.
-##   prod      : NYS_Wetlands_Prod. No leaf-off ortho and no lidar, so HUCs
-##               without those sources still stack; NAIP keeps ndvi/ndwi (the
-##               prod14 bandset uses both). DEM stays in as the reference grid
-##               even though the model does not use it as a channel.
+##   prod      : NYS_Wetlands_Prod. No lidar, so HUCs without it still stack;
+##               NAIP keeps ndvi/ndwi (the prod14 bandset uses both). DEM stays
+##               in as the reference grid even though the model does not use it
+##               as a channel. As of 2026-11 also carries HAND (band "hand",
+##               after hydro) and the leaf-off ortho with derived indices:
+##               r_lo g_lo b_lo nir_lo ndvi_lo ndwi_lo (ortho_indices = TRUE).
+##               22 predictor bands; prod14 is a by-name subset of them.
+##   ortho_indices : derive ndvi_lo / ndwi_lo from the leaf-off ortho. The
+##               HUC_Ortho rasters only hold r g b nir, so the indices are
+##               computed in the stack (see ortho_lo_indices()), never on disk.
 stack_profiles <- function() {
   list(
     factorial = list(sources   = c("dem", "terr", "hydro", "chm", "naip", "ortho", "lidar"),
-                     naip_drop = c("ndvi", "ndwi")),
-    prod      = list(sources   = c("dem", "terr", "hydro", "chm", "naip"),
-                     naip_drop = character())
+                     naip_drop = c("ndvi", "ndwi"),
+                     ortho_indices = FALSE),
+    prod      = list(sources   = c("dem", "terr", "hydro", "hand", "chm", "naip", "ortho"),
+                     naip_drop = character(),
+                     ortho_indices = TRUE)
   )
+}
+
+## --- Derived leaf-off indices ------------------------------------------------
+## Appends ndvi_lo / ndwi_lo to a leaf-off ortho raster whose bands are already
+## suffixed (r_lo g_lo b_lo nir_lo). Same formulas as vi2() in
+## NAIP_Processing_CMD.R, which bakes the leaf-on ndvi/ndwi into HUC_NAIP_Processed:
+##   ndvi = (nir - r) / (nir + r)      ndwi = (g - nir) / (g + nir)
+## terra arithmetic is eager, so the patch builder calls this AFTER cropping to
+## the patch window -- never on a whole HUC. The inference twin
+## (NYS_Wetlands_Prod prod/dl_huc_stack.py) must compute the same thing.
+ortho_lo_indices <- function(o) {
+  idx <- c((o[["nir_lo"]] - o[["r_lo"]]) / (o[["nir_lo"]] + o[["r_lo"]]),
+           (o[["g_lo"]] - o[["nir_lo"]]) / (o[["g_lo"]] + o[["nir_lo"]]))
+  names(idx) <- c("ndvi_lo", "ndwi_lo")
+  c(o, idx)
 }
 
 ## Resolve the active profile name. Precedence: the HUC_STACK_PROFILE env var,
@@ -138,7 +162,12 @@ huc_sources_ready <- function(paths, huc_number) {
 ## Band order of the final stack (the contract) is the profile's source order:
 ##   factorial: DEM, terrain(slope, TPI, Geomorph, meanc, dmv -- all bands kept),
 ##              hydro(log flowacc), CHM, NAIP(ndvi/ndwi dropped), ortho, lidar
-##   prod     : DEM, terrain, hydro(log flowacc), CHM, NAIP(ndvi/ndwi kept)
+##   prod     : DEM, terrain, hydro(log flowacc), hand, CHM,
+##              NAIP(ndvi/ndwi kept), ortho(r_lo g_lo b_lo nir_lo)
+## The prod profile's ndvi_lo/ndwi_lo are NOT in these layers: they are derived
+## per window by build_huc_stack_patch() / build_huc_stack_full(), so opening a
+## HUC never triggers a whole-HUC index computation (and huc_minmax() never
+## needs them -- they are shift_scale bands with analytic [-1, 1] bounds).
 ## rast() returns lazy file pointers; no pixels are read until a downstream
 ## crop / resample / minmax / extract forces it.
 huc_layers <- function(paths) {
@@ -178,6 +207,12 @@ huc_layers <- function(paths) {
   hydro$flowacc <- log(hydro$flowacc)
   out$hydro <- hydro
 
+  if ("hand" %in% prof$sources) {
+    hand <- rast(pick1(paths$hand, "HAND"))
+    set.names(hand, "hand")
+    out$hand <- hand
+  }
+
   out$chm <- rast(pick1(paths$chm, "CHM"))
 
   naip <- rast(pick1(paths$naip, "NAIP"))
@@ -194,8 +229,18 @@ huc_layers <- function(paths) {
     out$lidar <- rast(pick1(paths$lidar, "lidar"))
   }
 
-  # Named list, in stack order (DEM first = the reference grid).
-  out[prof$sources]
+  # Named list, in stack order (DEM first = the reference grid). The profile
+  # rides along so the stack builders know whether to derive the ortho indices.
+  out <- out[prof$sources]
+  attr(out, "profile") <- profile
+  out
+}
+
+## TRUE when this layer list's profile derives ndvi_lo/ndwi_lo from the ortho.
+lyrs_ortho_indices <- function(lyrs) {
+  profile <- attr(lyrs, "profile")
+  !is.null(profile) && "ortho" %in% names(lyrs) &&
+    isTRUE(stack_profiles()[[profile]]$ortho_indices)
 }
 
 ## --- Align one raster to a reference grid (resample only if needed) ----------
@@ -210,6 +255,9 @@ align_to <- function(r, ref, method = "bilinear") {
 build_huc_stack_full <- function(paths) {
   lyrs <- huc_layers(paths)
   ref  <- lyrs$dem
+  # Whole-HUC index computation (eager) -- acceptable here, this is the
+  # full-raster path; patches derive per window instead.
+  if (lyrs_ortho_indices(lyrs)) lyrs$ortho <- ortho_lo_indices(lyrs$ortho)
   aligned <- lapply(lyrs, align_to, ref = ref)
   rast(unname(aligned))
 }
@@ -264,14 +312,17 @@ build_huc_stack_patch <- function(paths, geom, buffer_px = 5, mask = TRUE, lyrs 
   d <- buffer_px * res(lyrs$terr)[1]
   bwin <- ext(xmin(e) - d, xmax(e) + d, ymin(e) - d, ymax(e) + d)
 
-  align_patch <- function(r) {
-    rc <- crop(r, bwin, snap = "out")
+  # Indices are derived on the native-grid crop, before any resample, so the
+  # result equals "compute on the full raster, then crop + resample".
+  derive <- lyrs_ortho_indices(lyrs)
+  align_patch <- function(key) {
+    rc <- crop(lyrs[[key]], bwin, snap = "out")
+    if (derive && key == "ortho") rc <- ortho_lo_indices(rc)
     align_to(rc, dem_crop)
   }
 
-  others <- lyrs[setdiff(names(lyrs), "dem")]
   # Flat list of SpatRasters (DEM first) -> rast() concatenates the layers.
-  patch_lyrs <- c(list(dem_crop), lapply(unname(others), align_patch))
+  patch_lyrs <- c(list(dem_crop), lapply(setdiff(names(lyrs), "dem"), align_patch))
   out <- rast(patch_lyrs)
   if (mask) out <- terra::mask(out, dem_crop)
   out

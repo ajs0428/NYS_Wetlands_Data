@@ -26,6 +26,11 @@ set -uo pipefail
 #
 # Usage:
 #   bash Shell_Scripts/check_stack_ready.sh <SELECTION...> [-o OUTFILE] [--no-bands]
+#                                           [--profile factorial|prod]
+#
+#   --profile  which stack_profiles() entry of huc_stack.R to check. factorial
+#              (default) = the seven sources above; prod = dem terr hydro hand
+#              chm naip ortho (no lidar, plus HAND).
 #
 #   SELECTION  one or more of:
 #     batchN         a batch name from Shell_Scripts/batch_config.sh
@@ -56,6 +61,8 @@ cd /ibstorage/anthony/NYS_Wetlands_Data/
 source Shell_Scripts/batch_config.sh   # GPKG + batchN arrays
 
 # === SOURCE LAYOUT (mirrors huc_source_dirs() in huc_stack.R) ===
+# Default = the factorial profile's seven sources. --profile prod (parsed
+# below) swaps in the prod profile's: no lidar, plus HAND.
 KEYS="dem terr hydro chm naip ortho lidar"
 
 subdir_for() {
@@ -65,6 +72,7 @@ subdir_for() {
         hydro) echo "Data/TerrainProcessed/HUC_Hydro" ;;
         chm)   echo "Data/CHMs/HUC_CHMs" ;;
         naip)  echo "Data/NAIP/HUC_NAIP_Processed" ;;
+        hand)  echo "Data/TerrainProcessed/HUC_HAND" ;;
         ortho) echo "Data/Ortho/HUC_Ortho" ;;
         lidar) echo "Data/Lidar/HUC_Lidar_Metrics" ;;
     esac
@@ -92,6 +100,13 @@ while [ "$#" -gt 0 ]; do
             OUTFILE="$1" ;;
         --no-bands)
             CHECK_BANDS=0 ;;
+        --profile)
+            shift
+            case "${1:-}" in
+                factorial) ;;
+                prod) KEYS="dem terr hydro hand chm naip ortho" ;;
+                *) echo "ERROR: --profile needs factorial|prod" >&2; exit 1 ;;
+            esac ;;
         -h|--help)
             grep -E '^#( |$)' "$0" | sed -E 's/^# ?//'
             exit 0 ;;
