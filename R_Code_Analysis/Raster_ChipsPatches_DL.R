@@ -470,7 +470,17 @@ rast_chip_patch_create_one <- function(wetland_file) {
 # and its stale rasters survive untouched (REMOVE_EXISTING never reaches them).
 # On 2026-08-12 two malformed files wiped out all of cluster 208 and cluster 225
 # that way. Contain the blast radius to the one file, and name it in the log.
+#
+# Every early return(invisible(NULL)) in rast_chip_patch_create_one (bad
+# MOD_CLASS, missing sources, no PatchGroup, ...) also happens BEFORE the
+# REMOVE_EXISTING sweep, so a skipped gpkg keeps its old rasters on disk. On
+# 2026-11-13 that left 68 R_Patches_Prod rasters from 11-04 (pre-HAND/ortho
+# stack) in place behind a one-line "Skipping" message. So after each file,
+# when REMOVE_EXISTING is on, any of its rasters older than this call are
+# reported in a loud banner here and again in the end-of-run summary.
 rast_chip_patch_create <- function(wetland_file) {
+    source("R_Code_Analysis/patch_groups.R") # callr workers: patch_out_dir/prefix
+    t_start <- Sys.time()
     tryCatch(
         rast_chip_patch_create_one(wetland_file),
         error = function(e) {
@@ -483,6 +493,33 @@ rast_chip_patch_create <- function(wetland_file) {
             invisible(NULL)
         }
     )
+    if (!removeExisting) {
+        return(invisible(NULL))
+    }
+    prefix <- patch_file_prefix(basename(wetland_file))
+    if (is.na(prefix)) {
+        return(invisible(NULL))
+    }
+    out_dir <- patch_out_dir(patchPath)
+    existing <- list.files(out_dir, full.names = TRUE)
+    existing <- existing[startsWith(basename(existing), prefix)]
+    stale <- existing[file.mtime(existing) < t_start]
+    if (length(stale) == 0) {
+        return(invisible(NULL))
+    }
+    bar <- strrep("!", 78)
+    message(
+        "\n", bar, "\n",
+        "!!! STALE PATCHES NOT REMOVED: ", basename(wetland_file), "\n",
+        "!!! REMOVE_EXISTING was on, but this file was skipped before the sweep,\n",
+        "!!! so ", length(stale), " raster(s) from an older run remain in ", out_dir, "\n",
+        "!!! (", prefix, "*, newest ",
+        format(max(file.mtime(stale)), "%Y-%m-%d %H:%M"), ").\n",
+        "!!! Fix the vector (see the Skipping/error line above) and rerun, or\n",
+        "!!! delete them before training.\n",
+        bar, "\n"
+    )
+    invisible(list(file = basename(wetland_file), prefix = prefix, n = length(stale)))
 }
 
 ### Non-parallel
@@ -509,7 +546,7 @@ options(future.globals.maxSize = 48.0 * 1e9)
 # plan(multisession, workers = corenum)
 plan(future.callr::callr, workers = corenum)
 
-future_lapply(
+run_results <- future_lapply(
     l_wet_cluster,
     rast_chip_patch_create,
     future.seed = TRUE,
@@ -526,6 +563,23 @@ future_lapply(
     #   fct_df = fct_df
     # )
 )
+
+# End-of-run summary of every gpkg whose stale rasters survived REMOVE_EXISTING
+# (see rast_chip_patch_create). Printed last so it isn't buried in the log.
+stale_runs <- Filter(Negate(is.null), run_results)
+if (length(stale_runs) > 0) {
+    bar <- strrep("!", 78)
+    message(
+        "\n", bar, "\n",
+        "!!! SUMMARY: ", length(stale_runs), " gpkg(s) in cluster ", clusterSubset,
+        " were skipped and left ", sum(vapply(stale_runs, `[[`, numeric(1), "n")),
+        " stale raster(s) in ", patch_out_dir(patchPath), ":\n",
+        paste0("!!!   ", vapply(stale_runs, function(r) {
+            paste0(r$file, " (", r$n, ")")
+        }, character(1)), collapse = "\n"),
+        "\n", bar
+    )
+}
 
 ### Checks
 # l_patches <- list.files("Data/Training_Data/R_Patches_Vector")
