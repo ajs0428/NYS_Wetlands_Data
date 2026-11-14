@@ -133,13 +133,26 @@ hand_func <- function(dem_fn) {
   streams_fn <- file.path(streamsFolder, paste0(base, "_streams.tif"))
   hand_fn <- file.path(handFolder, paste0(base, "_HAND.tif"))
 
-  if (file.exists(hand_fn)) {
-    message("HAND already made: ", hand_fn)
-    return("exists")
-  }
   if (!file.exists(facc_fn)) {
     warning("No flow accumulation for ", base, " — HAND NOT written")
     return("no_flowacc")
+  }
+  # Rebuild HAND (and streams) when older than the wbt DEM or flowacc it was
+  # derived from, or on a different grid — a rebuilt DEM -> wbt -> TWI chain
+  # would otherwise leave the old HAND in place (see is_stale in
+  # hydro_metrics_singleVect_CMD.R). Outputs are rewritten via temp + rename.
+  if (file.exists(hand_fn)) {
+    stale_by <- c(dem_fn, facc_fn)[file.mtime(hand_fn) < file.mtime(c(dem_fn, facc_fn))]
+    if (length(stale_by) == 0 &&
+      !compareGeom(rast(hand_fn), rast(dem_fn), stopOnError = FALSE)) {
+      stale_by <- paste(basename(dem_fn), "(grid differs)")
+    }
+    if (length(stale_by) == 0) {
+      message("HAND already made: ", hand_fn)
+      return("exists")
+    }
+    message("STALE HAND (older than / mismatched with ",
+      paste(basename(stale_by), collapse = ", "), "): rebuilding ", hand_fn)
   }
   t0 <- Sys.time()
 

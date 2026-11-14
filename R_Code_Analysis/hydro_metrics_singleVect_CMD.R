@@ -69,16 +69,18 @@ print(tempdir())
 
 ###############################################################################################
 # All the DEMs in a cluster
+# Anchored to the .tif: a stray sidecar (cluster 12 had a .tif.aux.xml) also
+# matched the old prefix-only pattern, giving one HUC two DEM paths.
 list_of_huc_dems <- list.files(
     demFolder,
-    paste0("cluster_", clusterNumber, "_huc"),
+    paste0("^cluster_", clusterNumber, "_huc_\\d+\\.tif$"),
     full.names = TRUE
 )
 print(list_of_huc_dems)
 list_of_huc_hydro_dems <- list.files(
     "Data/TerrainProcessed/HUC_DEM_Hydro/",
     full.names = TRUE,
-    paste0("cluster_", clusterNumber, "_huc")
+    paste0("^cluster_", clusterNumber, "_huc_\\d+_wbt\\.tif$")
 )
 print(list_of_huc_hydro_dems)
 dem_hucs <- str_extract(list_of_huc_dems, "(?<=huc_)\\d+")
@@ -93,6 +95,26 @@ print(non_wbt_list)
 
 ###############################################################################################
 
+# Staleness: an existing output is rebuilt when it is older than its input or
+# its grid no longer matches the input's. Skip-if-exists alone hid a 2026-03-15
+# DEM rebuild: 42 HUCs kept wbt/TWI/HAND conditioned from the OLD, smaller DEM
+# (up to 11 km2 missing), so their training patches had all-NA twi/hand. Stale
+# outputs are deleted here so the rebuild below runs; they are derived products.
+is_stale <- function(out_fn, in_fn) {
+    if (!file.exists(out_fn)) {
+        return(FALSE)
+    }
+    if (file.mtime(out_fn) < file.mtime(in_fn)) {
+        message("STALE (older than ", basename(in_fn), "): ", out_fn)
+        return(TRUE)
+    }
+    if (!terra::compareGeom(rast(out_fn), rast(in_fn), stopOnError = FALSE)) {
+        message("STALE (grid differs from ", basename(in_fn), "): ", out_fn)
+        return(TRUE)
+    }
+    FALSE
+}
+
 hydro_func <- function(huc_num) {
     dem_fn <- list_of_huc_dems[grepl(huc_num, list_of_huc_dems)]
     dem_fn_abs <- paste0("/ibstorage/anthony/NYS_Wetlands_Data/", dem_fn)
@@ -104,6 +126,10 @@ hydro_func <- function(huc_num) {
         "_wbt.tif"
     )
     hc_fn_abs <- paste0("/ibstorage/anthony/NYS_Wetlands_Data/", hc_fn)
+
+    if (is_stale(hc_fn_abs, dem_fn_abs)) {
+        unlink(hc_fn_abs)
+    }
 
     if (!file.exists(hc_fn_abs)) {
         # WhiteboxTools' fill/breach panic with "Error unwrapping 'output'" on
@@ -168,6 +194,11 @@ hydro_func <- function(huc_num) {
         tools::file_path_sans_ext(basename(hc_fn)),
         "_TWI_Facc.tif"
     )
+
+    # Also catches a wbt rebuilt above: it is now newer than the old TWI.
+    if (file.exists(hc_fn) && is_stale(fa_twi_name, hc_fn)) {
+        unlink(fa_twi_name)
+    }
 
     if (!file.exists(fa_twi_name) & file.exists(hc_fn)) {
         message("New TWI and Flow Acc for ", fa_twi_name)
